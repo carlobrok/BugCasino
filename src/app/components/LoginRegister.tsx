@@ -68,17 +68,19 @@ export default function LoginRegister() {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-10 p-5 border rounded-lg shadow">
+        <div className="max-w-md mx-auto mt-10 p-5">
             <h1 className="text-xl font-bold">
                 {showLogin && "Login"}
                 {showRegister && "Register"}
                 {!showLogin && !showRegister && "Welcome"}
             </h1>
-            <p className="mt-2 text-gray-500">
-                {showLogin && "Please enter your credentials"}
-                {showRegister && "Please enter your credentials"}
-                {!showLogin && !showRegister && "Please sign in using your DLR e-mail address"}
-            </p>
+            <div className="w-md">
+                <p className="mt-2 text-gray-500">
+                    {showLogin && "Please enter your credentials"}
+                    {showRegister && "Please enter your credentials"}
+                    {!showLogin && !showRegister && "Please sign in using your DLR e-mail address"}
+                </p>
+            </div>
 
             <form className="mt-4">
                 <input

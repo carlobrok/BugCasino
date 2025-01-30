@@ -2,7 +2,7 @@ import { assert } from "console";
 import LoginRegister from "./components/LoginRegister";
 import LogoutButton from "./components/LogoutButton";
 import { getServerSession } from "next-auth";
-
+import { redirect } from "next/navigation";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 
 export default async function Home() {
@@ -11,19 +11,14 @@ export default async function Home() {
   console.log("session", session);
 
   if (session) {
-    return (
-      <main className="flex flex-col items-center justify-center min-h-screen p-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Hello, {session.user?.name}</h1>
-          <LogoutButton />
-        </div>
-      </main>
-    )
+    redirect("/dashboard");
   } else {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen p-4">
-        <LoginRegister />
-      </main>
+      <div className="bg-bug-casino bg-cover bg-center h-screen text-lg">
+        <main className="flex flex-col items-center justify-center min-h-screen p-4">
+          <LoginRegister />
+        </main>
+      </div>
     )
   }
 }
