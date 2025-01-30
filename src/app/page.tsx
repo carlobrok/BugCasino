@@ -1,101 +1,396 @@
-import Image from "next/image";
+import { assert } from "console";
+import LoginRegister from "./components/LoginRegister";
+import LogoutButton from "./components/LogoutButton";
+import { getServerSession } from "next-auth";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+export default async function Home() {
+
+  const session = await getServerSession(authOptions)
+  console.log("session", session);
+
+  if (session) {
+    return (
+      <main className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Hello, {session.user?.name}</h1>
+          <LogoutButton />
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    )
+  } else {
+    return (
+      <main className="flex flex-col items-center justify-center min-h-screen p-4">
+        <LoginRegister />
+      </main>
+    )
+  }
 }
+
+
+
+// I want to create a login form using next-auth and the prismaAdapter. prisma is using a local sqlite database. i am using the next app router. 
+
+// these are the versions i am using:
+// next-auth@4.24.11
+// prisma@6.3.0
+// next@15.1.6 
+// react@19.0.0
+
+// this is how the tree of my installation looks like:
+// ├── package-lock.json
+// ├── package.json
+// ├── postcss.config.mjs
+// ├── prisma
+// │   ├── dev.db
+// │   └── schema.prisma
+// ├── public
+// │   ├── file.svg
+// │   ├── globe.svg
+// │   ├── next.svg
+// │   ├── vercel.svg
+// │   └── window.svg
+// ├── src
+// │   ├── app
+// │   │   ├── api
+// │   │   │   ├── auth
+// │   │   │   │   └── [...nextauth]
+// │   │   │   │       └── route.ts
+// │   │   │   ├── register
+// │   │   │   │   └── route.ts
+// │   │   │   └── user-exists
+// │   │   │       └── route.ts
+// │   │   ├── components
+// │   │   │   ├── LoginRegister.tsx
+// │   │   │   └── LogoutButton.tsx
+// │   │   ├── favicon.ico
+// │   │   ├── globals.css
+// │   │   ├── layout.tsx
+// │   │   └── page.tsx
+// │   └── lib
+// │       └── prisma.ts
+// ├── tailwind.config.ts
+// └── tsconfig.json
+
+// on the landing page a login/register form must be presented when a user is not logged in. this is provided by the loginregister component. It should handle the login/register flow as follows:
+//   1. only a input for email + button "login" is visible.
+//   2. after clicking on the "login" button, the api endpoint user-exists is called to check whether the user is already registered
+//   3.a) if the user is already registered: a new input field for the password is shown.
+//   3.b) if the user does not exist yet, two fields for name and Password are shown.
+//   4. after the login / register process, the user must be logged in and a session, e.g. by using jwt must be created. so when the user accesses the website next time, he is still logged in
+
+
+// scheme.prisma
+// ```
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
+
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   email     String   @unique
+//   password  String
+//   name      String?
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+// ```
+
+
+// app/api/register/route.ts  (this definitely works, registered users show up in the database)
+// ```
+// import { PrismaClient } from "@prisma/client";
+// import { NextResponse } from "next/server";
+// import bcrypt from "bcrypt";
+
+// const prisma = new PrismaClient();
+
+// export async function POST(req: Request) {
+//   const { email, name, password } = await req.json();
+
+//   if (!email || !password) {
+//     return NextResponse.json({ error: "E-Mail und Passwort erforderlich" }, { status: 400 });
+//   }
+
+//   const existingUser = await prisma.user.findUnique({ where: { email } });
+//   if (existingUser) {
+//     return NextResponse.json({ error: "Benutzer existiert bereits" }, { status: 400 });
+//   }
+
+//   const hashedPassword = await bcrypt.hash(password, 10);
+//   const newUser = await prisma.user.create({
+//     data: { email, name, password: hashedPassword },
+//   });
+
+//   return NextResponse.json({ id: newUser.id, email: newUser.email });
+// }
+// ```
+
+// app/api/user-exists/route.ts   ( this works too, a registered user is found and if the email is registered only the password input is shown in the loginregister component ) 
+// ```
+// import { PrismaClient } from "@prisma/client";
+// import { NextResponse } from "next/server";
+
+// const prisma = new PrismaClient();
+
+// export async function POST(req: Request) {
+//   const { email } = await req.json();
+
+//   if (!email) return NextResponse.json({ error: "Email erforderlich" }, { status: 400 });
+
+//   const user = await prisma.user.findUnique({ where: { email } });
+//   return NextResponse.json({ exists: !!user });
+// }
+
+// ```
+
+
+// app/components/LoginRegister.tsx   
+// ```
+// "use client";
+
+// import { signIn } from "next-auth/react";
+// import { useRouter } from "next/navigation";
+// import { useState } from "react";
+
+// export default function LoginRegister() {
+    
+//     const [email, setEmail] = useState("");
+//     const [name, setName] = useState("");
+//     const [password, setPassword] = useState("");
+//     const [showLogin, setShowLogin] = useState(false);
+//     const [showRegister, setShowRegister] = useState(false);
+//     const [error, setError] = useState("");
+//     const router = useRouter();
+
+//     const checkUserExists = async () => {
+//         const res = await fetch("/api/user-exists", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email }),
+//         });
+
+//         if (res.ok) {
+//         const data = await res.json();
+//         if (data.exists) {
+//             setShowLogin(true);
+//         } else {
+//             setShowRegister(true);
+//         }
+//         }
+//     }
+    
+//     const registerUser = async () => {
+//         const res = await fetch("/api/register", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, name, password }),
+//         });
+
+//         if (res.ok) {
+//         router.refresh();
+//         }
+//         else if (res.status === 400) {
+//         const data = await res.json();
+//         setError(data.error);
+//         }
+
+//     }
+
+
+//     const handleSubmit = async (e: React.FormEvent) => {
+//         e.preventDefault();
+//         setError("");
+    
+//         const result = await signIn("credentials", {
+//           redirect: false,
+//           email,
+//           password,
+//         });
+    
+//         if (result?.error) {
+//           setError(result.error);
+//         } else if (result?.ok) {
+//           router.refresh();
+//         }
+//     };
+    
+//     return (
+//         <div className="max-w-md mx-auto mt-10 p-5 border rounded-lg shadow">
+//         <h1 className="text-xl font-bold">Login</h1>
+//         <form onSubmit={handleSubmit} className="mt-4">
+//             <input
+//             type="email"
+//             placeholder="Email"
+//             className="w-full p-2 border rounded"
+//             value={email}
+//             onChange={(e) => setEmail(e.target.value)}
+//             required
+//             />
+//             {!showLogin && !showRegister && (
+//             <button
+//                 type="button"
+//                 className="w-full mt-2 bg-blue-500 text-white py-2 rounded"
+//                 onClick={checkUserExists}
+//             >
+//                 Login
+//             </button>
+//             )}
+//             {showLogin && (
+//             <>
+//                 <input
+//                 type="password"
+//                 placeholder="Passwort"
+//                 className="w-full p-2 border rounded mt-2"
+//                 value={password}
+//                 onChange={(e) => setPassword(e.target.value)}
+//                 required
+//                 />
+//                 <button type="submit" className="w-full mt-2 bg-green-500 text-white py-2 rounded">
+//                 Anmelden
+//                 </button>
+//             </>
+//             )}
+//             {showRegister && (
+//             <>  
+//                 <input
+//                 type="text"
+//                 placeholder="Name"
+//                 className="w-full p-2 border rounded mt-2"
+//                 value={name}
+//                 onChange={(e) => setName(e.target.value)}
+//                 required
+//                 />
+//                 <input
+//                 type="password"
+//                 placeholder="Passwort"
+//                 className="w-full p-2 border rounded mt-2"
+//                 value={password}
+//                 onChange={(e) => setPassword(e.target.value)}
+//                 required
+//                 />
+//                 <button type="button" onClick={registerUser} className="w-full mt-2 bg-green-500 text-white py-2 rounded">
+//                 Anmelden
+//                 </button>
+//             </>
+//             )}
+
+
+//             {error && <p className="text-red-500 mt-2">{error}</p>}
+//         </form>
+//         </div>
+//     );
+// }
+// ```
+
+
+// app/api/auth/[...nextauth]/route.ts   ( there is probalby a problem here creating the session, as the session variable that can be retrieved with `getServerSession` is null after the auth procedure )
+// ```
+// import NextAuth from "next-auth"
+// import CredentialsProvider from "next-auth/providers/credentials"
+// import { NextAuthOptions } from "next-auth"
+// import { PrismaAdapter } from "@next-auth/prisma-adapter"
+// import { prisma } from "@/lib/prisma"
+
+// import bcrypt from "bcrypt"
+
+
+// export const authOptions : NextAuthOptions = {
+//   adapter: PrismaAdapter(prisma),
+//   providers: [
+//     CredentialsProvider({
+//       name: "Credentials",
+//       credentials: {
+//         email: { label: "Email", type: "email", required: true },
+//         password: { label: "Password", type: "password", required: true },
+//       },
+//       async authorize(credentials) {
+//         if (!credentials?.email || !credentials?.password) {
+//           throw new Error("E-Mail und Passwort erforderlich");
+//         }
+
+//         const user = await prisma.user.findUnique({
+//           where: { email: credentials.email },
+//         });
+
+//         if (!user) {
+//           throw new Error("User does not exist");
+//         }
+
+//         const isValid = await bcrypt.compare(credentials.password, user.password);
+//         if (!isValid) {
+//           throw new Error("Invalid password");
+//         }
+
+//         console.log("user", user, "credentials", credentials);
+
+//         return { id: user.id.toString(), email: user.email, name: user.name };
+//       },
+//     }),
+//   ],
+//   session: { 
+//     strategy: "jwt"
+//   },
+//   callbacks: {
+//     async jwt({token, user} : {token: any, user: any}) {
+//       console.log("jwt", token, user);
+//       return {...token, ...user}
+//     },
+//     // async session({ session, token, user }y) {
+//     //   if (session.user) {
+//     //     console.log("session.user", session.user);
+//     //     console.log("token", token);
+//     //     session.user.id = token.sub;
+//     //   }
+//     //   console.log("session", session);
+//     //   return session;
+//     // },
+//   }
+// };
+
+// export default NextAuth(authOptions)
+// ```
+
+// app/page.tsx ( here the problem is noticable. after going through the login form the session is still null )
+// ```
+// import { assert } from "console";
+// import LoginRegister from "./components/LoginRegister";
+// import LogoutButton from "./components/LogoutButton";
+// import { getServerSession } from "next-auth";
+
+// import { authOptions } from "./api/auth/[...nextauth]/route";
+
+// export default async function Home() {
+
+//   const session = await getServerSession(authOptions)
+//   console.log("session", session);
+
+//   if (session) {
+//     console.log("session", session);
+
+//     return (
+//       <main className="flex flex-col items-center justify-center min-h-screen p-4">
+//         <div className="text-center">
+//           <h1 className="text-2xl font-bold">Hello, {session.user.name}</h1>
+//           <LogoutButton />
+//         </div>
+//       </main>
+//     )
+//   } else {
+//     return (
+//       <main className="flex flex-col items-center justify-center min-h-screen p-4">
+//         <LoginRegister />
+//       </main>
+//     )
+//   }
+// }
+// ```
+
+
+// please solve my not working auth procedure.

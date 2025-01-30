@@ -12,6 +12,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      backgroundImage: {
+        'bug-casino': "url('/BugCasino.webp')",
+      },
     },
   },
   plugins: [],
