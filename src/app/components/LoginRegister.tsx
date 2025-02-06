@@ -1,149 +1,169 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useActionState } from "react";
+import SubmitButton from "./SubmitButton";
+import { checkUserExists, registerUser } from "../actions";
+
+
+
+async function loginUser(prevState: any, formData: FormData) {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    await signIn("credentials", {
+        email,
+        password,
+        redirect: true,
+    });
+
+    return { step: "login", email: email };
+}
+
+
+async function handleFormAction(prevState: any, formData: FormData) {
+
+    const step = prevState.step || "check";
+
+    if (step === "check") {
+        return await checkUserExists(prevState, formData);
+    }
+
+    if (step === "login") {
+        return loginUser(prevState, formData);
+    }
+
+    if (step === "register") {
+
+        console.log("registering user", formData);
+
+        await registerUser(prevState, formData);
+        return await loginUser(prevState, formData);
+    }
+}
+
+function Input({ type, name, label, ...props }: { type: string, name: string, label: string, [key: string]: any }) {
+    return (
+        <div>
+            <label htmlFor={name} className="block font-medium text-gray-700">{label}</label>
+            <input
+                type={type}
+                name={name}
+                id={name}
+                className={`w-full mt-2 p-2 border rounded`}
+                required
+                {...props}
+            />
+        </div>
+    );
+}
 
 export default function LoginRegister() {
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [password, setPassword] = useState("");
-    const [showLogin, setShowLogin] = useState(false);
-    const [showRegister, setShowRegister] = useState(false);
-    const [error, setError] = useState("");
-    const [touched, setTouched] = useState({ email: false, name: false, password: false });
-    const router = useRouter();
 
-    const checkUserExists = async () => {
-        if (!email) {
-            setTouched((prev) => ({ ...prev, email: true }));
-            return;
-        }
-        const res = await fetch("/api/user-exists", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-        });
-
-        if (res.ok) {
-            const data = await res.json();
-            data.exists ? setShowLogin(true) : setShowRegister(true);
-        }
-    };
-
-    const registerUser = async () => {
-        setTouched({ email: true, name: true, password: true });
-        if (!email || !name || !password) return;
-        const res = await fetch("/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, name, password }),
-        });
-
-        if (res.ok) {
-            router.refresh();
-        } else if (res.status === 400) {
-            const data = await res.json();
-            setError(data.error);
-        }
-    };
-
-    const loginUser = async () => {
-        setTouched((prev) => ({ ...prev, email: true, password: true }));
-        if (!email || !password) return;
-        setError("");
-
-        const result = await signIn("credentials", {
-            redirect: false,
-            email,
-            password,
-        });
-
-        if (result?.error) {
-            setError(result.error);
-        } else if (result?.ok) {
-            router.refresh();
-            router.push("/");
-        }
-    };
+    const [state, formAction, pending] = useActionState(handleFormAction, { step: "check", email: "" });
 
     return (
-        <div className="max-w-md mx-auto mt-10 p-5">
-            <h1 className="text-xl font-bold">
-                {showLogin && "Login"}
-                {showRegister && "Register"}
-                {!showLogin && !showRegister && "Welcome"}
+        <div className="absolute top-50%" >
+
+
+            <h1 className="text-xl font-bold text-center">
+                {state?.step === "check" && "Welcome"}
+                {state?.step === "login" && "Sign In"}
+                {state?.step === "register" && "Register"}
             </h1>
             <div className="w-md">
                 <p className="mt-2 text-gray-500">
-                    {showLogin && "Please enter your credentials"}
-                    {showRegister && "Please enter your credentials"}
-                    {!showLogin && !showRegister && "Please sign in using your DLR e-mail address"}
+                    {state?.step === "check" && "Please sign in using your DLR e-mail address"}
+                    {state?.step === "login" && "Please enter your credentials"}
+                    {state?.step === "register" && "Please enter your credentials"}
                 </p>
             </div>
-
-            <form className="mt-4">
-                <input
-                    type="email"
-                    placeholder="Email"
-                    className={`w-full p-2 border rounded ${touched.email && !email ? "border-red-500" : ""}`}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                {!showLogin && !showRegister && (
-                    <button
-                        type="button"
-                        className="w-full mt-2 bg-blue-500 text-white py-2 rounded"
-                        onClick={checkUserExists}
-                    >
-                        Continue
-                    </button>
-                )}
-                {showLogin && (
-                    <>
+            <div className="max-w-md mx-auto mt-10 p-5">
+                <form className="mt-6 space-y-4" action={formAction}>
+                    {state?.step === "check" && (
+                        <>
+                            {/* <div>
+                        <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
+                        <input
+                            type="email" name="email" id="email" autoComplete="email"
+                            className={`w-full mt-2 p-2 border rounded`}
+                            required
+                        />
+                        </div> */}
+                            <Input type="email" name="email" label="Email" />
+                        </>
+                    )}
+                    {state?.step === "login" && (
+                        <>
+                            <div>
+                                {/* <label className="block font-medium text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            readOnly={true}
+                            value={state.email}
+                            placeholder="Email"
+                            className={`w-full p-2 border rounded`}
+                        /> */}
+                                <Input type="email" name="email" label="Email" value={state.email} />
+                            </div>
+                            {/* <div>
+                        <label className="block font-medium text-gray-700">Password</label>
                         <input
                             type="password"
+                            name="password"
                             placeholder="Passwort"
-                            className={`w-full p-2 border rounded mt-2 ${touched.password && !password ? "border-red-500" : ""}`}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            className={`w-full p-2 border rounded mt-2`}
                         />
-                        <button
-                            type="button"
-                            onClick={loginUser}
-                            className="w-full mt-2 bg-blue-500 text-white py-2 rounded"
-                        >
-                            Login
-                        </button>
-                    </>
-                )}
-                {showRegister && (
-                    <>
+                        </div> */}
+                            <Input type="password" name="password" label="Password" />
+                        </>
+                    )}
+                    {state?.step === "register" && (
+                        <>
+                            {/* <label htmlFor="name" className="block font-medium text-gray-700">Name</label>
                         <input
                             type="text"
-                            placeholder="Name"
-                            className={`w-full p-2 border rounded mt-2 ${touched.name && !name ? "border-red-500" : ""}`}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            name="name"
+                            className={`w-full p-2 border rounded mt-2`}
                         />
+                         */}
+                            <Input type="text" name="name" label="Name" />
+
+                            {/* <label htmlFor="group" className="block font-medium text-gray-700">Group</label>
+                        <input
+                            type="text"
+                            name="group"
+                            className={`w-full p-2 border rounded mt-2`}
+                        /> */}
+                            <Input type="text" name="group" label="Group" />
+
+
+
+                            {/* <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            readOnly={true}
+                            value={state.email}
+                            className={`w-full p-2 border rounded mt-2`}
+                        /> */}
+                            <Input type="email" name="email" label="Email" value={state.email} />
+
+
+
+                            {/* <label htmlFor="password" className="block font-medium text-gray-700">Password</label>
                         <input
                             type="password"
-                            placeholder="Passwort"
-                            className={`w-full p-2 border rounded mt-2 ${touched.password && !password ? "border-red-500" : ""}`}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <button
-                            type="button"
-                            onClick={registerUser}
-                            className="w-full mt-2 bg-green-500 text-white py-2 rounded"
-                        >
-                            Register
-                        </button>
-                    </>
-                )}
-                {error && <p className="text-red-500 mt-2">{error}</p>}
-            </form>
+                            name="password"
+                            className={`w-full p-2 border rounded mt-2`}
+                        /> */}
+                            <Input type="password" name="password" label="Password" />
+                        </>
+                    )}
+                    <SubmitButton pending={pending} />
+                </form>
+            </div>
         </div>
     );
 }

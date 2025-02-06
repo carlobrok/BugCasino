@@ -16,7 +16,7 @@ export default async function Page() {
         <div>
             <Header />
             <h1>Dashboard</h1>
-
+            
             
         </div>
     );
