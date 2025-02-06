@@ -1,22 +1,18 @@
+// src/components/HourWheel.tsx
 import React from 'react';
 import WheelBase from './WheelBase';
 
 interface HourWheelProps {
-  /** Das aktuell ausgewählte Datum */
   date: Date;
-  /** Callback, wenn sich die Stunde ändert */
   onChange: (date: Date) => void;
-  /** Optionale untere Grenze für die Stunden */
   minValue?: number;
-  /** Optionale obere Grenze für die Stunden */
   maxValue?: number;
+  classNames?: string;
 }
 
-const HourWheel: React.FC<HourWheelProps> = ({ date, onChange, minValue, maxValue }) => {
-  // Erstelle ein Array [0, 1, 2, …, 23]
+const HourWheel: React.FC<HourWheelProps> = ({ date, onChange, minValue, maxValue, classNames }) => {
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  // Aktualisiere die Stunde des aktuellen Datums und erzeuge ein neues Date-Objekt.
   const updateDate = (current: Date, newHour: number): Date => {
     const newDate = new Date(current);
     newDate.setHours(newHour);
@@ -32,7 +28,7 @@ const HourWheel: React.FC<HourWheelProps> = ({ date, onChange, minValue, maxValu
       displayFormatter={(value: number) => value.toString().padStart(2, '0')}
       minValue={minValue}
       maxValue={maxValue}
-      classNames='hour-wheel'
+      classNames={classNames}
     />
   );
 };

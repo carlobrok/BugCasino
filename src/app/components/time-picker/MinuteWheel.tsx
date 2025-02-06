@@ -1,22 +1,18 @@
+// src/components/MinuteWheel.tsx
 import React from 'react';
 import WheelBase from './WheelBase';
 
 interface MinuteWheelProps {
-  /** Das aktuell ausgewählte Datum */
   date: Date;
-  /** Callback, wenn sich die Minute ändert */
   onChange: (date: Date) => void;
-  /** Optionale untere Grenze für die Minuten */
   minValue?: number;
-  /** Optionale obere Grenze für die Minuten */
   maxValue?: number;
+  classNames?: string;
 }
 
-const MinuteWheel: React.FC<MinuteWheelProps> = ({ date, onChange, minValue, maxValue }) => {
-  // Erstelle ein Array [0, 1, 2, …, 59]
+const MinuteWheel: React.FC<MinuteWheelProps> = ({ date, onChange, minValue, maxValue, classNames }) => {
   const minutes = Array.from({ length: 60 }, (_, i) => i);
 
-  // Aktualisiere die Minute des aktuellen Datums und erzeuge ein neues Date-Objekt.
   const updateDate = (current: Date, newMinute: number): Date => {
     const newDate = new Date(current);
     newDate.setMinutes(newMinute);
@@ -32,7 +28,7 @@ const MinuteWheel: React.FC<MinuteWheelProps> = ({ date, onChange, minValue, max
       displayFormatter={(value: number) => value.toString().padStart(2, '0')}
       minValue={minValue}
       maxValue={maxValue}
-      classNames='minute-wheel'
+      classNames={classNames}
     />
   );
 };

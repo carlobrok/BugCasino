@@ -1,3 +1,4 @@
+// src/components/WheelBase.tsx
 import React, {
     useRef,
     useEffect,
@@ -10,32 +11,18 @@ import React, {
   import './time-picker.css';
   
   export interface WheelBaseProps {
-    /** Das aktuell ausgewählte Datum. */
     date: Date;
-    /** Callback, der das aktualisierte Datum zurückgibt. */
     onChange: (date: Date) => void;
-    /** Die anzuzeigenden Werte (z. B. Stunden, Minuten oder Indizes für Tage). */
     items: number[];
-    /**
-     * Funktion, die aus dem aktuellen Datum und einem neuen Wert ein aktualisiertes Datum erzeugt.
-     */
     updateDate: (current: Date, newValue: number) => Date;
-    /** (Optional) Funktion zur Formatierung des anzuzeigenden Wertes. */
     displayFormatter?: (value: number) => string;
-    /** (Optional) Untere Grenze (muss in items vorhanden sein). */
     minValue?: number;
-    /** (Optional) Obere Grenze (muss in items vorhanden sein). */
     maxValue?: number;
-
-    // Optional: CSS-Klassen, die hinzugefügt werden sollen
     classNames?: string;
   }
   
-  /** Höhe in Pixeln jedes sichtbaren Listenelements */
   const ITEM_HEIGHT = 40;
-  /** Anzahl sichtbarer Zellen – muss ungerade sein, damit eine Zelle zentriert ist */
   const VISIBLE_CELLS = 5;
-  /** Index der mittleren Zelle (0-basiert) */
   const CENTER_INDEX = Math.floor(VISIBLE_CELLS / 2);
   
   const WheelBase: React.FC<WheelBaseProps> = ({
@@ -48,7 +35,6 @@ import React, {
     maxValue,
     classNames = '',
   }) => {
-    // Ermittle den zulässigen Bereich anhand der übergebenen minValue/maxValue.
     const minIndex =
       minValue !== undefined && items.includes(minValue)
         ? items.indexOf(minValue)
@@ -57,14 +43,11 @@ import React, {
       maxValue !== undefined && items.includes(maxValue)
         ? items.indexOf(maxValue)
         : items.length - 1;
-  
-    // Bei Auswahl eines Elements (Index i) wird translate = (CENTER_INDEX - i)*ITEM_HEIGHT.
     const maxTranslate = (CENTER_INDEX - minIndex) * ITEM_HEIGHT;
     const minTranslate = (CENTER_INDEX - maxIndex) * ITEM_HEIGHT;
   
     const mainListRef = useRef<HTMLDivElement>(null);
   
-    // Initial ermitteln wir den aktuell ausgewählten Wert aus dem Datum.
     let currentValue: number;
     if (items.length === 24) {
       currentValue = date.getHours();
@@ -80,7 +63,6 @@ import React, {
     const [currentTranslatedValue, setCurrentTranslatedValue] = useState<number>(initialTranslate);
     const [wasDragged, setWasDragged] = useState<boolean>(false);
   
-    // Drag‑bezogene States
     const [startCapture, setStartCapture] = useState<boolean>(false);
     const [cursorPosition, setCursorPosition] = useState<number>(0);
     const [firstCursorPosition, setFirstCursorPosition] = useState<number>(0);
@@ -89,7 +71,6 @@ import React, {
     const [dragDirection, setDragDirection] = useState<'up' | 'down' | null>(null);
     const [showFinalTranslate, setShowFinalTranslate] = useState<boolean>(false);
   
-    // Aktualisiere den Transformwert – während des Draggings mit Preview, sonst final.
     useEffect(() => {
       if (mainListRef.current) {
         if (startCapture) {
@@ -100,7 +81,6 @@ import React, {
       }
     }, [cursorPosition, startCapture, currentTranslatedValue]);
   
-    // --- Mouse- und Touch-Eventhandler ---
     const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
       setWasDragged(false);
       setShowFinalTranslate(false);
@@ -167,7 +147,7 @@ import React, {
     const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
       if (startCapture) {
         const movement = e.clientY - firstCursorPosition;
-        if (Math.abs(movement) > 5) {
+        if (Math.abs(movement) > ITEM_HEIGHT / 2) {
           setWasDragged(true);
         }
         setCursorPosition(movement);
@@ -177,7 +157,7 @@ import React, {
     const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
       if (startCapture) {
         const movement = e.targetTouches[0].clientY - firstCursorPosition;
-        if (Math.abs(movement) > 5) {
+        if (Math.abs(movement) > ITEM_HEIGHT / 2) {
           setWasDragged(true);
         }
         setCursorPosition(movement);
@@ -210,12 +190,11 @@ import React, {
       const translate = (CENTER_INDEX - idx) * ITEM_HEIGHT;
       setCurrentTranslatedValue(translate);
       setSelectedIndex(idx);
-      onChange(updateDate(date, item));
     };
   
     return (
       <div
-        className={`time-picker-wheel ${classNames}`}
+        className={`wheel-base ${classNames}`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseTouchEnd}
         onMouseMove={handleMouseMove}
@@ -241,9 +220,8 @@ import React, {
           {items.map((item, idx) => (
             <div key={idx} className="time-picker-cell" style={{ height: ITEM_HEIGHT }}>
               <div
-                className={`time-picker-cell-inner ${classNames} ${
-                  idx === selectedIndex ? 'time-picker-cell-inner-selected' : ''
-                }`}
+                hidden={idx < minIndex || idx > maxIndex}
+                className={`item-picker-cell-inner ${idx === selectedIndex ? 'time-picker-cell-inner-selected' : ''}`}
                 onClick={() => handleClickToSelect(idx, item)}
               >
                 {displayFormatter(item)}
