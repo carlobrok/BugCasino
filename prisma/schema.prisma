@@ -25,16 +25,16 @@ model User {
 
 
 model Ticket {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  open      Boolean  @default(true)
-  bets      Bet[]
-  timeEstimate DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  title         String
+  description   String
+  author        User     @relation(fields: [authorId], references: [id])
+  authorId      Int
+  open          Boolean  @default(true)
+  bets          Bet[]
+  timeEstimate  DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 

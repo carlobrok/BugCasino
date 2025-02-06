@@ -56,6 +56,15 @@ input:focus {
     0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%); */
 }
 
+
+
+
+
+
+
+
+
+
 .time-picker-hour {
    position: relative;
    width: 50px;
@@ -143,7 +152,7 @@ input:focus {
    transition: all 100ms linear;
 }
 
-.time-picker-cell-inner-hour {
+.item-picker-cell-inner {
    width: fit-content;
    height: 100%;
    transition: all 100ms linear;
@@ -152,10 +161,9 @@ input:focus {
    line-height: 35px;
    text-align: center;
    display: flex;
-   justify-content: end;
    align-items: center;
    font-size: 14px;
-   color: #666;
+   color: #6a6a6b;
    padding: 0 10px;
 }
 
