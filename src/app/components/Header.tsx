@@ -10,7 +10,7 @@ export default function Header() {
         
         {/* Centered navigation links */}
         <nav className="flex space-x-6 text-bold ">
-          <Link href="/" className="hover:text-gray-400">Home</Link>
+          <Link href="/dashboard" className="hover:text-gray-400">Home</Link>
           <Link href="/tickets" className="hover:text-gray-400">Tickets</Link>
           <Link href="/profile" className="hover:text-gray-400">Profile</Link>
         </nav>

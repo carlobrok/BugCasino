@@ -40,10 +40,7 @@ export default function CreateTicket() {
                 </div>
 
                 <div className="mt-4">
-                    <div className="time-picker-popup">
-                        <TimePicker />
-                        {/* <TimePickerSelection {...params} /> */}
-                    </div>
+                    <TimePicker />
                 </div>
 
                 <SubmitButton pending={pending} />

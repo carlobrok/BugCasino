@@ -54,8 +54,6 @@ const timeFrames: dayTimeWindow[] = [
 function TimePicker() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
-    // let inputValue = selectedDate.toTimeString();
-
 
     function selectDate(date: Date) {
         setSelectedDate(date);
@@ -91,8 +89,8 @@ function TimePicker() {
 
     function onChange(value: Date) {
         const adjustedDate = adjustDateToTimeFrame(value);
-        // inputValue = adjustedDate.toTimeString().slice(0, 5);
-        console.log(adjustedDate);
+        // inputValue = adjustedDate.toDateString();
+        // console.log(adjustedDate);
         selectDate(adjustedDate);
     }
 
@@ -105,7 +103,7 @@ function TimePicker() {
             <div className="time-picker-container">
                 <input
                     className="time-picker-input"
-                    value={selectedDate.toTimeString()}
+                    value={selectedDate.toISOString()}
                     hidden
                     type="text"
                     name="time"
@@ -122,7 +120,7 @@ function TimePicker() {
                             const newDay = timeFrames[newDayIndex].start;
                             newDate.setFullYear(newDay.getFullYear(), newDay.getMonth(), newDay.getDate());
                             
-                            console.log(newDate);
+                            // console.log(newDate);
                             
                             setSelectedDate(adjustDateToTimeFrame(newDate));
                         }}
