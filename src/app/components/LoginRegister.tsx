@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useActionState } from "react";
 import SubmitButton from "./SubmitButton";
-import { checkUserExists, registerUser } from "../actions";
+import { checkUserExists, registerUser } from "../../lib/actions";
 
 
 
@@ -35,7 +35,7 @@ async function handleFormAction(prevState: any, formData: FormData) {
 
     if (step === "register") {
 
-        console.log("registering user", formData);
+        // console.log("registering user", formData);
 
         await registerUser(prevState, formData);
         return await loginUser(prevState, formData);
@@ -63,7 +63,7 @@ export default function LoginRegister() {
     const [state, formAction, pending] = useActionState(handleFormAction, { step: "check", email: "" });
 
     return (
-        <div className="absolute inset-x-0 mx-auto h-[380px] w-[500px] bottom-[12%] " >
+        <div className="absolute inset-x-0 mx-auto h-[380px] w-[500px] bottom-[12%] text-gray-700" >
             <h1 className="text-2xl font-bold text-center">
                 {state?.step === "check" && "Welcome"}
                 {state?.step === "login" && "Sign In"}

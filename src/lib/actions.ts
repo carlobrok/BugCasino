@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { User } from "@prisma/client";
-import { getOpenUserTicket, getUserTickets } from "@/lib/gamedata";
+import { getOpenUserTicket, getUserTickets } from "@/lib/actions/gamedata";
 import bcrypt from "bcrypt";
 
 
@@ -16,7 +16,7 @@ export async function newTicket(prevState: any, formData: FormData) {
 
     const user: User | null = await getCurrentUser();
     if (!user) {
-        console.log("user not authenticated");
+        // console.log("user not authenticated");
         return { error: "You are not authenticated" };
     }
 
@@ -27,7 +27,7 @@ export async function newTicket(prevState: any, formData: FormData) {
     }
 
     if (!title || !description || !timeEstimate) {
-        console.log("missing fields", title, description, timeEstimate);
+        // console.log("missing fields", title, description, timeEstimate);
         return { error: "Please fill out all fields" };
     }
 
@@ -35,7 +35,7 @@ export async function newTicket(prevState: any, formData: FormData) {
         data: { title, description, authorId: user.id, timeEstimate }
     });
 
-    console.log(ticket);
+    // console.log(ticket);
 
     return { success: true, ticket };
 }
@@ -44,11 +44,11 @@ export async function newTicket(prevState: any, formData: FormData) {
 export async function checkUserExists(prevState: any, formData: FormData) {
     const mail = formData.get('email') as string;
 
-    console.log("checking user", mail);
+    // console.log("checking user", mail);
 
     const user = await prisma.user.findUnique({ where: { email: mail } });
 
-    console.log("user", user);
+    // console.log("user", user);
 
     if (!user) {
         return { step: 'register', email : mail };

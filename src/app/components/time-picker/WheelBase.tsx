@@ -252,6 +252,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleMouseTouchEnd}
+      tabIndex={-1}
     >
       <div
         ref={mainListRef}

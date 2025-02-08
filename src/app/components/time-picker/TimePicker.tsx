@@ -13,11 +13,11 @@ interface dayTimeWindow {
 const generateTimeFrames = (): dayTimeWindow[] => {
     let timeFrames: dayTimeWindow[] = [];
     const now = new Date();
-    
+
     if (now.getHours() >= 17) {
         now.setDate(now.getDate() + 1);
     }
-    
+
     for (let i = 0; i <= 3; i++) {
         const start = new Date(now);
         const end = new Date(now);
@@ -99,7 +99,7 @@ function TimePicker() {
     }
 
     return (
-        <div className="time-picker">
+        <div className="time-picker m-auto p-4">
             <div className="time-picker-container">
                 <input
                     className="time-picker-input"
@@ -119,9 +119,9 @@ function TimePicker() {
                             const newDate = new Date(selectedDate);
                             const newDay = timeFrames[newDayIndex].start;
                             newDate.setFullYear(newDay.getFullYear(), newDay.getMonth(), newDay.getDate());
-                            
+
                             // console.log(newDate);
-                            
+
                             setSelectedDate(adjustDateToTimeFrame(newDate));
                         }}
                         classNames="day-wheel"
@@ -133,12 +133,16 @@ function TimePicker() {
                         maxValue={maxHour}
                         classNames="hour-wheel"
                     />
+                    <div className="m-auto z-10">:</div>
                     <MinuteWheel
                         date={selectedDate}
                         onChange={onChange}
                         classNames="minute-wheel"
                     />
                 </div>
+                <div
+                    className="time-picker-selected-overlay absolute top-1/2 -translate-y-1/2" 
+                />
             </div>
         </div>
     );

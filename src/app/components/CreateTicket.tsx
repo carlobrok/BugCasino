@@ -1,10 +1,11 @@
 'use client'
 
-import { useActionState, useState } from "react";
-import { newTicket } from "@/app/actions";
+import { useActionState, useEffect, useState } from "react";
+import { newTicket } from "@/lib/actions";
 import './time-picker/time-picker.css';
 import SubmitButton from "./SubmitButton";
 import TimePicker from "./time-picker/TimePicker";
+import { useRouter } from "next/navigation";
 
 const initialState = { error: "", success: undefined, ticket: undefined };
 
@@ -12,34 +13,43 @@ export default function CreateTicket() {
     const pickerDefaultValue: string = '10:00';
 
     const [state, formAction, pending] = useActionState(newTicket, initialState);
-    const [timeInputValue, setTimeInputValue] = useState<string>(pickerDefaultValue);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (state.success) {
+          router.refresh(); // or router.push(router.asPath)
+        }
+      }, [state.success, router]);
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+        <div className="max-w-md m-auto">
             <h2 className="text-2xl font-bold mb-4">Create a new Ticket</h2>
 
             <form action={formAction}>
                 <div >
-                    <label className="block text-sm font-medium text-gray-700">Title</label>
+                    <label className="block text-sm font-medium">Title</label>
                     <input
                         type="text"
                         name="title"
-                        className="mt-1 block w-full p-2 border  rounded-md"
+                        className="mt-1 block w-full p-2 bg-zinc-700 rounded-md focus:border-pink-600"
+                        placeholder="Enter the title"
+                        autoComplete="off"
                         required
                     />
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Short Description</label>
+                <div className="mt-2">
+                    <label className="block text-sm font-medium">Description</label>
                     <input
                         type="text"
                         name="description"
-                        className="mt-1 block w-full p-2 border  rounded-md"
+                        placeholder="Some short description"
+                        className="mt-1 block bg-zinc-700 w-full border-gray-70 p-2  rounded-md"
                         required
                     />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-2">
                     <TimePicker />
                 </div>
 

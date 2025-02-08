@@ -34,7 +34,7 @@ export const authOptions : NextAuthOptions = {
           throw new Error("Invalid password");
         }
 
-        console.log("user", user, "credentials", credentials);
+        // console.log("user", user, "credentials", credentials);
 
         return { id: user.id.toString(), email: user.email, name: user.name };
       },
@@ -52,7 +52,7 @@ export const authOptions : NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      // console.log("session callback\n", session, token);
+      // // console.log("session callback\n", session, token);
       if (session.user) {
         session.user.email = token.email;
         session.user.name = token.name;

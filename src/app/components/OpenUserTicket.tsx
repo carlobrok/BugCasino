@@ -1,4 +1,5 @@
-import { getOpenUserTicket } from "@/lib/gamedata";
+import { getOpenUserTicket } from "@/lib/actions/gamedata";
+import CloseTicketButton from "./CloseTicketButton";
 
 export default async function OpenUserTicket() {
 
@@ -8,18 +9,26 @@ export default async function OpenUserTicket() {
     return null;
   }
 
-  console.log("ticket", ticket);
+
+
+  // console.log("ticket", ticket);
   return (
     <>
-    <h2 className="text-xl font-bold">Your Ticket</h2>
-    <div className="p-4 border rounded-lg">
-      <h3 className="text-lg font-bold">{ticket.title}</h3>
-      <p>{ticket.description}</p>
-      <p>{ticket.author.name}</p>
-      {/* <p>{ticket.timeEstimate.toLocaleString('de-DE', {weekday: "short", day: "2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit", })}</p> */}
-      <p>{ticket.timeEstimate.toLocaleString('en-UK', {dateStyle:"full", timeStyle:"short"})}</p>
-      <p>{ticket._count.bets} Bets</p>
-    </div>
+      <div className="p-6 rounded-lg bg-zinc-700 shadow-lg">
+        <div className="flex justify-between">
+          <div className="flex flex-col" >
+            <h3 className="text-lg font-bold">{ticket.title}</h3>
+            <p>{ticket.description}</p>
+            <p className="mt-3 italic">{ticket.timeEstimate.toLocaleString('en-UK', { dateStyle: "full", timeStyle: "short" })}</p>
+          </div>
+          {/* <p>{ticket.author.name}</p> */}
+          <div className="flex flex-col items-end justify-between">
+            <p>{ticket._count.bets} Bets</p>
+            <CloseTicketButton />
+          </div>
+        </div>
+
+      </div>
     </>
   );
 }

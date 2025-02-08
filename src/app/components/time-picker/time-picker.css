@@ -1,152 +1,177 @@
 /* Container des gesamten TimePickers */
 .time-picker {
-   margin-bottom: 50px;
-   border-radius: 12px;
-   overflow: hidden;
-   box-shadow: 0 11px 15px rgba(0, 0, 0, 0.3);
-   background-color: #1d1d1d;
-   width: 240px;
-   padding: 20px;
- }
- 
- /* Fade-in Animation */
- .time-picker-transition {
-   animation: fade-in 150ms ease-out;
- }
- @keyframes fade-in {
-   0% {
-     transform: translateY(150px);
-     opacity: 0;
-   }
-   100% {
-     transform: translateY(0);
-     opacity: 1;
-   }
- }
- 
- /* Container für alle Elemente */
- .time-picker-container {
-   position: relative;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
- }
- 
- /* Eingabefeld */
- .time-picker-input {
-   cursor: text;
-   padding: 5px 10px;
-   border-radius: 5px;
-   border: 1px solid rgba(0,0,0,0.3);
-   margin-bottom: 10px;
-   width: 100%;
-   text-align: center;
- }
- 
- /* Wrapper für Stunden- und Minuten-Räder */
- .time-picker-wheels {
-   display: flex;
-   gap: 10px;
- }
- 
- /* Gemeinsame Eigenschaften der Wheels */
- .wheel-base {
-   overflow: hidden;
-   position: relative;
-   height: 200px; /* ITEM_HEIGHT * VISIBLE_CELLS (40 * 5) */
-   overscroll-behavior-y: contain;
- }
- 
- /* Spezifische Klassen */
- .day-wheel {
-   width: 100%;
-   margin-bottom: 10px;
- }
- .hour-wheel,
- .minute-wheel {
-   width: 50px;
- }
+  border-radius: 12px;
+  overflow: hidden;
+  width: 300px;
+}
 
- /* Übergänge */
- .time-picker-fast {
-   transition: transform 700ms cubic-bezier(0.13, 0.67, 0.01, 0.94);
- }
- .time-picker-slow {
-   transition: transform 600ms cubic-bezier(0.13, 0.67, 0.01, 0.94);
- }
- 
- /* Zellen und Inhalt */
- .time-picker-cell {
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   height: 40px;
- }
- .item-picker-cell-inner {
-   cursor: pointer;
-   border-radius: 7px;
-   line-height: 35px;
-   padding: 0 10px;
-   font-size: 14px;
-   transition: all 100ms linear;
-   color: #6a6a6b;
- }
- .item-picker-cell-inner:hover {
-   background-color: rgba(255,157,10,0.8);
-   color: #fff;
- }
- .time-picker-cell-inner-selected {
-   color: #f7f7f7;
-   font-size: 16px;
- }
- 
- /* Overlays und Schatten */
- .time-picker-selected-overlay {
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   left: 10px;
-   right: 10px;
-   background-color: #2c2c2f;
-   border-radius: 6px;
-   pointer-events: none;
-   z-index: 1;
- }
- .time-picker-top-shadow,
- .time-picker-bottom-shadow {
-   position: absolute;
-   width: 100%;
-   z-index: 2;
- }
- .time-picker-top-shadow {
-   top: 0;
-   background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
- }
- .time-picker-bottom-shadow {
-   bottom: 0;
-   background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 100%);
- }
- 
- /* Buttons (optional) */
- .time-picker-btn-container {
-   display: flex;
-   justify-content: space-between;
-   background-color: #292929;
-   border-bottom: 1px solid #333;
-   width: 100%;
- }
- .time-picker-btn {
-   padding: 10px 15px;
-   font-size: 13px;
-   color: #fe9f06;
-   transition: all 150ms linear;
-   font-weight: 500;
- }
- .time-picker-btn:hover {
-   opacity: 0.6;
- }
- .time-picker-btn-cancel {
-   font-size: 12px;
-   font-weight: 300;
- }
- 
+/* Fade-in Animation */
+.time-picker-transition {
+  animation: fade-in 150ms ease-out;
+}
+
+@keyframes fade-in {
+  0% {
+    transform: translateY(150px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Container für alle Elemente */
+.time-picker-container {
+  position: relative;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+}
+
+/* Eingabefeld */
+.time-picker-input {
+  cursor: text;
+  padding: 10px 10px;
+  /* border-radius: 5px; */
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  width: 100%;
+  text-align: center;
+}
+
+/* Wrapper für Stunden- und Minuten-Räder */
+.time-picker-wheels {
+  display: flex;
+}
+
+/* Gemeinsame Eigenschaften der Wheels */
+.wheel-base {
+  overflow: visible hidden;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  /* ITEM_HEIGHT * VISIBLE_CELLS (40 * 5) */
+  overscroll-behavior-y: contain;
+
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+/Edge */
+  user-select: none;
+  /* Standard */
+  z-index: 5;
+  
+}
+
+/* Spezifische Klassen */
+.day-wheel {
+  width: 100%;
+}
+
+.hour-wheel,
+.minute-wheel {
+  width: 70px;
+}
+
+.minute-wheel {
+  margin-right: 10px;
+}
+
+/* Übergänge */
+.time-picker-fast {
+  transition: transform 700ms cubic-bezier(0.13, 0.67, 0.01, 0.94);
+}
+
+.time-picker-slow {
+  transition: transform 600ms cubic-bezier(0.13, 0.67, 0.01, 0.94);
+}
+
+.day-wheel > .time-picker-cell {
+  align-items: start;
+}
+
+/* Zellen und Inhalt */
+.time-picker-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+}
+
+.item-picker-cell-inner {
+  cursor: pointer;
+  border-radius: 7px;
+  line-height: 35px;
+  padding: 0 10px;
+  font-size: 14px;
+  transition: all 100ms linear;
+  color: #6a6a6b;
+}
+
+.item-picker-cell-inner:hover {
+  background-color: rgba(255, 157, 10, 0.8);
+  color: #fff;
+}
+
+.time-picker-cell-inner-selected {
+  color: #f7f7f7;
+  font-size: 16px;
+}
+
+/* Overlays und Schatten */
+.time-picker-selected-overlay {
+  position: absolute;
+  background-color: #2c2c2f;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 1;
+  width: 100%;
+  height: 40px;
+}
+
+.time-picker-top-shadow,
+.time-picker-bottom-shadow {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+}
+
+.time-picker-top-shadow {
+  top: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+}
+
+.time-picker-bottom-shadow {
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+}
+
+/* Buttons (optional) */
+.time-picker-btn-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #292929;
+  border-bottom: 1px solid #333;
+  width: 100%;
+}
+
+.time-picker-btn {
+  padding: 10px 15px;
+  font-size: 13px;
+  color: #fe9f06;
+  transition: all 150ms linear;
+  font-weight: 500;
+}
+
+.time-picker-btn:hover {
+  opacity: 0.6;
+}
+
+.time-picker-btn-cancel {
+  font-size: 12px;
+  font-weight: 300;
+}
