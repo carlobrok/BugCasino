@@ -2,7 +2,7 @@ import { getOpenUserTicket } from "@/lib/actions/gamedata";
 import CloseTicketButton from "../CloseTicketButton";
 import { formatBetCounter, formatTimeEstimate } from "@/lib/format-helper";
 import TicketCard, { TicketTopRightCorner } from "./TicketCard";
-import { TicketIcon } from "@heroicons/react/24/outline";
+import { TicketIcon } from "@heroicons/react/24/solid";
 import Amount, { AmountColor } from "../Amount";
 
 export default async function OpenUserTicket() {

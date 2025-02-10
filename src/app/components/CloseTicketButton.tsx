@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { closeUserTicket } from "@/lib/actions/ticket";
-import { CheckIcon } from "@heroicons/react/24/outline"; // Install heroicons: npm install @heroicons/react
+import { CheckIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
 export default function CloseTicketButton() {

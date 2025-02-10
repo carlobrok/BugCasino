@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createBet } from "@/lib/actions/bet";
-import { BanknotesIcon, CheckIcon } from "@heroicons/react/24/outline"; // Install heroicons: npm install @heroicons/react
+import { CheckIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import AmountInputGroup from "./AmountInputGroup";
 import { formatDoneInTime } from "@/lib/format-helper";

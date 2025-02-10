@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Amount, { AmountColor } from "./Amount";
-import { QuestionMarkCircleIcon, TicketIcon, TrophyIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { QuestionMarkCircleIcon, TicketIcon, TrophyIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import LogoutButton from "./Login/LogoutButton";
 import { getUserScore } from "@/lib/actions/gamedata";
 

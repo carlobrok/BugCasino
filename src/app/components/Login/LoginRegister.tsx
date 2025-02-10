@@ -93,7 +93,9 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
                         <>
                             <Input type="text" name="name" label="Name" />
                             {/* <Input type="text" name="group" label="Group" /> */}
+                            <div className="flex justify-between mt-2">
                             <RegisterSelectGroup groups={groups} />
+                            </div>
 
                             <Input type="email" name="email" label="Email" value={state.email} readOnly hidden />
                             <Input type="password" name="password" label="Password" />

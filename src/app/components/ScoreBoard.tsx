@@ -2,7 +2,7 @@ import { getScores } from "@/lib/actions/gamedata";
 import Amount, { AmountColor } from "./Amount";
 import { getCurrentUser } from "@/lib/session";
 import GradientLine from "./GradientLine";
-import { TrophyIcon } from "@heroicons/react/24/outline";
+import { TrophyIcon } from "@heroicons/react/24/solid";
 
 export default async function ScoreBoard() {
 

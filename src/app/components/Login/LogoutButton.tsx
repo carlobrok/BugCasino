@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/solid';
 import { redirect } from "next/navigation";
 
 
@@ -13,7 +13,7 @@ export default function LogoutButton() {
         signOut(); redirect("/");
       }}
     >
-      <ArrowRightStartOnRectangleIcon className="w-6 h-6 stroke-red-700 hover:stroke-red-700" />
+      <ArrowRightStartOnRectangleIcon className="w-6 h-6 fill-red-700 hover:fill-red-600" />
     </button>
     // </div>
   );

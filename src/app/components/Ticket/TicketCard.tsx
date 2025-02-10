@@ -1,6 +1,6 @@
 import { TicketWithDetails } from "@/lib/actions/gamedata";
-import { formatBetCounter, formatDoneInTime, formatTimeEstimate } from "@/lib/format-helper";
-import { LockClosedIcon, TicketIcon, UserIcon } from "@heroicons/react/24/outline";
+import { formatBetCounter, formatDoneInTime, formatTimeEstimate, formatTimeEstimateShort } from "@/lib/format-helper";
+import { LockClosedIcon, TicketIcon, UserIcon } from "@heroicons/react/24/solid";
 import Amount, { AmountColor } from "../Amount";
 import GradientLine from "../GradientLine";
 import CreateBet from "../CreateBet";
@@ -33,8 +33,8 @@ export default function TicketCard({ childrenLeft, childrenRight, topLevel }:
 export function TicketTitle({ title, open = true }: { title: string, open?: boolean }) {
     return (
         <div className="flex items-center">
-            {open && (<TicketIcon className="w-6 h-6 mr-2" />)}
-            {!open && (<LockClosedIcon className="w-6 h-6 mr-2 text-red-500" />)}
+            {open && (<TicketIcon className="size-6 mr-2" />)}
+            {!open && (<LockClosedIcon className="size-5 mr-2 fill-red-300" />)}
             <h3 className="text-lg font-bold">{title}</h3>
         </div>
     )
@@ -61,7 +61,7 @@ export function TicketTopRightCorner({ children }: { children: React.ReactNode }
 
 const defaultTicketChildrenLeft = (ticket: TicketWithDetails) => (
     <>
-        <div className="flex flex-col justify-between h-full"> 
+        <div className="flex flex-col justify-between h-full">
 
             <TicketTitleDescription ticket={ticket} />
             <div className="mt-6">
@@ -82,7 +82,32 @@ export function TicketClosed({ ticket, userId }: { ticket: TicketWithDetails, us
 
     return (
         <TicketCard
-            childrenLeft={defaultTicketChildrenLeft(ticket)}
+            childrenLeft={
+                <>
+                    <div className="flex flex-col justify-between h-full">
+                        <div>
+                            <div className="flex items-center font-bold">
+                                <UserIcon className="size-5 mr-2" />
+                                {ticket.author.name}
+                            </div>
+                            <TicketTitle title={ticket.title} open={ticket.open} />
+                        </div>
+                        <div className="mt-6">
+                            <div className="flex gap-1 italic">
+                                <div>
+                                    <p>Estimate:</p>
+                                    <p>Closed:</p>
+
+                                </div>
+                                <div>
+                                    <p>{formatTimeEstimateShort(ticket.timeEstimate)}</p>
+                                    <p>{formatTimeEstimateShort(ticket.updatedAt)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            }
 
             childrenRight={
                 <>
@@ -163,9 +188,9 @@ export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDe
                             </>
                         ) : (
                             <>
-                            <div className="flex flex-col justify-end items-end h-full">
-                                <CreateBet ticketId={ticket.id} userScore={userScore} />
-                            </div>
+                                <div className="flex flex-col justify-end items-end h-full">
+                                    <CreateBet ticketId={ticket.id} userScore={userScore} />
+                                </div>
                             </>
                         )}
 
