@@ -1,9 +1,9 @@
-import { BanknotesIcon } from "@heroicons/react/24/outline";
+import { CircleStackIcon } from "@heroicons/react/20/solid";
 
 export enum AmountColor {
-    Emerald = "stroke-amber-400",
-    EmeraldDark = "stroke-amber-600",
-    Gray = "stroke-zinc-300"
+    Emerald = "fill-amber-400",
+    EmeraldDark = "fill-amber-400 stroke-zinc-700/25",
+    Gray = "stroke-zinc-300 stroke-zinc-200/50"
 }
 
 // export enum AmountColor {
@@ -22,7 +22,7 @@ export default function Amount({ amount, color = AmountColor.Emerald, size = 5}:
     return (
         <div className="flex items-center mx-2">  
             {typeof amount === 'number' ? <p>{amount}</p> : amount}
-            <BanknotesIcon className={`w-${size} h-${size} ml-1 ${ color } drop-shadow-md`} />
+            <CircleStackIcon className={`w-${size} h-${size} ml-1 ${ color } drop-shadow-md`} />
         </div>
     );
 }
