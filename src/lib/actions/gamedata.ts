@@ -16,21 +16,27 @@ export type Ticket = {
   updatedAt: Date;
 }
 
-export async function getUserScore() : Promise<number> {
+export async function getUserScore() : Promise<{name: string, userScore: number}> {
   const user : User | null = await getCurrentUser();
 
   if (!user) {
-    return 0;
+    return { name: " ", userScore: 0 };
   }
 
   const result = await prisma.user.findFirst({
-    select: { score: true },
+    select: { name: true, score: true },
     where: { id: user.id },
   });
 
-  return result?.score ?? 0;
+  return { name: result?.name ?? "Unknown Name", userScore: result?.score ?? 0 };
 }
 
+export async function getScores() {
+  return await prisma.user.findMany({
+    select: { name: true, score: true, id: true },
+    orderBy: { score: "desc" },
+  });
+}
 
 /**
  * @returns All tickets of the current user or null if not authenticated.
@@ -85,56 +91,76 @@ export async function closeUserTicket() {
   });
 }
 
+export interface TicketWithDetails extends Ticket {
+  bets: {
+    user: { name: string };
+    amount: number;
+    doneInTime: boolean;
+    userId: number;
+    id: number;
+  }[];
+  author: {
+    name: string;
+    group: {
+      name: string ;
+    } | null;
+  };
+}
 
-export async function getOtherTickets()  {
-  const user : User | null = await getCurrentUser();
 
+export async function getOtherTickets(filters: { open?: boolean; groupName?: string } = {}) : Promise<TicketWithDetails[] | null> {
+  const user = await getCurrentUser();
   if (!user) {
     return null;
   }
 
-  return await prisma.ticket.findMany({
+  // Build a dynamic where clause based on the filters provided:
+  const whereClause: any = {
+    authorId: { not: user.id },
+    ...(filters.open !== undefined ? { open: filters.open } : {}),
+    ...(filters.groupName ? { author: { group: { name: filters.groupName } } } : {}),
+  };
+
+  const tickets = await prisma.ticket.findMany({
     include: {
       author: {
-        select: { 
-          name: true, 
-          group: { 
-            select: {
-              name: true
-            } 
-          },
-        }
-      },
-      bets: {
-        select: {                       
-          user: {
+        select: {
+          name: true,
+          group: {
             select: { name: true },
           },
+        },
+      },
+      bets: {
+        select: {
+          user: { select: { name: true } },
           amount: true,
           doneInTime: true,
           userId: true,
-        }
-      },
-    },
-    where: { authorId: { not: user.id } },
-  });
-}
-
-export async function getTicketDetails(ticketId: number) {
-  return await prisma.ticket.findUnique({
-    include: {
-      bets: {
-        select: {
-          user: {
-            select: { name: true },
-          },
-          doneInTime: true,
-          amount: true,
+          id: true,
         },
       },
     },
-    where: {
-      id: ticketId,
-    },
+    where: whereClause,
+  });
+  
+  return tickets.sort((a, b) => {
+    // 1. Open tickets should come first
+    if (a.open !== b.open) return b.open ? 1 : -1;
+
+    // 2. Tickets where the user has NOT bet should come first
+    const aUserBet = a.bets.some((bet) => bet.userId === user.id);
+    const bUserBet = b.bets.some((bet) => bet.userId === user.id);
+    if (aUserBet !== bUserBet) return aUserBet ? 1 : -1;
+
+    // 3. Newest tickets first (already ordered in Prisma, but kept as fallback)
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  })
+}
+
+
+export async function getGroups() {
+  return await prisma.group.findMany({
+    select: { name: true, id: true },
   });
 }

@@ -14,3 +14,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+section {
+  line-height: inherit;
+}
+
+.fugaz-one-regular {
+  font-family: "Fugaz One", serif;
+  font-weight: 400;
+  font-style: normal;
+}

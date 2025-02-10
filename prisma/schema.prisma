@@ -21,7 +21,7 @@ model User {
   bets      Bet[]
   group     Group?    @relation(fields: [groupId], references: [id])
   groupId   Int?
-  score     Int      @default(0)
+  score     Int      @default(20)
 }
 
 

@@ -2,8 +2,9 @@
 
 import { signIn } from "next-auth/react";
 import { useActionState } from "react";
-import SubmitButton from "./SubmitButton";
-import { checkUserExists, registerUser } from "../../lib/actions";
+import SubmitButton from "../SubmitButton";
+import { checkUserExists, registerUser } from "../../../lib/actions";
+import RegisterSelectGroup from "./RegisterSelectGroup";
 
 
 
@@ -42,23 +43,24 @@ async function handleFormAction(prevState: any, formData: FormData) {
     }
 }
 
-function Input({ type, name, label, ...props }: { type: string, name: string, label: string, [key: string]: any }) {
+function Input({ type, name, label, hidden = false, ...props }: { type: string, name: string, label: string, hidden?: boolean, [key: string]: any }) {
     return (
         <div className="w-full mt-2">
-            <label htmlFor={name} className="block px-2 font-bold text-sm">{label}</label>
+            <label htmlFor={name} className={"block px-2 font-bold text-sm" + (hidden === true ? " hidden" : "")}>{label}</label>
             <input
                 type={type}
                 name={name}
                 id={name}
-                className={`w-full px-2 py-1 border rounded`}
+                className={`w-full px-4 py-1 border rounded-lg text-md`}
                 required
+                hidden={hidden}
                 {...props}
             />
         </div>
     );
 }
 
-export default function LoginRegister() {
+export default function LoginRegister({ groups }: { groups: { name: string; id: number }[] }) {
 
     const [state, formAction, pending] = useActionState(handleFormAction, { step: "check", email: "" });
 
@@ -90,9 +92,10 @@ export default function LoginRegister() {
                     {state?.step === "register" && (
                         <>
                             <Input type="text" name="name" label="Name" />
-                            <Input type="text" name="group" label="Group" />
+                            {/* <Input type="text" name="group" label="Group" /> */}
+                            <RegisterSelectGroup groups={groups} />
 
-                            <Input type="email" name="email" label="Email" value={state.email} readOnly />
+                            <Input type="email" name="email" label="Email" value={state.email} readOnly hidden />
                             <Input type="password" name="password" label="Password" />
                         </>
                     )}

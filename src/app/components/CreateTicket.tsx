@@ -2,9 +2,9 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { newTicket } from "@/lib/actions";
-import './time-picker/time-picker.css';
+import './TimePicker/time-picker.css';
 import SubmitButton from "./SubmitButton";
-import TimePicker from "./time-picker/TimePicker";
+import TimePicker from "./TimePicker/TimePicker";
 import { useRouter } from "next/navigation";
 
 const initialState = { error: "", success: undefined, ticket: undefined };

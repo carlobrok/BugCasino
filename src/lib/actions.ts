@@ -51,7 +51,7 @@ export async function checkUserExists(prevState: any, formData: FormData) {
     // console.log("user", user);
 
     if (!user) {
-        return { step: 'register', email : mail };
+        return { step: 'register', email: mail };
     }
 
     return { step: 'login', email: mail };
@@ -59,15 +59,19 @@ export async function checkUserExists(prevState: any, formData: FormData) {
 
 
 export async function registerUser(prevState: any, formData: FormData) {
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const group = formData.get('group') as string;
-    const name = formData.get('name') as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    // Get group id from form data and convert it to a number (if provided)
+    const groupValue = formData.get("group") as string;
+    const groupId = groupValue ? Number(groupValue) : null;
+    const name = formData.get("name") as string;
 
-    console.log("registering user", email, name, group);
+    console.log("registering user", email, name, groupId);
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await prisma.user.create({ data: { email, password: hashedPassword, name } });
+    await prisma.user.create({
+        data: { email, password: hashedPassword, name, groupId },
+    });
 
-    return { step: 'register', email };
+    return { step: "register", email };
 }

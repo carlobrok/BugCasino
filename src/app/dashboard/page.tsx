@@ -1,8 +1,7 @@
-import Header from '../components/Header';
 import { getServerSession } from "next-auth";
-
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import ScoreBoard from '../components/ScoreBoard';
+import AppPage from '../components/AppPage';
 
 
 export default async function Page() {
@@ -13,12 +12,9 @@ export default async function Page() {
     }
 
     return (
-        <div>
-            <Header />
-            <h1>Dashboard</h1>
-            
-            
-        </div>
+        <AppPage>
+            <ScoreBoard />
+        </AppPage>
     );
     }
 

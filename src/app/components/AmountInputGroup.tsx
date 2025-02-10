@@ -1,4 +1,4 @@
-import Amount from "./Amount";
+import Amount, { AmountColor } from "./Amount";
 
 interface ModifierButtonProps {
     adjustment: () => void;
@@ -11,7 +11,7 @@ function ModifierButton({ adjustment, disabled, direction }: ModifierButtonProps
         <button
             onClick={adjustment}
             disabled={disabled}
-            className="px-2 font-bold text-lg rounded-lg bg-zinc-500 disabled:bg-zinc-600 hover:bg-zinc-400 hover:text-white disabled:text-gray-400"
+            className="px-2 font-bold text-lg rounded-lg shadow-md bg-zinc-500 disabled:bg-zinc-600 hover:bg-zinc-400 hover:text-white disabled:text-gray-400"
             style={{fontFamily: "monospace"}}
         >
             {direction === "increase" ? "+" : "-"}
@@ -30,12 +30,7 @@ export default function InputGroup({ userScore, amount, setAmount } : { userScor
     return (
         <div className="flex items-center align-middle w-fit">
             <ModifierButton adjustment={decrease} disabled={amount <= 0} direction="decrease" />
-
-
-
-            
-            <Amount amount={amount} color={true} />
-
+            <Amount amount={amount} color={AmountColor.Emerald} />
             <ModifierButton adjustment={increase} disabled={amount >= userScore} direction="increase" />
 
         </div>
