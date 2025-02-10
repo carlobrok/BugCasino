@@ -1,16 +1,26 @@
 import Link from "next/link";
 import Amount, { AmountColor } from "./Amount";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { QuestionMarkCircleIcon, TicketIcon, TrophyIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import LogoutButton from "./Login/LogoutButton";
 import { getUserScore } from "@/lib/actions/gamedata";
 
-export async function SideBars() {
-
-    const { name, userScore } = await getUserScore();
-    
+function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
-        <div className="fixed top-0 left-0 right-0 z-10 px-8 pt-6">
-            <div className="flex justify-between">
+        <Link href={href} className="hover:text-gray-400 hover:">
+            <div className="flex items-center gap-x-2">
+                {children}
+            </div>
+        </Link>
+    );
+}
+
+
+async function SideBars() {
+    const { name, userScore } = await getUserScore();
+
+    return (
+        <>
+            <div className="fixed top-0 left-0 z-10 px-8 pt-6">
 
                 {/* Left side: bug casino title and navigation */}
 
@@ -21,19 +31,21 @@ export async function SideBars() {
                     </div>
 
                     {/* Centered navigation links */}
-                    {/* <nav className="flex flex-col justify-center space-x-6 text-bold "> */}
-                        <Link href="/dashboard" className="hover:text-gray-400">Home</Link>
-                        <Link href="/tickets" className="hover:text-gray-400">Tickets</Link>
-                        <Link href="/profile" className="hover:text-gray-400">Profile</Link>
-                    {/* </nav> */}
+                    <nav className="flex flex-col font-bold space-y-2 mt-4">
+                        <SideBarLink href="/tickets"><TicketIcon className="size-6" />Tickets</SideBarLink>
+                        <SideBarLink href="/leaderboard"><TrophyIcon className="size-6" />Leaderboard</SideBarLink>
+                        <SideBarLink href="/groups"><UserGroupIcon className="size-6" />Groups</SideBarLink>
+                        {/* <SideBarLink href="/slots">Slots</SideBarLink> */}
+                    </nav>
                 </div>
-
+            </div>
+            <div className="fixed top-0 right-0 z-10 px-8 pt-6">
 
 
                 {/* Right side: stats, event and logout */}
 
                 <div className="flex justify-end items-center space-x-6">
-                    {/* <p className="mt-4"> Hi {name}!</p> */}
+                    <p>{name}</p>
                     <Amount amount={userScore} color={AmountColor.Emerald} size={6} />
                     <QuestionMarkCircleIcon className="w-6 h-6 mr-1" />
                     <LogoutButton />
@@ -41,7 +53,7 @@ export async function SideBars() {
 
 
             </div>
-        </div>
+        </>
     );
 }
 

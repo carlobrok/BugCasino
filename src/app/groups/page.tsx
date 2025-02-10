@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import ScoreBoard from '../components/ScoreBoard';
 import AppPage from '../components/AppPage';
+import GroupLeaderBoard from "../components/GroupLeaderBoard";
 
 
 export default async function Page() {
@@ -13,8 +14,9 @@ export default async function Page() {
 
     return (
         <AppPage>
-            <ScoreBoard />
+            <div className="flex justify-center items-center h-full">
+                <GroupLeaderBoard />
+            </div>
         </AppPage>
     );
     }
-
