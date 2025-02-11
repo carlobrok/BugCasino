@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/session";
 import { User } from "@prisma/client";
 import { getOpenUserTicket, getUserTickets } from "@/lib/actions/gamedata";
 import bcrypt from "bcrypt";
+import { RegisterFormData } from "@/app/components/Login/LoginRegister";
 
 
 export async function newTicket(prevState: any, formData: FormData) {
@@ -41,8 +42,8 @@ export async function newTicket(prevState: any, formData: FormData) {
 }
 
 
-export async function checkUserExists(prevState: any, formData: FormData) {
-    const mail = formData.get('email') as string;
+export async function checkUserExists(prevState: any, formData: RegisterFormData) {
+    const mail = formData.email;
 
     // console.log("checking user", mail);
 
@@ -58,19 +59,13 @@ export async function checkUserExists(prevState: any, formData: FormData) {
 }
 
 
-export async function registerUser(prevState: any, formData: FormData) {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    // Get group id from form data and convert it to a number (if provided)
-    const groupValue = formData.get("group") as string;
-    const groupId = groupValue ? Number(groupValue) : null;
-    const name = formData.get("name") as string;
+export async function registerUser({email, password, name, groupId, avatar}: {email: string, password: string, name: string, groupId: number, avatar: string}) {
 
-    console.log("registering user", email, name, groupId);
+    console.log("registering user", email, name, groupId,);
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.create({
-        data: { email, password: hashedPassword, name, groupId },
+        data: { email, password: hashedPassword, name, groupId, avatar },
     });
 
     return { step: "register", email };

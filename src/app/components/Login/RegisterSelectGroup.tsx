@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 interface Group {
   name: string;
@@ -11,16 +12,20 @@ interface Group {
 }
 
 interface RegisterSelectGroupProps {
+  register: UseFormRegister<any>;
+  setValue: UseFormSetValue<any>;
   groups: Group[];
+  errors: any;
 }
 
-export default function RegisterSelectGroup({ groups }: RegisterSelectGroupProps) {
+export default function RegisterSelectGroup({ groups, register, setValue, errors }: RegisterSelectGroupProps) {
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
   const selectGroup = (group: Group | null) => {
-    // If the same group is selected, do nothing.
-    if (group && selectedGroup && group.id === selectedGroup.id) return;
+    if (!group) return;
+
     setSelectedGroup(group);
+    setValue("groupId", group.id, { shouldValidate: true });
   };
 
   return (
@@ -67,7 +72,10 @@ export default function RegisterSelectGroup({ groups }: RegisterSelectGroupProps
       </Menu>
 
       {/* Hidden input field to store the selected group ID */}
-      <input type="hidden" name="group" value={selectedGroup ? selectedGroup.id : ""} />
+      <input type="hidden" {...register("groupId", {required: "Group is required"})} />
+      {errors.groupId && (
+        <p className="text-red-500 text-sm">{errors.groupId.message}</p>
+      )}
     </div>
   );
 }

@@ -3,6 +3,8 @@ import Amount, { AmountColor } from "./Amount";
 import { QuestionMarkCircleIcon, TicketIcon, TrophyIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import LogoutButton from "./Login/LogoutButton";
 import { getUserScore } from "@/lib/actions/gamedata";
+import UserIconName from "./UserIconName";
+import { getUser } from "@/lib/session";
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
@@ -16,7 +18,7 @@ function SideBarLink({ href, children }: { href: string; children: React.ReactNo
 
 
 async function SideBars() {
-    const { name, userScore } = await getUserScore();
+    const user = await getUser();
 
     return (
         <>
@@ -27,11 +29,15 @@ async function SideBars() {
                 <div className="flex flex-col">
                     {/* Left placeholder for spacing */}
                     <div className="">
-                        <h1 className="text-3xl py-2 text-zinc-200 fugaz-one-regular">Bug Casino</h1>
+                        <h1 className={"text-3xl py-2 fugaz-one-regular"
+                            + " bg-gradient-to-r from-red-600  via-amber-500 to-orange-600"
+                            + " inline-block text-transparent bg-clip-text"}>
+                            Bug Casino
+                        </h1>
                     </div>
 
                     {/* Centered navigation links */}
-                    <nav className="flex flex-col font-bold space-y-2 mt-4">
+                    <nav className="flex flex-col font-bold space-y-4 mt-4">
                         <SideBarLink href="/tickets"><TicketIcon className="size-6" />Tickets</SideBarLink>
                         <SideBarLink href="/leaderboard"><TrophyIcon className="size-6" />Leaderboard</SideBarLink>
                         <SideBarLink href="/groups"><UserGroupIcon className="size-6" />Groups</SideBarLink>
@@ -45,8 +51,9 @@ async function SideBars() {
                 {/* Right side: stats, event and logout */}
 
                 <div className="flex justify-end items-center space-x-6">
-                    <p>{name}</p>
-                    <Amount amount={userScore} color={AmountColor.Emerald} size={6} />
+                    <UserIconName name={user.name} avatar={user.avatar} />
+
+                    <Amount amount={user.score} color={AmountColor.Emerald} size={6} />
                     <QuestionMarkCircleIcon className="w-6 h-6 mr-1" />
                     <LogoutButton />
                 </div>
@@ -59,10 +66,13 @@ async function SideBars() {
 
 export default function AppPage({ children }: { children: React.ReactNode }) {
     return (
-        <div className="relative">
-            <SideBars />
-            <div className="absolute top-20 w-full">{children}</div>
-            <footer className="w-full h-40 static bottom-0"></footer>
-        </div>
+        <>
+            <div className="relative">
+                <SideBars />
+                <div className="absolute top-20 w-full">{children}
+                    <footer className=" w-full h-40 static bottom-0"></footer>
+                </div>
+            </div>
+        </>
     );
 }

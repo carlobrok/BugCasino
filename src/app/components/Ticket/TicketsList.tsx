@@ -1,10 +1,9 @@
-// In your TicketsGrid.tsx (server component)
-import { getCurrentUser } from "@/lib/session";
-import { getGroups, getOtherTickets, getUserScore } from "@/lib/actions/gamedata";
-import TicketStatusFilter from "./TicketStatusFilter";
-import { TicketClosed, TicketOpen } from "./TicketCard";
-import GroupFilterDropdown from "./DropdownGroupFilter";
+
 import React from "react";
+import { getUser } from "@/lib/session";
+import { getGroups, getOtherTickets } from "@/lib/actions/gamedata";
+import TicketCard, { TicketClosed, TicketOpen, TicketTitle } from "./TicketCard";
+import GroupFilterDropdown from "./DropdownGroupFilter";
 import TicketStatusDropdown from "./DropdownTicketStatus";
 
 interface TicketsGridProps {
@@ -29,8 +28,7 @@ export default async function TicketsList({ searchParams }: TicketsGridProps) {
 
   // Pass the filters to your data-access function:
   const tickets = await getOtherTickets({ open: filterOpen, groupName: filterGroupName });
-  const { name, userScore } = await getUserScore();
-  const user = await getCurrentUser();
+  const user = await getUser();
 
   if (!user) {
     return <p>Not authenticated</p>;
@@ -46,11 +44,15 @@ export default async function TicketsList({ searchParams }: TicketsGridProps) {
   );
 
   if (!tickets || tickets.length === 0) {
-    console.log("No tickets found");
     return (
       <>
         {filterSection}
-        <p>No tickets found</p>
+        <div className="opacity-30">
+        <TicketCard childrenLeft={
+          <TicketTitle title="There are no tickets yet .." open={true} />
+        }
+          childrenRight={<></>} />
+        </div>
       </>
     );
   }
@@ -63,7 +65,7 @@ export default async function TicketsList({ searchParams }: TicketsGridProps) {
       <div className="flex flex-col gap-4">
         {tickets.map((theTicket) => (
           <React.Fragment key={theTicket.id}>
-            {theTicket.open && (<TicketOpen ticket={theTicket} userId={user.id} userScore={userScore} />)}
+            {theTicket.open && (<TicketOpen ticket={theTicket} userId={user.id} userScore={user.score} />)}
             {!theTicket.open && (<TicketClosed ticket={theTicket} userId={user.id} />)}
           </React.Fragment>
         ))

@@ -22,7 +22,7 @@ export default function Amount({ amount, color = AmountColor.Emerald, size = 5}:
     return (
         <div className="flex items-center mx-2">  
             {typeof amount === 'number' ? <p>{amount}</p> : amount}
-            <CircleStackIcon className={`w-${size} h-${size} ml-1 ${ color } drop-shadow-md`} />
+            <CircleStackIcon className={`size-${size} w-${size} ml-1 ${ color } drop-shadow-md`} />
         </div>
     );
 }

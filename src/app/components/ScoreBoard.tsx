@@ -3,6 +3,7 @@ import Amount, { AmountColor } from "./Amount";
 import { getCurrentUser } from "@/lib/session";
 import GradientLine from "./GradientLine";
 import { TrophyIcon } from "@heroicons/react/24/solid";
+import UserIconName from "./UserIconName";
 
 export default async function ScoreBoard() {
 
@@ -32,7 +33,7 @@ export default async function ScoreBoard() {
                 }>
                     <div className="flex items-center ml-2">
                         <p className="w-8">{index + 1}</p>
-                        <p>{score.name}</p>
+                        <UserIconName name={score.name} avatar={score.avatar} />
                     </div>
                     <Amount amount={score.score} color={(index === 0 ? AmountColor.Emerald : AmountColor.Emerald)} />
                 </div>

@@ -1,5 +1,5 @@
 import { prisma } from "../prisma";
-import { getCurrentUser } from "../session";
+import { getCurrentUser, getUser } from "../session";
 import { User } from "@prisma/client";
 
 export type Ticket = {
@@ -16,24 +16,15 @@ export type Ticket = {
   updatedAt: Date;
 }
 
-export async function getUserScore() : Promise<{name: string, userScore: number}> {
-  const user : User | null = await getCurrentUser();
+export async function getUserScore() : Promise<{name: string, userScore: number, avatar?: string}> {
+  const user = await getUser();
 
-  if (!user) {
-    return { name: " ", userScore: 0 };
-  }
-
-  const result = await prisma.user.findFirst({
-    select: { name: true, score: true },
-    where: { id: user.id },
-  });
-
-  return { name: result?.name ?? "Unknown Name", userScore: result?.score ?? 0 };
+  return { name: user.name, userScore: user.score, avatar: user.avatar };
 }
 
 export async function getScores() {
   return await prisma.user.findMany({
-    select: { name: true, score: true, id: true },
+    select: { name: true, score: true, id: true, avatar: true },
     orderBy: { score: "desc" },
   });
 }

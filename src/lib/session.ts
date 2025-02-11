@@ -27,3 +27,26 @@ export async function getCurrentUser() : Promise<User | null> {
 
   return user;
 }
+
+
+/**
+* Retrieves the current authenticated user from the database.
+* Throws an error if the user is not authenticated.
+* @returns The current user.
+*/
+export async function getUser() : Promise<User> {
+ const session = await getCurrentSession();
+ if (!session || !session.user?.email) {
+   throw new Error("User is not authenticated");
+ }
+
+ const user = await prisma.user.findUnique({
+   where: { email: session.user.email },
+ });
+
+ if (!user) {
+   throw new Error("User not found");
+ }
+
+ return user;
+}

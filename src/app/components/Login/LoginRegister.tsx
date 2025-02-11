@@ -1,29 +1,27 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
+import { useForm } from "react-hook-form";
 import SubmitButton from "../SubmitButton";
 import { checkUserExists, registerUser } from "../../../lib/actions";
 import RegisterSelectGroup from "./RegisterSelectGroup";
+import RegisterSelectAvatar from "./RegisterSelectAvatar";
 
-
-
-async function loginUser(prevState: any, formData: FormData) {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    await signIn("credentials", {
-        email,
-        password,
-        redirect: true,
-    });
-
-    return { step: "login", email: email };
+export interface RegisterFormData {
+    email: string;
+    password?: string;
+    name?: string;
+    groupId?: number;
+    avatar?: string;
 }
 
+async function loginUser(email: string, password: string) {
+    await signIn("credentials", { email, password, redirect: true });
+    return { step: "done", email };
+}
 
-async function handleFormAction(prevState: any, formData: FormData) {
-
+async function handleFormAction(prevState: any, formData: RegisterFormData) {
     const step = prevState.step || "check";
 
     if (step === "check") {
@@ -31,41 +29,48 @@ async function handleFormAction(prevState: any, formData: FormData) {
     }
 
     if (step === "login") {
-        return loginUser(prevState, formData);
+        return await loginUser(formData.email, formData.password!);
     }
 
     if (step === "register") {
+        await registerUser({
+            email: formData.email,
+            password: formData.password!,
+            name: formData.name!,
+            groupId: formData.groupId!,
+            avatar: formData.avatar!,
+        });
 
-        // console.log("registering user", formData);
-
-        await registerUser(prevState, formData);
-        return await loginUser(prevState, formData);
+        return await loginUser(formData.email, formData.password!);
     }
 }
 
-function Input({ type, name, label, hidden = false, ...props }: { type: string, name: string, label: string, hidden?: boolean, [key: string]: any }) {
-    return (
-        <div className="w-full mt-2">
-            <label htmlFor={name} className={"block px-2 font-bold text-sm" + (hidden === true ? " hidden" : "")}>{label}</label>
-            <input
-                type={type}
-                name={name}
-                id={name}
-                className={`w-full px-4 py-1 border rounded-lg text-md`}
-                required
-                hidden={hidden}
-                {...props}
-            />
-        </div>
-    );
-}
-
 export default function LoginRegister({ groups }: { groups: { name: string; id: number }[] }) {
-
     const [state, formAction, pending] = useActionState(handleFormAction, { step: "check", email: "" });
 
+    const {
+        register,
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+    } = useForm<RegisterFormData>({
+        mode: "onChange",
+    });
+
+    const onSubmit = (data: RegisterFormData) => {
+        startTransition(() => {
+            formAction(data);
+        });
+    };
+
+
+    if (state?.step === "done") {
+        return <></>;
+    }
+
     return (
-        <div className="absolute inset-x-0 mx-auto h-[380px] w-[500px] bottom-[12%] text-gray-700" >
+        <div className="absolute inset-x-0 mx-auto h-[380px] w-[500px] bottom-[12%] text-gray-700">
             <h1 className="text-2xl font-bold text-center">
                 {state?.step === "check" && "Welcome"}
                 {state?.step === "login" && "Sign In"}
@@ -76,31 +81,72 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
                 {state?.step === "login" && "Please enter your credentials"}
                 {state?.step === "register" && "Please don't use your DLR credentials"}
             </p>
+
             <div className="w-80 mx-auto">
-                <form className="mt-6" action={formAction}>
+                <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
                     {state?.step === "check" && (
                         <>
-                            <Input type="email" name="email" label="Email" />
+                            <label className="block px-2 font-bold text-sm">Email</label>
+                            <input
+                                type="email"
+                                {...register("email", { required: "Email is required" })}
+                                className="w-full px-4 py-1 border rounded-lg text-md"
+                            />
+                            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                         </>
                     )}
+
                     {state?.step === "login" && (
                         <>
-                            <Input type="email" name="email" label="Email" value={state.email} readOnly />
-                            <Input type="password" name="password" label="Password" />
+                            <label className="block px-2 font-bold text-sm">Email</label>
+                            <input type="email" value={state?.email} readOnly className="w-full px-4 py-1 border rounded-lg text-md" />
+
+                            <label className="block px-2 font-bold text-sm">Password</label>
+                            <input
+                                type="password"
+                                {...register("password", { required: "Password is required" })}
+                                className="w-full px-4 py-1 border rounded-lg text-md"
+                            />
+                            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
                         </>
                     )}
+
                     {state?.step === "register" && (
                         <>
-                            <Input type="text" name="name" label="Name" />
-                            {/* <Input type="text" name="group" label="Group" /> */}
+                            <label className="block px-2 font-bold text-sm">Name</label>
+                            <input
+                                type="text"
+                                {...register("name", { required: "Name is required" })}
+                                className="w-full px-4 py-1 border rounded-lg text-md"
+                            />
+                            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+
                             <div className="flex justify-between mt-2">
-                            <RegisterSelectGroup groups={groups} />
+                                <RegisterSelectAvatar
+                                    register={register}
+                                    setValue={setValue}
+                                    errors={errors}
+                                />
+                                <RegisterSelectGroup
+                                    groups={groups}
+                                    register={register}
+                                    setValue={setValue}
+                                    errors={errors}
+                                />
                             </div>
 
-                            <Input type="email" name="email" label="Email" value={state.email} readOnly hidden />
-                            <Input type="password" name="password" label="Password" />
+                            <input type="hidden" value={state?.email} {...register("email")} />
+
+                            <label className="block px-2 font-bold text-sm">Password</label>
+                            <input
+                                type="password"
+                                {...register("password", { required: "Password is required" })}
+                                className="w-full px-4 py-1 border rounded-lg text-md"
+                            />
+                            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
                         </>
                     )}
+
                     <SubmitButton pending={pending} />
                 </form>
             </div>

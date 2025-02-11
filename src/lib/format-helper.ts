@@ -15,3 +15,12 @@ export function formatTimeEstimate(estimate: Date) {
         minute: "numeric",
       })
 }
+
+export function formatTimeEstimateShort(estimate: Date) {
+    return estimate.toLocaleString("en-UK", {
+        day: "numeric",
+        month: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      })
+}
