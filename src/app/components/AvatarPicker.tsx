@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useRef, useEffect, JSX } from 'react';
-import EmojiPicker, { Categories, EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
+import EmojiPicker, { Categories, Emoji, EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
 import { PlusIcon } from '@heroicons/react/16/solid';
 
-function AvatarPicker({setInput} : {setInput: (avatar: string) => void}) : JSX.Element {
-  // State to show/hide the emoji picker
+function AvatarPicker({ setInput }: { setInput?: (avatar: string) => void }): JSX.Element {
+  
   const [showPicker, setShowPicker] = useState<boolean>(false);
   // State to hold the selected emoji (avatar)
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -16,8 +16,10 @@ function AvatarPicker({setInput} : {setInput: (avatar: string) => void}) : JSX.E
   // Callback fired when an emoji is clicked.
   // The callback receives an object containing the emoji string and a native MouseEvent.
   const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent): void => {
-    setAvatar(emojiData.emoji);
-    setInput(emojiData.unified);
+    setAvatar(emojiData.unified);
+    if (setInput) {
+      setInput(emojiData.unified);
+    }
     setShowPicker(false);
   };
 
@@ -45,7 +47,7 @@ function AvatarPicker({setInput} : {setInput: (avatar: string) => void}) : JSX.E
         onClick={() => setShowPicker((prev) => !prev)}
       >
         {avatar ? (
-          <span className="text-xl">{avatar}</span>
+          <Emoji unified={avatar} size={20} emojiStyle={EmojiStyle.APPLE} />
         ) : (
           <PlusIcon className="h-6 w-6 text-gray-500" />
         )}
@@ -54,9 +56,10 @@ function AvatarPicker({setInput} : {setInput: (avatar: string) => void}) : JSX.E
       {/* Emoji picker dropdown */}
       {showPicker && (
         <div ref={pickerRef} className="absolute z-10 mt-2 transform -translate-y-1/2 left-1/2">
-          <EmojiPicker 
-          onEmojiClick={onEmojiClick} 
-          emojiStyle={EmojiStyle.NATIVE}
+          <EmojiPicker
+            onEmojiClick={onEmojiClick}
+            emojiStyle={EmojiStyle.APPLE}
+            lazyLoadEmojis={true}
             theme={Theme.LIGHT}
             categories={[
               {
@@ -84,7 +87,7 @@ function AvatarPicker({setInput} : {setInput: (avatar: string) => void}) : JSX.E
                 name: 'Objects'
               }
             ]}
-            />
+          />
         </div>
       )}
     </div>

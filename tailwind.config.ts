@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        golddark: "#eba921",
+        goldlight: "#e4d74f",
+        bronzelight: "#f1a672",
+        bronzedark: "#88593c",
       },
       backgroundImage: {
         'bug-casino': "url('/BugCasino.webp')",
