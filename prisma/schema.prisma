@@ -46,9 +46,12 @@ model Bet {
   userId        Int
   ticket        Ticket   @relation(fields: [ticketId], references: [id])
   ticketId      Int
-  createdAt     DateTime @default(now())
-  doneInTime    Boolean
   amount        Int
+  result        Int?    
+  doneInTime    Boolean
+  notified      Boolean  @default(false)
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
 }
 
 model Group {

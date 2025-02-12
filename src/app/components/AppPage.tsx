@@ -5,6 +5,7 @@ import LogoutButton from "./Login/LogoutButton";
 import { getUserScore } from "@/lib/actions/gamedata";
 import UserIconName from "./UserIconName";
 import { getUser } from "@/lib/session";
+import Notifications from "./Notifications";
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
@@ -57,7 +58,8 @@ async function SideBars() {
                     <QuestionMarkCircleIcon className="w-6 h-6 mr-1" />
                     <LogoutButton />
                 </div>
-
+                
+                <Notifications />
 
             </div>
         </>
