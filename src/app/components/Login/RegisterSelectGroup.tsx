@@ -35,18 +35,18 @@ export default function RegisterSelectGroup({ groups, register, setValue, errors
       </label>
       <Menu as="div" className="relative inline-block text-left w-full">
         <MenuButton
-          className="inline-flex w-full justify-between text-md items-center border bg-white gap-x-1.5 rounded-lg px-4 py-1 shadow-xs hover:bg-zinc-100"
+          className="inline-flex w-full justify-between text-md items-center border bg-white gap-x-1.5 rounded-lg px-4 py-1 shadow-2xs hover:bg-zinc-100"
           data-open
         >
           {selectedGroup ? selectedGroup.name : "Select a group"}
           <span>
             <ChevronDownIcon
               aria-hidden="true"
-              className="size-5 text-gray-400 data-[open]:hidden"
+              className="size-5 text-gray-400 data-open:hidden"
             />
             <ChevronUpIcon
               aria-hidden="true"
-              className="size-5 text-gray-400 hidden data-[open]:block"
+              className="size-5 text-gray-400 hidden data-open:block"
             />
           </span>
         </MenuButton>

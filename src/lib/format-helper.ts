@@ -27,9 +27,9 @@ export function formatTimeEstimateShort(estimate: Date) {
 
 
 export enum RankColors {
-    FIRST = "bg-gradient-to-tr from-golddark via-goldlight to-golddark",  // bg-linear-45deg
-    SECOND = "bg-gradient-to-tr from-zinc-400 via-zinc-100 to-slate-400",  // bg-linear-45deg
-    THIRD = "bg-gradient-to-tr from-bronzedark via-bronzelight to-bronzedark"  // bg-linear-45deg
+    FIRST = "bg-linear-[20deg] from-golddark via-goldlight to-golddark",
+    SECOND = "bg-linear-[20deg] from-zinc-400 via-zinc-100 to-slate-400",
+    THIRD = "bg-linear-[20deg] from-bronzedark via-bronzelight to-bronzedark",
 }
 
 export function getRankColor(rank: number,): string | null {

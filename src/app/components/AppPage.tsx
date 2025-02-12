@@ -31,7 +31,7 @@ async function SideBars() {
                     {/* Left placeholder for spacing */}
                     <div className="">
                         <h1 className={"text-3xl py-2 fugaz-one-regular"
-                            + " bg-gradient-to-r from-red-600  via-amber-500 to-orange-600"
+                            + " bg-linear-to-r from-red-600  via-amber-500 to-orange-600"
                             + " inline-block text-transparent bg-clip-text"}>
                             Bug Casino
                         </h1>

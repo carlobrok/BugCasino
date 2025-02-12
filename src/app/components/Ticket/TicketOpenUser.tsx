@@ -23,7 +23,7 @@ export default async function OpenUserTicket() {
           <div className="flex justify-between items-center">
             <p>{formatBetCounter(ticket._count.bets)}</p>
             <Amount
-              amount={<div className="blur-sm mr-1 w-4 h-2 rounded bg-zinc-700"></div>}
+              amount={<div className="blur-xs mr-1 w-3 h-3 rounded-sm bg-zinc-700"></div>}
               color={AmountColor.EmeraldDark}
             />
           </div>

@@ -52,18 +52,18 @@ export default function BaseDropdown({
     <Menu as="div" className={`relative inline-block text-left ${className}`}>
       <div>
         <MenuButton
-          className="inline-flex w-full justify-between items-center gap-x-1.5 rounded-lg bg-zinc-700 px-4 py-2 text-sm font-semibold text-white shadow-xs hover:bg-zinc-600"
+          className="inline-flex w-full justify-between items-center gap-x-1.5 rounded-lg bg-zinc-700 px-4 py-2 text-sm font-semibold text-white shadow-2xs hover:bg-zinc-600"
           data-open
         >
           {selectedLabel}
           <span>
             <ChevronDownIcon
               aria-hidden="true"
-              className="size-5 text-gray-400 data-[open]:hidden"
+              className="size-5 text-gray-400 data-open:hidden"
             />
             <ChevronUpIcon
               aria-hidden="true"
-              className="size-5 text-gray-400 hidden data-[open]:block"
+              className="size-5 text-gray-400 hidden data-open:block"
             />
           </span>
         </MenuButton>
@@ -71,7 +71,7 @@ export default function BaseDropdown({
 
       <MenuItems
         transition
-        className="absolute right-0 z-10 mt-2 w-full origin-top-right rounded-lg overflow-hidden bg-zinc-600 shadow-lg transition focus:solid-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
+        className="absolute right-0 z-10 mt-2 w-full origin-top-right rounded-lg overflow-hidden bg-zinc-600 shadow-lg transition focus:solid-none data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
       >
         {children}
       </MenuItems>
