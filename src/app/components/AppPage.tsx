@@ -6,6 +6,7 @@ import { getUserScore } from "@/lib/actions/gamedata";
 import UserIconName from "./UserIconName";
 import { getUser } from "@/lib/session";
 import Notifications from "./Notifications";
+import HelpPage from "./HelpPage";
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
@@ -51,16 +52,13 @@ async function SideBars() {
 
                 {/* Right side: stats, event and logout */}
 
-                <div className="flex justify-end items-center space-x-6">
-                    <UserIconName name={user.name} avatar={user.avatar} />
-
+                <div className="flex justify-end items-center gap-x-4">
+                    <UserIconName name={user.name} avatar={user.avatar} />                
                     <Amount amount={user.score} color={AmountColor.Emerald} size={6} />
-                    <QuestionMarkCircleIcon className="w-6 h-6 mr-1" />
+                    <Notifications />
+                    <HelpPage />
                     <LogoutButton />
                 </div>
-                
-                <Notifications />
-
             </div>
         </>
     );
