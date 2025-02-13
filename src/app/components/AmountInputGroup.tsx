@@ -20,18 +20,16 @@ function ModifierButton({ adjustment, disabled, direction }: ModifierButtonProps
 }
 
 
-export default function InputGroup({ userScore, amount, setAmount } : { userScore: number, amount: number, setAmount: (amount: number) => void }) {
+export default function InputGroup({ userScore, amount, setAmount, disableInput = false } : { userScore: number, amount: number, setAmount: (amount: number) => void, disableInput?: boolean }) {
 
     const decrease = () => setAmount(Math.max(0, amount - 1));
     const increase = () => setAmount(Math.min(userScore, amount + 1));
 
-
-
     return (
         <div className="flex items-center align-middle w-fit">
-            <ModifierButton adjustment={decrease} disabled={amount <= 0} direction="decrease" />
+            <ModifierButton adjustment={decrease} disabled={amount <= 0 || disableInput} direction="decrease" />
             <Amount amount={amount} color={AmountColor.Emerald} />
-            <ModifierButton adjustment={increase} disabled={amount >= userScore} direction="increase" />
+            <ModifierButton adjustment={increase} disabled={amount >= userScore || disableInput} direction="increase" />
 
         </div>
     );

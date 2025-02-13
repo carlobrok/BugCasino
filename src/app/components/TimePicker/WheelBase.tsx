@@ -242,7 +242,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
 
   return (
     <div
-      className={`wheel-base ${classNames}`}
+      className={`wheel-base ${classNames} bg-linear-to-b from-transparent from-10% via-zinc-500/30 to-90% to-transparent mx-2`}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseTouchEnd}
       onMouseMove={handleMouseMove}

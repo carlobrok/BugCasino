@@ -70,7 +70,7 @@ const defaultTicketChildrenLeft = (ticket: TicketWithDetails) => (
                     {ticket.author.name}
                 </div>
                 <p className="italic">
-                    {formatTimeEstimate(ticket.timeEstimate)}
+                    Estimated: {formatTimeEstimate(ticket.timeEstimate)}
                 </p>
             </div>
         </div>
@@ -142,6 +142,9 @@ export function TicketClosed({ ticket, userId }: { ticket: TicketWithDetails, us
 
 export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDetails, userId: number, userScore: number }) {
 
+    const userHasBetOnTicket = ticket.bets.some((bet) => bet.userId === userId);
+    console.log("userHasBetOnTicket", userHasBetOnTicket);
+
     return (
         <>
             <TicketCard
@@ -163,7 +166,7 @@ export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDe
 
                 childrenRight={
                     <>
-                        {ticket.bets.some((bet) => bet.userId === userId) ? (
+                        {userHasBetOnTicket ? (
                             <>
                                 <div className="flex flex-col items-end justify-between">
                                     {ticket.bets

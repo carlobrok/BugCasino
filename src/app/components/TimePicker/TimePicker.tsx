@@ -124,7 +124,7 @@ function TimePicker() {
 
                             setSelectedDate(adjustDateToTimeFrame(newDate));
                         }}
-                        classNames="day-wheel"
+                        classNames="day-wheel mr-4"
                     />
                     <HourWheel
                         date={selectedDate}
@@ -133,7 +133,7 @@ function TimePicker() {
                         maxValue={maxHour}
                         classNames="hour-wheel"
                     />
-                    <div className="m-auto z-10">:</div>
+                    <div className="m-auto font-bold z-10">:</div>
                     <MinuteWheel
                         date={selectedDate}
                         onChange={onChange}

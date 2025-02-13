@@ -1,5 +1,4 @@
 // lib/notifications.ts
-import { sendNotification } from './sseClients';
 import type {  User } from '@prisma/client';
 
 type Bet = {
@@ -31,5 +30,4 @@ export function ticketClosedNotification(user: User, bet: Bet, correctBet: boole
   };
 
   // Sende die Notification via SSE an den Client, der mit user.id registriert ist.
-  sendNotification(user.id, notification);
 }
