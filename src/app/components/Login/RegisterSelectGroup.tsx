@@ -35,7 +35,7 @@ export default function RegisterSelectGroup({ groups, register, setValue, errors
       </label>
       <Menu as="div" className="relative inline-block text-left w-full">
         <MenuButton
-          className="inline-flex w-full justify-between text-md items-center border bg-white gap-x-1.5 rounded-lg px-4 py-1 shadow-2xs hover:bg-zinc-100"
+          className={`inline-flex w-full justify-between text-md items-center border ${errors.groupId ? 'border-red-500' : 'border-gray-300'} bg-white gap-x-1.5 rounded-lg px-4 py-1 shadow-2xs hover:bg-zinc-100`}
           data-open
         >
           {selectedGroup ? selectedGroup.name : "Select a group"}
@@ -73,9 +73,6 @@ export default function RegisterSelectGroup({ groups, register, setValue, errors
 
       {/* Hidden input field to store the selected group ID */}
       <input type="hidden" {...register("groupId", {required: "Group is required"})} />
-      {errors.groupId && (
-        <p className="text-red-500 text-sm">{errors.groupId.message}</p>
-      )}
     </div>
   );
 }

@@ -28,20 +28,31 @@ export async function getCurrentUser() : Promise<User | null> {
   return user;
 }
 
+export type UserData = Pick<User, "id" | "email" | "name" | "avatar" | "score">;
+
+
 
 /**
 * Retrieves the current authenticated user from the database.
 * Throws an error if the user is not authenticated.
 * @returns The current user.
 */
-export async function getUser() : Promise<User> {
+export async function getUser() : Promise<UserData> {
  const session = await getCurrentSession();
  if (!session || !session.user?.email) {
    throw new Error("User is not authenticated");
  }
 
+//  exclude password
  const user = await prisma.user.findUnique({
    where: { email: session.user.email },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      avatar: true,
+      score: true,
+    },
  });
 
  if (!user) {
@@ -49,4 +60,14 @@ export async function getUser() : Promise<User> {
  }
 
  return user;
+}
+
+
+export async function getMinimalUserData() : Promise<Pick<User, "email"| "name"| "avatar">> {
+  const user = await getUser();
+  return {
+    email: user.email,
+    name: user.name,
+    avatar: user.avatar,
+  };
 }

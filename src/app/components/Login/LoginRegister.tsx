@@ -1,12 +1,14 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { startTransition, useActionState } from "react";
+import { startTransition, use, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import SubmitButton from "../SubmitButton";
 import { checkUserExists, registerUser } from "../../../lib/actions";
 import RegisterSelectGroup from "./RegisterSelectGroup";
 import RegisterSelectAvatar from "./RegisterSelectAvatar";
+import { getMinimalUserData } from "@/lib/session";
+import UserIconName from "../UserIconName";
 
 export interface RegisterFormData {
     email: string;
@@ -47,7 +49,6 @@ async function handleFormAction(prevState: any, formData: RegisterFormData) {
 
 export default function LoginRegister({ groups }: { groups: { name: string; id: number }[] }) {
     const [state, formAction, pending] = useActionState(handleFormAction, { step: "check", email: "" });
-
     const {
         register,
         handleSubmit,
@@ -58,7 +59,12 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
         mode: "onChange",
     });
 
+    const [userName, setUserName] = useState<string>("");
+    const [userAvatar, setUserAvatar] = useState<string>("");
+
     const onSubmit = (data: RegisterFormData) => {
+
+
         startTransition(() => {
             formAction(data);
         });
@@ -68,6 +74,7 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
     if (state?.step === "done") {
         return <></>;
     }
+
 
     return (
         <div className="absolute inset-x-0 mx-auto h-[380px] w-[500px] bottom-[12%] text-gray-700">
@@ -90,24 +97,23 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
                             <input
                                 type="email"
                                 {...register("email", { required: "Email is required" })}
-                                className="w-full px-4 py-1 border rounded-lg text-md"
+                                className={"w-full px-4 py-1 bg-white border rounded-lg text-md" + (errors.email ? " border-red-500" : " border-gray-300")}
                             />
-                            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                         </>
                     )}
 
                     {state?.step === "login" && (
                         <>
                             <label className="block px-2 font-bold text-sm">Email</label>
-                            <input type="email" value={state?.email} readOnly className="w-full px-4 py-1 border rounded-lg text-md" />
+                            <input type="email" value={state?.email} readOnly className={"w-full px-4 py-1 bg-white border rounded-lg text-md" + (errors.name ? " border-red-500" : " border-gray-300")} />
 
                             <label className="block px-2 font-bold text-sm">Password</label>
                             <input
                                 type="password"
                                 {...register("password", { required: "Password is required" })}
-                                className="w-full px-4 py-1 border rounded-lg text-md"
+                                className={"w-full px-4 py-1 bg-white border rounded-lg text-md" + (errors.password ? " border-red-500" : " border-gray-300")}
                             />
-                            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+                            {/* {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>} */}
                         </>
                     )}
 
@@ -117,9 +123,9 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
                             <input
                                 type="text"
                                 {...register("name", { required: "Name is required" })}
-                                className="w-full px-4 py-1 border rounded-lg text-md"
+                                className={"w-full px-4 py-1 bg-white border rounded-lg text-md" + (errors.name ? " border-red-500" : " border-gray-300")}
                             />
-                            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                            {/* {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>} */}
 
                             <div className="flex justify-between mt-2">
                                 <RegisterSelectAvatar
@@ -141,9 +147,9 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
                             <input
                                 type="password"
                                 {...register("password", { required: "Password is required" })}
-                                className="w-full px-4 py-1 border rounded-lg text-md"
+                                className={"w-full px-4 py-1 bg-white border rounded-lg text-md" + (errors.password ? " border-red-500" : " border-gray-300")}
                             />
-                            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+                            {/* {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>} */}
                         </>
                     )}
 

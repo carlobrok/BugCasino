@@ -20,11 +20,8 @@ export default function RegisterSelectAvatar({ register, setValue, errors }: Pro
             <label htmlFor="avatar" className="block px-2 font-bold text-sm">
                 Avatar
             </label>
-            <AvatarPicker setInput={handleAvatarChange} />
+            <AvatarPicker setInput={handleAvatarChange} error={errors.avatar} />
             <input type="hidden" {...register("avatar", { required: "Avatar is required" })} />
-            {errors.avatar && (
-                <p className="text-red-500 text-sm">{errors.avatar.message}</p>
-            )}
         </div>
     );
 }

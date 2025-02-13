@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, JSX } from 'react';
 import EmojiPicker, { Categories, Emoji, EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
 import { PlusIcon } from '@heroicons/react/16/solid';
 
-function AvatarPicker({ setInput }: { setInput?: (avatar: string) => void }): JSX.Element {
+function AvatarPicker({ setInput, error }: { setInput?: (avatar: string) => void, error?: any }): JSX.Element {
   
   const [showPicker, setShowPicker] = useState<boolean>(false);
   // State to hold the selected emoji (avatar)
@@ -43,7 +43,8 @@ function AvatarPicker({ setInput }: { setInput?: (avatar: string) => void }): JS
     <div className="relative inline-block">
       {/* Avatar circle */}
       <div
-        className="size-9 rounded-full bg-white border border-gray-300 flex items-center justify-center cursor-pointer"
+        className={`size-9 rounded-full bg-white border flex items-center justify-center cursor-pointer 
+          ${error ? 'border-red-500' : 'border-gray-300'}`}
         onClick={() => setShowPicker((prev) => !prev)}
       >
         {avatar ? (
