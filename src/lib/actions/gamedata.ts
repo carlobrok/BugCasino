@@ -139,10 +139,10 @@ export async function getOtherTickets(filters: { open?: boolean; groupName?: str
     // 1. Open tickets should come first
     if (a.open !== b.open) return b.open ? 1 : -1;
 
-    // 2. Tickets where the user has NOT bet should come first
-    const aUserBet = a.bets.some((bet) => bet.userId === user.id);
-    const bUserBet = b.bets.some((bet) => bet.userId === user.id);
-    if (aUserBet !== bUserBet) return aUserBet ? 1 : -1;
+    // // 2. Tickets where the user has NOT bet should come first
+    // const aUserBet = a.bets.some((bet) => bet.userId === user.id);
+    // const bUserBet = b.bets.some((bet) => bet.userId === user.id);
+    // if (aUserBet !== bUserBet) return aUserBet ? 1 : -1;
 
     // 3. Newest tickets first (already ordered in Prisma, but kept as fallback)
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
