@@ -52,9 +52,6 @@ export async function closeUserTicket() {
         data: { score: { increment: result } },
       });
     }
-
-    // notify user
-    ticketClosedNotification(user, bet, correctBet, result);    
   }
 
   // Return the result of updating the ticket(s)

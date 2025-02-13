@@ -47,7 +47,7 @@ model Bet {
   ticket        Ticket   @relation(fields: [ticketId], references: [id])
   ticketId      Int
   amount        Int
-  result        Int?    
+  outcome       Int?    
   doneInTime    Boolean
   notified      Boolean  @default(false)
   updatedAt     DateTime @updatedAt
