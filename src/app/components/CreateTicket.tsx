@@ -15,11 +15,9 @@ export default function CreateTicket() {
     const [state, formAction, pending] = useActionState(newTicket, initialState);
     const router = useRouter();
 
-    useEffect(() => {
-        if (state.success) {
-          router.refresh(); // or router.push(router.asPath)
-        }
-      }, [state.success, router]);
+    if (state.success) {
+        return <div>Success</div>;
+    }
 
     return (
         <div className="max-w-md m-auto">
@@ -31,7 +29,7 @@ export default function CreateTicket() {
                     <input
                         type="text"
                         name="title"
-                        className="mt-1 block w-full p-2 bg-zinc-700 rounded-md focus:border-pink-600"
+                        className="mt-1 block w-full px-4 p-2 bg-zinc-700 rounded-md focus:border-pink-600"
                         placeholder="Enter the title"
                         autoComplete="off"
                         required
@@ -44,7 +42,7 @@ export default function CreateTicket() {
                         type="text"
                         name="description"
                         placeholder="Some short description"
-                        className="mt-1 block bg-zinc-700 w-full border-gray-70 p-2  rounded-md"
+                        className="mt-1 block bg-zinc-700 w-full border-gray-70 px-4 p-2  rounded-md"
                         required
                     />
                 </div>

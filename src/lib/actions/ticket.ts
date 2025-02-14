@@ -42,7 +42,7 @@ export async function closeUserTicket() {
     // update Bet 
     await prisma.bet.update({
       where: { id: bet.id },
-      data: { result: result },
+      data: { outcome: result },
     });
 
     // update User score

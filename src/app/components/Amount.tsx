@@ -1,4 +1,4 @@
-import { CircleStackIcon } from "@heroicons/react/20/solid";
+import { Coins } from "lucide-react";
 
 export enum AmountColor {
     Emerald = "fill-amber-400",
@@ -18,11 +18,11 @@ export enum AmountColor {
 //     Gray = "stroke-zinc-300"
 // }
 
-export default function Amount({ amount, color = AmountColor.Emerald, size = 5}: { amount: number | React.ReactElement; color?: AmountColor, size?: number }) {
+export default function Amount({ amount, color = AmountColor.Emerald, size = 20}: { amount: number | React.ReactElement; color?: AmountColor, size?: number }) {
     return (
         <div className="flex items-center mx-2">  
             {typeof amount === 'number' ? <p>{amount}</p> : amount}
-            <CircleStackIcon className={`size-${size} w-${size} ml-1 ${ color } drop-shadow-md`} />
+            <Coins className={AmountColor.Emerald + " drop-shadow-md ml-1"} color="#fffbeb" size={size} />
         </div>
     );
 }

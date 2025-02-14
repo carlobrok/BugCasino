@@ -31,7 +31,7 @@ function GroupCard({ group, rank }: { group: Group, rank: number }) {
             <div className="flex flex-col justify-between items-center h-full">
                 <h1 className="text-3xl font-bold">{group.name}</h1>
                 <div className="w-full flex justify-evenly items-center font-semibold mt-4 t  text-2xl">
-                    <Amount amount={group.score} size={5} color={AmountColor.EmeraldDark}/>
+                    <Amount amount={group.score} size={28} color={AmountColor.EmeraldDark} />
                     <div className="flex items-center gap-2">
                         {group.tickets}
                         <TicketIcon className="size-6" />
@@ -44,13 +44,13 @@ function GroupCard({ group, rank }: { group: Group, rank: number }) {
 
                         <UserIconName name={user.name} avatar={user.avatar} size={20} />
                         <div className="flex" >
-                            <Amount amount={user.score} size={4} color={AmountColor.EmeraldDark}/>
-                                <div className="flex items-center gap-2">
+                            <Amount amount={user.score} color={AmountColor.EmeraldDark} />
+                            <div className="flex items-center gap-2">
                                 {user._count.tickets}
                                 <TicketIcon className="size-5" />
                             </div>
                         </div>
-                        
+
                     </div>
                 ))}
             </div>

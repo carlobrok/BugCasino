@@ -242,7 +242,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
 
   return (
     <div
-      className={`wheel-base ${classNames} bg-linear-to-b from-transparent from-10% via-zinc-500/30 to-90% to-transparent mx-2`}
+      className={`wheel-base ${classNames} mx-2 px-2 bg-linear-to-b from-transparent from-10% via-zinc-500/30 to-90% to-transparent `}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseTouchEnd}
       onMouseMove={handleMouseMove}
@@ -271,7 +271,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
           <div key={idx} className="time-picker-cell" style={{ height: ITEM_HEIGHT }}>
             <div
               hidden={idx < minIndex || idx > maxIndex}
-              className={`item-picker-cell-inner ${idx === selectedIndex ? 'time-picker-cell-inner-selected' : ''}`}
+              className={`item-picker-cell-inner hover:bg-sky-700/70 ${idx === selectedIndex ? 'time-picker-cell-inner-selected font-bold' : ''}`}
               onClick={() => handleClickToSelect(idx, item)}
             >
               {displayFormatter(item)}

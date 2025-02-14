@@ -13,37 +13,44 @@ export default function HelpPage() {
     }
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
                 setShowHelp(false);
             }
         };
 
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleKeyDown);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyDown);
         };
     }, []);
     
 
     return (
-        <div ref={containerRef} className="relative flex items-center justify-center">
-            <button onClick={toggleHelp}>
+        <div className="relative flex items-center justify-center">
+            <button onClick={toggleHelp} className="hover:cursor-pointer">
                 <QuestionMarkCircleIcon className="size-6 fill-zinc-300" />
             </button>
             {showHelp && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/20">
                     <div 
-                        className={`relative w-[500px] h-[300px] bg-white/30 backdrop-blur-sm border-2 border-gray-300/30 p-6 rounded-2xl shadow-lg transition-opacity duration-1000 ${showHelp ? 'translate-y-0 opacity-100' : '-translate-y-40 opacity-0'}`}
+                        className={`relative w-[800px] h-[300px] text-white  bg-white/30 backdrop-blur-lg border-2 border-gray-300/30 p-6 rounded-2xl shadow-lg transition-opacity duration-1000 ${showHelp ? 'translate-y-0 opacity-100' : '-translate-y-40 opacity-0'}`}
                     >
                         <button 
                             onClick={toggleHelp} 
-                            className="absolute top-3 right-3 text-gray-700 hover:text-gray-900"
+                            className="absolute top-3 right-3 text-zinc-300 hover:text-zinc-100"
                         >
-                            <XMarkIcon className="w-6 h-6" />
+                            <XMarkIcon className="size-8 hover:cursor-pointer" />
                         </button>
-                        <h2 className="text-lg font-semibold">Help Modal</h2>
-                        <p className="mt-2 text-gray-700">This is your help modal content.</p>
+                        <h2 className="w-full text-center mb-2">Welcome to the Bug Casino!</h2>
+                        <div className="italic mx-4 text-sm font-normal">
+
+                        <p>
+                        Did you know that many mammals participate in game-like games to sharpen their instincts and improve teamwork in high-pressure environments? 
+                        Didn't you? Neither did I, but I'm confident that ChatGPT made that fact up. Anyway, here's some help to get you started:
+                        </p>
+                        </div>
+
                     </div>
                 </div>
             )}

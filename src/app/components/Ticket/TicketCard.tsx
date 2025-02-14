@@ -184,7 +184,7 @@ export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDe
                                         .map((bet) => (
                                             <div key={bet.id} className="flex text-right">
                                                 <p>{bet.user.name}</p>
-                                                <Amount amount={bet.amount} color={AmountColor.Gray} size={5} />
+                                                <Amount amount={bet.amount} color={AmountColor.Gray} />
                                             </div>
                                         ))}
                                 </div>

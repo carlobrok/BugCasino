@@ -11,7 +11,7 @@ export type BetNotification = {
         userId: number;
         doneInTime: boolean;
         amount: number;
-        result: number;
+        outcome: number;
     }
     ticketAuthor: string;
     ticketId: number;
@@ -30,13 +30,13 @@ export async function GET(request: Request) {
     
 
     const notifications: BetNotification[] = unnotifiedBets.map(bet => ({
-        message: bet.result! > 0 ? `Gewonnen! Dein Gewinn beträgt: ${bet.result}.` : `Verloren! Das Ergebnis war: ${bet.result}.`,
+        message: bet.outcome! > 0 ? `Gewonnen! Dein Gewinn beträgt: ${bet.outcome}.` : `Verloren! Das Ergebnis war: ${bet.outcome}.`,
         bet: {
             id: bet.id,
             userId: bet.userId,
             doneInTime: bet.doneInTime,
             amount: bet.amount,
-            result: bet.result || 0,
+            outcome: bet.outcome || 0,
         },
         ticketAuthor: bet.ticket.author.name,
         ticketId: bet.ticket.id,

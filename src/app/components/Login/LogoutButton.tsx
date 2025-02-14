@@ -13,7 +13,7 @@ export default function LogoutButton() {
         signOut(); redirect("/");
       }}
     >
-      <ArrowRightStartOnRectangleIcon className="w-6 h-6 fill-red-700 hover:fill-red-600" />
+      <ArrowRightStartOnRectangleIcon className="w-6 h-6 fill-red-700 hover:fill-red-600 hover:cursor-pointer" />
     </button>
     // </div>
   );

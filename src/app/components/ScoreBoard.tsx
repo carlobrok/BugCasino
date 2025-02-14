@@ -2,9 +2,10 @@ import { getScores } from "@/lib/actions/gamedata";
 import Amount, { AmountColor } from "./Amount";
 import { getCurrentUser } from "@/lib/session";
 import GradientLine from "./GradientLine";
-import { TrophyIcon } from "@heroicons/react/24/solid";
+import { TrophyIcon } from "@heroicons/react/24/outline";
 import UserIconName from "./UserIconName";
 import { getRankColor } from "@/lib/format-helper";
+import { LaurelLeft, LaurelRight } from "./Laurel";
 
 export default async function ScoreBoard() {
 
@@ -17,7 +18,11 @@ export default async function ScoreBoard() {
 
     return (
         <div className="bg-zinc-700 rounded-2xl px-8 py-6 flex flex-col w-96 gap-1 items-center shadow-lg">
-            <TrophyIcon className="size-8"/>
+            <div className="flex items-center gap-2">
+                <LaurelLeft className="size-10 fill-white" />
+                <p className="text-2xl font-bold">Leaderboard</p>
+                <LaurelRight className="size-10 fill-white" />
+            </div>
             {/* <h1 className="text-2xl w-full text-center font-bold"></h1> */}
             <GradientLine className="my-4 w-64" />
             {scores.map((score, index) => (

@@ -14,8 +14,6 @@ export default function CloseTicketButton() {
         startTransition(async () => {
             try {
                 await closeUserTicket();
-                // After the ticket is closed, refresh the page to show the updated state.
-                router.refresh(); 
             } catch (error) {
                 console.error("Error closing ticket:", error);
             }

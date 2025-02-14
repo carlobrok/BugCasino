@@ -1,16 +1,17 @@
 import Link from "next/link";
-import Amount, { AmountColor } from "./Amount";
+import { AmountColor } from "./Amount";
 import { TicketIcon, TrophyIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import LogoutButton from "./Login/LogoutButton";
 import UserIconName from "./UserIconName";
-import { getUser } from "@/lib/session";
 import Notifications from "./Notifications";
 import HelpPage from "./HelpPage";
 import GradientLine from "./GradientLine";
+import { Coins } from "lucide-react";
+import { getUserScore } from "@/lib/actions/gamedata";
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
-        <Link href={href} className="hover:text-gray-400 hover:">
+        <Link href={href} className="hover:text-white hover:translate-x-2  duration-200" prefetch={false}>
             <div className="flex items-center gap-x-2">
                 {children}
             </div>
@@ -18,9 +19,30 @@ function SideBarLink({ href, children }: { href: string; children: React.ReactNo
     );
 }
 
+async function SideBarDynamic() {
+    const user = await getUserScore();
 
-async function SideBars() {
-    const user = await getUser();
+    return (
+        <>
+            <UserIconName name={user.name} avatar={user.avatar} size={30} textClassNames="ml-3 text-xl" />
+            {/* <Amount amount={user.score} color={AmountColor.Emerald} size={6} /> */}
+
+            <div className="flex items-center gap-x-3">
+                <Coins className={AmountColor.Emerald} color="#fffbeb" size={30} />
+                {/* < className={`size-${size} w-${size} ml-1 ${color} drop-shadow-md`} /> */}
+                <p className="text-xl">{user.userScore}</p>
+            </div>
+
+            <div className="flex items-center gap-x-3">
+                {/* <TicketIcon className={`size-${size} w-${size} ml-1 ${color} drop-shadow-md`} /> */}
+                <TicketIcon className="size-8 drop-shadow-md" />
+                <p className="text-xl">{user.closedTickets}</p>
+            </div>
+        </>
+    );
+}
+
+export function SideBars() {
 
     return (
         <>
@@ -28,7 +50,7 @@ async function SideBars() {
 
                 {/* Left side: bug casino title and navigation */}
 
-                <div className="flex flex-col">
+                <div className="flex flex-col font-bold gap-y-2">
                     {/* Left placeholder for spacing */}
                     <div className="">
                         <h1 className={"text-4xl py-2 fugaz-one-regular"
@@ -37,15 +59,13 @@ async function SideBars() {
                             Bug Casino
                         </h1>
                     </div>
-                    <div className="flex font-bold text-lg gap-3 my-3">
-                    <UserIconName name={user.name} avatar={user.avatar} />                
-                    <Amount amount={user.score} color={AmountColor.Emerald} size={6} />
-                    </div>
 
-                    <GradientLine className="w-40 my-3"/>
+                    <SideBarDynamic />
+
+                    <GradientLine className="w-20 my-3" />
 
                     {/* Centered navigation links */}
-                    <nav className="flex flex-col font-bold space-y-4 mt-4">
+                    <nav className="flex flex-col font-bold space-y-4">
                         <SideBarLink href="/tickets"><TicketIcon className="size-6" />Tickets</SideBarLink>
                         <SideBarLink href="/leaderboard"><TrophyIcon className="size-6" />Leaderboard</SideBarLink>
                         <SideBarLink href="/groups"><UserGroupIcon className="size-6" />Groups</SideBarLink>
@@ -72,7 +92,6 @@ export default function AppPage({ children }: { children: React.ReactNode }) {
     return (
         <>
             <div className="relative">
-                <SideBars />
                 <div className="absolute top-20 w-full">{children}
                     <footer className=" w-full h-40 static bottom-0"></footer>
                 </div>

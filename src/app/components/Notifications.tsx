@@ -72,7 +72,7 @@ export default function Notifications() {
           { notifications.length > 0 ? 
             <BellAlertIcon className={"size-6 hover:cursor-pointer fill-red-300" + (showWiggle ? " animate-wiggle" : "")}/> 
             :
-            <BellIcon className={"size-6 hover:cursor-pointer"} />
+            <BellIcon className={"size-6 hover:cursor-pointer fill-zinc-300"} />
           }
         </button>
 

@@ -14,6 +14,7 @@ export async function getGroupScores() {
                         select: {
                             tickets: true,
                         },
+                        
                     },
                 },
             },

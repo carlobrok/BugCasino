@@ -16,10 +16,14 @@ export type Ticket = {
   updatedAt: Date;
 }
 
-export async function getUserScore() : Promise<{name: string, userScore: number, avatar?: string}> {
+export async function getUserScore() : Promise<{name: string, userScore: number, avatar: string, closedTickets: number}> {
   const user = await getUser();
 
-  return { name: user.name, userScore: user.score, avatar: user.avatar };
+  const closedTickets = await prisma.ticket.count({
+    where: { authorId: user.id, open: false },
+  });
+
+  return { name: user.name, userScore: user.score, avatar: user.avatar, closedTickets };
 }
 
 export async function getScores() {
