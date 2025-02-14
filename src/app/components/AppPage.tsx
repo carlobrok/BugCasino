@@ -91,10 +91,8 @@ export function SideBars() {
 export default function AppPage({ children }: { children: React.ReactNode }) {
     return (
         <>
-            <div className="relative">
-                <div className="absolute top-20 w-full">{children}
-                    <footer className=" w-full h-40 static bottom-0"></footer>
-                </div>
+            <div className="absolute top-20 w-full">{children}
+                <footer className=" w-full h-40 static bottom-0"></footer>
             </div>
         </>
     );
