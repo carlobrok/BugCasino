@@ -29,6 +29,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-portal": "^4.0.7",
+    "lucide-react": "^0.475.0",
     "postcss": "^8",
     "prisma": "^6.3.0",
     "react-hook-form": "^7.54.2",
