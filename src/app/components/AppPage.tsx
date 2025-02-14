@@ -6,6 +6,7 @@ import UserIconName from "./UserIconName";
 import { getUser } from "@/lib/session";
 import Notifications from "./Notifications";
 import HelpPage from "./HelpPage";
+import GradientLine from "./GradientLine";
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
@@ -30,12 +31,18 @@ async function SideBars() {
                 <div className="flex flex-col">
                     {/* Left placeholder for spacing */}
                     <div className="">
-                        <h1 className={"text-3xl py-2 fugaz-one-regular"
+                        <h1 className={"text-4xl py-2 fugaz-one-regular"
                             + " bg-linear-to-r from-red-600  via-amber-500 to-orange-600"
                             + " inline-block text-transparent bg-clip-text"}>
                             Bug Casino
                         </h1>
                     </div>
+                    <div className="flex font-bold text-lg gap-3 my-3">
+                    <UserIconName name={user.name} avatar={user.avatar} />                
+                    <Amount amount={user.score} color={AmountColor.Emerald} size={6} />
+                    </div>
+
+                    <GradientLine className="w-40 my-3"/>
 
                     {/* Centered navigation links */}
                     <nav className="flex flex-col font-bold space-y-4 mt-4">
@@ -51,9 +58,7 @@ async function SideBars() {
 
                 {/* Right side: stats, event and logout */}
 
-                <div className="flex justify-end items-center gap-x-4">
-                    <UserIconName name={user.name} avatar={user.avatar} />                
-                    <Amount amount={user.score} color={AmountColor.Emerald} size={6} />
+                <div className="flex justify-end font-bold items-center gap-x-4">
                     <Notifications />
                     <HelpPage />
                     <LogoutButton />

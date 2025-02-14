@@ -72,12 +72,12 @@ export default function Notifications() {
           { notifications.length > 0 ? 
             <BellAlertIcon className={"size-6 hover:cursor-pointer fill-red-300" + (showWiggle ? " animate-wiggle" : "")}/> 
             :
-            <BellIcon className={"size-6"} />
+            <BellIcon className={"size-6 hover:cursor-pointer"} />
           }
         </button>
 
         {showNotifications && (
-          <div className="absolute top-10 -right-20 z-10 mt-2 w-80 origin-top-right rounded-lg overflow-hidden bg-zinc-300 shadow-lg">
+          <div className="absolute top-10 -right-20 z-8 mt-2 w-80 origin-top-right rounded-lg overflow-hidden bg-zinc-300/50 shadow-lg">
             <div className="py-1">
               {notifications.map((notification, index) => (
                 <div key={notification.bet.id} className="px-4 py-2">

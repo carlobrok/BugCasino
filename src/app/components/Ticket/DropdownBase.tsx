@@ -71,7 +71,7 @@ export default function BaseDropdown({
 
       <MenuItems
         transition
-        className="absolute right-0 z-10 mt-2 w-full origin-top-right rounded-lg overflow-hidden bg-zinc-600 shadow-lg transition focus:solid-none data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+        className="absolute right-0 z-5 mt-2 w-full origin-top-right rounded-lg overflow-hidden bg-zinc-600 shadow-lg transition focus:solid-none data-closed:scale-95 data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
       >
         {children}
       </MenuItems>

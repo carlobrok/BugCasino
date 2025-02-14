@@ -133,7 +133,7 @@ function TimePicker() {
                         maxValue={maxHour}
                         classNames="hour-wheel"
                     />
-                    <div className="m-auto font-bold z-10">:</div>
+                    <div className="m-auto font-bold z-3">:</div>
                     <MinuteWheel
                         date={selectedDate}
                         onChange={onChange}
