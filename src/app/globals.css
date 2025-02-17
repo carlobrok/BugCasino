@@ -68,3 +68,35 @@ section {
   font-weight: 400;
   font-style: normal;
 }
+
+.link-translate {
+  @apply cursor-pointer  duration-200;
+}
+
+.link-translate:hover {
+  @apply translate-x-2;
+}
+
+.link-btn {
+  @apply px-3 py-1 shadow-md rounded-lg disabled:opacity-50 flex items-center justify-center;
+}
+
+.link-btn:hover {
+  @apply enabled:cursor-pointer;
+}
+
+.link-green {
+  @apply bg-green-900 duration-100 text-white;
+}
+
+.link-green:hover {
+  @apply bg-green-800 cursor-pointer;
+}
+
+.link-red {
+  @apply bg-red-900 duration-100 text-white;
+}
+
+.link-red:hover {
+  @apply bg-red-800 cursor-pointer;
+}

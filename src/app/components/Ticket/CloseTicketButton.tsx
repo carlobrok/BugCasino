@@ -5,6 +5,7 @@ import { closeUserTicket } from "@/lib/actions/ticket";
 import { getTicketReward } from "@/lib/actions/scoring"
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import Amount from "../Amount";
 
 export default function CloseTicketButton({ticketStart} : {ticketStart: Date}) {
     const [isPending, startTransition] = useTransition();
@@ -39,11 +40,11 @@ export default function CloseTicketButton({ticketStart} : {ticketStart: Date}) {
         <button
             onClick={handleClick}
             disabled={isPending}
-            className="px-3 py-1 bg-green-900 hover:bg-green-800 shadow-md text-white rounded-lg disabled:opacity-50 flex items-center justify-center"
+            className="link-green link-btn"
         >
-            done
+            <span className="mr-1">Done</span>
+            <Amount amount={rewardAmount}/>
             <CheckIcon className="ml-1 w-6 h-6" />
-            {rewardAmount}
         </button>
     );
 }

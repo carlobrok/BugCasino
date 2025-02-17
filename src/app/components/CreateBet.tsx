@@ -53,14 +53,14 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
                 <button
                     onClick={() => setDoneInTime(!doneInTime)}
                     disabled={isLoading}
-                    className={"px-3 py-1 text-white rounded-lg shadow-md disabled:opacity-50 flex items-center justify-center backdrop-blur-lg" + (doneInTime ? " bg-green-900 hover:bg-green-800" : " bg-red-900 hover:bg-red-800")}
+                    className={"link-btn  backdrop-blur-lg" + (doneInTime ? " link-green" : " link-red")}
                 >
                     {formatDoneInTime(doneInTime)}
                 </button>
                 <button
                     onClick={submitBet}
                     disabled={isLoading || amount <= 0}
-                    className={" px-3 py-1 text-white rounded-lg shadow-md enabled:hover:bg-zinc-400 disabled:opacity-50 flex items-center justify-center" + (isLoading ? " bg-zinc-600" : " bg-zinc-500")}
+                    className={" link-btn enabled:hover:bg-zinc-400 " + (isLoading ? " bg-zinc-600" : " bg-zinc-500")}
                 >
                     <p className="mr-2">bet</p>
                     {isLoading ?

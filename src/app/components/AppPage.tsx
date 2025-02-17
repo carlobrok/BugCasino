@@ -11,7 +11,7 @@ import { getUserScore } from "@/lib/actions/gamedata";
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
-        <Link href={href} className="hover:text-white hover:translate-x-2  duration-200">
+        <Link href={href} className="hover:text-white link-translate">
             <div className="flex items-center gap-x-2">
                 {children}
             </div>
@@ -23,7 +23,7 @@ async function SideBarDynamic() {
     const user = await getUserScore();
 
     return (
-        <>
+        <Link href={"/profile"} className="link-translate">
             <UserIconName name={user.name} avatar={user.avatar} size={30} textClassNames="ml-3 text-xl" />
             {/* <Amount amount={user.score} color={AmountColor.Emerald} size={6} /> */}
 
@@ -38,7 +38,7 @@ async function SideBarDynamic() {
                 <TicketIcon className="size-8 drop-shadow-md" />
                 <p className="text-xl">{user.closedTickets}</p>
             </div>
-        </>
+        </Link>
     );
 }
 

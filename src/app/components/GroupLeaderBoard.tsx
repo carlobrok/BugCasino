@@ -80,7 +80,7 @@ export default async function GroupLeaderBoard() {
                 <div className="flex items-center gap-4 mb-10">
 
                 <LaurelLeft className="size-20 fill-white" />
-                <h1 className="text-3xl lg:text-5xl font-bold">Group Leader Board</h1>
+                <h1 className="text-3xl lg:text-5xl font-bold">Group Leaderboard</h1>
                 <LaurelRight className="size-20 fill-white" />
                 </div>
                 

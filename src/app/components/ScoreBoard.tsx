@@ -41,7 +41,7 @@ export default async function ScoreBoard() {
                     } 
                     href={`/profile/${score.id}`}
                     >
-                        <div className="flex items-center ml-2">
+                        <div className="flex items-center ml-2 link-translate w-full h-full">
                             <p className="w-8">{index + 1}</p>
                             <UserIconName name={score.name} avatar={score.avatar} />
                         </div>
