@@ -16,6 +16,27 @@ export type Ticket = {
   updatedAt: Date;
 }
 
+
+export interface TicketWithDetails extends Ticket {
+  bets: {
+    user: { name: string };
+    amount: number;
+    doneInTime: boolean;
+    userId: number;
+    id: number;
+  }[];
+  author: {
+    name: string;
+    group: {
+      name: string ;
+    } | null;
+  };
+  _count: {
+    bets: number;
+  }
+}
+
+
 export async function getUserScore() : Promise<{name: string, userScore: number, avatar: string, closedTickets: number}> {
   const user = await getUser();
 
@@ -36,7 +57,7 @@ export async function getScores() {
 /**
  * @returns All tickets of the current user or null if not authenticated.
  */
-export async function getUserTickets(onlyClosed: boolean = false) : Promise< Ticket[] | null> {
+export async function getUserTickets(onlyClosed: boolean = false) : Promise< TicketWithDetails[] | null> {
   const user : User | null = await getCurrentUser();
 
   if (!user) {
@@ -46,13 +67,28 @@ export async function getUserTickets(onlyClosed: boolean = false) : Promise< Tic
   const schema = {
     include: {
       author: {
-        select: { name: true },
+        select: {
+          name: true,
+          group: {
+            select: { name: true },
+          },
+        },
       },
+      bets: {
+        select: {
+          user: { select: { name: true } },
+          amount: true,
+          doneInTime: true,
+          userId: true,
+          id: true,
+        },
+      },
+      _count: { select: { bets: true } },
     },
     where: { authorId: user.id, open: onlyClosed ? false : undefined },
   }
 
-  return await prisma.ticket.findMany(schema) as Ticket[];
+  return await prisma.ticket.findMany(schema) as TicketWithDetails[];
 }
 
 export async function getOpenUserTicket() {
@@ -86,21 +122,6 @@ export async function closeUserTicket() {
   });
 }
 
-export interface TicketWithDetails extends Ticket {
-  bets: {
-    user: { name: string };
-    amount: number;
-    doneInTime: boolean;
-    userId: number;
-    id: number;
-  }[];
-  author: {
-    name: string;
-    group: {
-      name: string ;
-    } | null;
-  };
-}
 
 
 export async function getOtherTickets(filters: { open?: boolean; groupName?: string } = {}) : Promise<TicketWithDetails[] | null> {
@@ -135,6 +156,7 @@ export async function getOtherTickets(filters: { open?: boolean; groupName?: str
           id: true,
         },
       },
+      _count: { select: { bets: true } },
     },
     where: whereClause,
   });

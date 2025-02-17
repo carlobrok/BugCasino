@@ -16,7 +16,7 @@ export default function TicketCard({ childrenLeft, childrenRight, topLevel }:
     }) {
 
     return (
-        <div className="relative p-6 rounded-2xl bg-zinc-700 shadow-lg">
+        <div className="relative p-6 rounded-2xl bg-zinc-700 shadow-lg w-full">
             {topLevel}
             <div className="flex justify-between">
                 <div className="w-1/2">
