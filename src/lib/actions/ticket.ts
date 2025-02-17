@@ -3,12 +3,7 @@
 import { prisma } from "../prisma";
 import { getCurrentUser } from "../session";
 import type { User } from "@prisma/client";
-import { ticketClosedNotification } from "../notification";
-
-function scoreUser(amount: number, doneInTime: boolean = false) {
-  return doneInTime ? 2 * amount : 0;
-}
-
+import { getBetReward, getTicketReward } from "@/lib/actions/scoring"
 
 export async function closeUserTicket() {
   const user: User | null = await getCurrentUser();
@@ -37,7 +32,7 @@ export async function closeUserTicket() {
   for (const bet of ticket.bets) {
     const correctBet = bet.doneInTime === doneInTime;
     console.log("Bet", bet, "is correct", correctBet);
-    const result = scoreUser(bet.amount, correctBet);
+    const result = getBetReward(bet.amount, correctBet);
 
     // update Bet 
     await prisma.bet.update({
@@ -54,9 +49,14 @@ export async function closeUserTicket() {
     }
   }
 
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { score: { increment: getTicketReward(ticket.createdAt) } }
+  });
+
   // Return the result of updating the ticket(s)
   return await prisma.ticket.update({
-    where: { id: ticket.id, open: true },
+    where: { id: ticket.id },
     data: { open: false },
   });
 }

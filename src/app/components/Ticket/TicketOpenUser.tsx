@@ -39,7 +39,7 @@ export default async function OpenUserTicket({ ticket }: { ticket: any }) {
       childrenRight={
         <>
         <div className="flex flex-col h-full items-end justify-end">
-          <CloseTicketButton />
+          <CloseTicketButton ticketStart={ticket.createdAt} />
         </div>
         </>
       }

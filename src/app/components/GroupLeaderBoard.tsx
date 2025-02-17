@@ -1,4 +1,4 @@
-import { getGroupScores } from "@/lib/actions/groups";
+import { getGroupScores } from "@/lib/actions/scoring";
 import { TicketIcon, UserIcon } from "@heroicons/react/24/solid";
 import UserIconName from "./UserIconName";
 import Amount, { AmountColor } from "./Amount";
