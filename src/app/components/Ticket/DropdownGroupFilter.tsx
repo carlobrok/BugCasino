@@ -24,38 +24,17 @@ export default function GroupFilterDropdown({ groups }: GroupFilterDropdownProps
       params.set("groupName", group);
       setSelectedGroup(group);
     }
-    
+
     router.push(`?${params.toString()}`);
   };
 
   return (
     <BaseDropdown selectedLabel={selectedGroup || "All Groups"} className="w-40">
       <div className="py-1">
-        <MenuItem>
-          {({ active }) => (
-            <button
-              onClick={() => selectGroup("")}
-              className={`block w-full text-left px-4 py-2 text-sm text-white ${
-                active ? "bg-zinc-600" : ""
-              }`}
-            >
-              All Groups
-            </button>
-          )}
-        </MenuItem>
+        <BaseDropdownItem key={"all"} onClick={() => selectGroup("")}>
+          All Groups
+        </BaseDropdownItem>
         {groups.map((group) => (
-          // <MenuItem key={group}>
-          //   {({ active }) => (
-          //     <button
-          //       onClick={() => selectGroup(group)}
-          //       className={`block w-full text-left px-4 py-2 text-sm text-white ${
-          //         active ? "bg-zinc-600" : ""
-          //       }`}
-          //     >
-          //       {group}
-          //     </button>
-          //   )}
-          // </MenuItem>
           <BaseDropdownItem key={group} onClick={() => selectGroup(group)}>
             {group}
           </BaseDropdownItem>

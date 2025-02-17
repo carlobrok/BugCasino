@@ -53,7 +53,7 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
                 <button
                     onClick={() => setDoneInTime(!doneInTime)}
                     disabled={isLoading}
-                    className={"px-3 py-1 text-white rounded-lg shadow-md disabled:opacity-50 flex items-center justify-center backdrop-blur-lg" + (doneInTime ? " bg-green-900" : " bg-red-900")}
+                    className={"px-3 py-1 text-white rounded-lg shadow-md disabled:opacity-50 flex items-center justify-center backdrop-blur-lg" + (doneInTime ? " bg-green-900 hover:bg-green-800" : " bg-red-900 hover:bg-red-800")}
                 >
                     {formatDoneInTime(doneInTime)}
                 </button>

@@ -156,7 +156,6 @@ export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDe
                             <Amount
                                 amount={ticket.bets.reduce((betSum, bet) => betSum + bet.amount, 0)}
                                 color={AmountColor.EmeraldDark}
-                                size={5}
                             />
                         </div>
                     } />

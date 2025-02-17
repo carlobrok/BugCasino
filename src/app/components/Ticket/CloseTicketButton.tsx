@@ -24,7 +24,7 @@ export default function CloseTicketButton() {
         <button
             onClick={handleClick}
             disabled={isPending}
-            className="px-3 py-1 bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg disabled:opacity-50 flex items-center justify-center"
+            className="px-3 py-1 bg-green-900 hover:bg-green-800 shadow-md text-white rounded-lg disabled:opacity-50 flex items-center justify-center"
         >
             done
             <CheckIcon className="ml-1 w-6 h-6" />
