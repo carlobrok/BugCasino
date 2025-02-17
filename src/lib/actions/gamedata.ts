@@ -36,7 +36,7 @@ export async function getScores() {
 /**
  * @returns All tickets of the current user or null if not authenticated.
  */
-export async function getUserTickets(onlyClosed: boolean = false) : Promise<Ticket | Ticket[] | null> {
+export async function getUserTickets(onlyClosed: boolean = false) : Promise< Ticket[] | null> {
   const user : User | null = await getCurrentUser();
 
   if (!user) {

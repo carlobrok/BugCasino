@@ -18,9 +18,6 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
     const [betPlaced, setBetPlaced] = useState(false);
 
 
-    const router = useRouter();
-
-
     const submitBet = async () => {
         setIsLoading(true);
 
@@ -44,7 +41,7 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
     if (betPlaced) {
         return (
             <div className="flex items-center space-x-2 transition-opacity duration-500 ease-out opacity-100">
-                <p className="text-green-500">Bet placed</p>
+                <p className="text-green-700">Bet placed</p>
             </div>
         );
     }

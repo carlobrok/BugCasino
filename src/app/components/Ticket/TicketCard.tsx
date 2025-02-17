@@ -173,9 +173,8 @@ export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDe
                                         .filter((bet) => bet.userId === userId)
                                         .map((bet) => (
                                             <div key={bet.id} className="flex items-center">
-                                                <p>I bet</p>
+                                                <p>I bet on {formatDoneInTime(bet.doneInTime)}</p>
                                                 <Amount amount={bet.amount} color={AmountColor.Emerald} />
-                                                <p>on {formatDoneInTime(bet.doneInTime)}</p>
                                             </div>
                                         ))}
                                     <GradientLine className={"my-2 w-40"} />

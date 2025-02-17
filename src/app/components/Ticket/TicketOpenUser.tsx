@@ -1,19 +1,13 @@
 import { getOpenUserTicket } from "@/lib/actions/gamedata";
-import CloseTicketButton from "../CloseTicketButton";
+import CloseTicketButton from "./CloseTicketButton";
 import { formatBetCounter, formatTimeEstimate } from "@/lib/format-helper";
 import TicketCard, { TicketTopRightCorner } from "./TicketCard";
 import { TicketIcon } from "@heroicons/react/24/solid";
 import Amount, { AmountColor } from "../Amount";
 
-export default async function OpenUserTicket() {
+export default async function OpenUserTicket({ ticket }: { ticket: any }) {
 
-  const ticket = await getOpenUserTicket();
-
-  if (!ticket) {
-    return null;
-  }
-
-
+  console.log("ticket", ticket);
 
   // console.log("ticket", ticket);
   return (

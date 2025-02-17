@@ -4,6 +4,7 @@ import UserIconName from "./UserIconName";
 import Amount, { AmountColor } from "./Amount";
 import GradientLine from "./GradientLine";
 import { getRankColor, RankColors } from "@/lib/format-helper";
+import { LaurelLeft, LaurelRight } from "./Laurel";
 
 
 interface Group {
@@ -76,7 +77,13 @@ export default async function GroupLeaderBoard() {
     return (
         <>
             <div className="flex flex-col items-center gap-4">
-                <h1 className="text-2xl font-bold">Group Leader Board</h1>
+                <div className="flex items-center gap-4 mb-10">
+
+                <LaurelLeft className="size-20 fill-white" />
+                <h1 className="text-3xl lg:text-5xl font-bold">Group Leader Board</h1>
+                <LaurelRight className="size-20 fill-white" />
+                </div>
+                
                 {groupsScores.sort((a, b) => b.score - a.score).map((group, index) => (
 
                     <GroupCard key={group.name} group={group} rank={index + 1} />

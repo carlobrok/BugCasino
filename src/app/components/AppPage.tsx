@@ -11,7 +11,7 @@ import { getUserScore } from "@/lib/actions/gamedata";
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
-        <Link href={href} className="hover:text-white hover:translate-x-2  duration-200" prefetch={false}>
+        <Link href={href} className="hover:text-white hover:translate-x-2  duration-200">
             <div className="flex items-center gap-x-2">
                 {children}
             </div>
