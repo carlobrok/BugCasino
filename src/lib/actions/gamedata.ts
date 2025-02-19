@@ -49,7 +49,7 @@ export async function getUserScore() : Promise<{name: string, userScore: number,
 
 export async function getScores() {
   return await prisma.user.findMany({
-    select: { name: true, score: true, id: true, avatar: true },
+    select: { name: true, score: true, id: true, avatar: true, _count: { select: { tickets: true } } },
     orderBy: { score: "desc" },
   });
 }

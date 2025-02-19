@@ -21,15 +21,12 @@ export async function getCurrentUser() : Promise<User | null> {
     return null;
   }
 
-  const user = await prisma.user.findUnique({
+  return await prisma.user.findUnique({
     where: { email: session.user.email },
   });
-
-  return user;
 }
 
-export type UserData = Pick<User, "id" | "email" | "name" | "avatar" | "score">;
-
+export type UserData = Pick<User, "id" | "email" | "name" | "avatar" | "score" > & {transactions: any[]};
 
 
 /**
@@ -52,6 +49,7 @@ export async function getUser() : Promise<UserData> {
       name: true,
       avatar: true,
       score: true,
+      transactions: true,
     },
  });
 

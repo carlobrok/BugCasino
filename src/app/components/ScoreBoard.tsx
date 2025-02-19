@@ -2,7 +2,7 @@ import { getScores } from "@/lib/actions/gamedata";
 import Amount, { AmountColor } from "./Amount";
 import { getCurrentUser } from "@/lib/session";
 import GradientLine from "./GradientLine";
-import { TrophyIcon } from "@heroicons/react/24/outline";
+import { TicketIcon } from "@heroicons/react/24/solid";
 import UserIconName from "./UserIconName";
 import { getRankColor } from "@/lib/format-helper";
 import { LaurelLeft, LaurelRight } from "./Laurel";
@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default async function ScoreBoard() {
 
-    const scores = await getScores();
+    const userScores = await getScores();
     const user = await getCurrentUser();
 
     if (!user) {
@@ -27,25 +27,29 @@ export default async function ScoreBoard() {
             <GradientLine className="my-4 w-80" />
 
             <div className="bg-zinc-700 rounded-2xl p-8 flex flex-col w-150 gap-1 items-center shadow-lg">
-                {scores.map((score, index) => (
+                {userScores.map((userScore, index) => (
                     <Link key={index} className={
                         "flex justify-between items-center py-1 px-3 rounded-lg w-full"
                         + (index <= 2 ? " text-zinc-800 font-semibold " + getRankColor(index + 1) : "")
-                        + (index === 0 ? " bg-orange-200/50" : "")
-                        + (index === 1 ? " bg-orange-200/25 " : "")
-                        + (index === 2 ? " bg-orange-200/10" : "")
-                        + (score.id === user.id ?
+                        + (userScore.id === user.id ?
                             (index <= 2 ? " border border-zinc-300" :
                                 " border border-zinc-300/50 bg-zinc-200/20"
                             ) : "")
                     } 
-                    href={`/profile/${score.id}`}
+                    href={`/profile/${userScore.id}`}
                     >
                         <div className="flex items-center ml-2 link-translate w-full h-full">
                             <p className="w-8">{index + 1}</p>
-                            <UserIconName name={score.name} avatar={score.avatar} />
+                            <UserIconName name={userScore.name} avatar={userScore.avatar} />
                         </div>
-                        <Amount amount={score.score} color={(index <= 2 ? AmountColor.EmeraldDark : AmountColor.Emerald)} />
+                        <div className="flex" >
+                            <Amount amount={userScore.score} color={(index <= 2 ? AmountColor.EmeraldDark : AmountColor.Emerald)} />
+                            <div className="flex justify-end items-center gap-2 w-15">
+                                {userScore._count.tickets}
+                                <TicketIcon className="size-5" />
+                            </div>
+                        </div>
+
                     </Link>
                 ))}
             </div>

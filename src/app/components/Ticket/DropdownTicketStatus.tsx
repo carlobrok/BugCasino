@@ -43,7 +43,7 @@ export default function TicketStatusDropdown() {
   }
 
   return (
-    <BaseDropdown selectedLabel={statusLabel} className="w-40">
+    <BaseDropdown selectedLabel={statusLabel} className="w-48">
       <div className="py-1">
         <BaseDropdownItem onClick={() => handleSelectStatus("all")}>
           All Tickets

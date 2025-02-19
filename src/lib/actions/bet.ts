@@ -3,6 +3,7 @@
 import { prisma } from "../prisma";
 import { getCurrentUser } from "../session";
 import type { User } from "@prisma/client";
+import { createTransaction, TransactionType } from "../transaction";
 
 type BetResponse = {    
     success: boolean;
@@ -28,11 +29,7 @@ export async function createBet(ticketId: number, amount: number, doneInTime: bo
     }
 
     try {
-        // Decrement the user's score by the amount of the bet
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { score: { decrement: amount } },
-        });
+        await createTransaction({ userId: user.id, amount, type: TransactionType.BET });
         
         // Return the result of updating the ticket(s)
         await prisma.bet.create({

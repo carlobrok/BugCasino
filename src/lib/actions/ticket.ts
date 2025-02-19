@@ -4,6 +4,7 @@ import { prisma } from "../prisma";
 import { getCurrentUser } from "../session";
 import type { User } from "@prisma/client";
 import { getBetReward, getTicketReward } from "@/lib/actions/scoring"
+import { createTransaction, TransactionType } from "../transaction";
 
 export async function closeUserTicket() {
   const user: User | null = await getCurrentUser();
@@ -32,27 +33,21 @@ export async function closeUserTicket() {
   for (const bet of ticket.bets) {
     const correctBet = bet.doneInTime === doneInTime;
     console.log("Bet", bet, "is correct", correctBet);
-    const result = getBetReward(bet.amount, correctBet);
+    const betReward = getBetReward(bet.amount, correctBet);
 
     // update Bet 
     await prisma.bet.update({
       where: { id: bet.id },
-      data: { outcome: result },
+      data: { outcome: betReward },
     });
 
     // update User score
     if (correctBet) {
-      await prisma.user.update({
-        where: { id: bet.userId },
-        data: { score: { increment: result } },
-      });
+      await createTransaction({ userId: bet.userId, amount: betReward, type: TransactionType.PAYOUT });
     }
   }
 
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { score: { increment: getTicketReward(ticket.createdAt) } }
-  });
+  await createTransaction({ userId: user.id, amount: getTicketReward(ticket.createdAt), type: TransactionType.PAYOUT });
 
   // Return the result of updating the ticket(s)
   return await prisma.ticket.update({
