@@ -671,7 +671,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
           >
             {showGridLines ? (
               <CartesianGrid
-                className={cx("stroke-gray-200 stroke-1 dark:stroke-gray-800")}
+                className={cx("stroke-gray-200 stroke-1 dark:stroke-gray-600 opacity-50")}
                 horizontal={true}
                 vertical={false}
               />
@@ -939,7 +939,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                     }}
                     key={category}
                     name={category}
-                    type="linear"
+                    type="monotone"
                     dataKey={category}
                     stroke=""
                     strokeWidth={2}

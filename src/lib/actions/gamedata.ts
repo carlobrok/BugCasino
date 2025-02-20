@@ -181,3 +181,12 @@ export async function getGroups() {
     select: { name: true, id: true },
   });
 }
+
+export async function getGroupName(groupId: number) : Promise<string> {
+  const name = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { name: true },
+  });
+
+  return name?.name || "Unknown";
+}

@@ -99,7 +99,7 @@ function TimePicker() {
     }
 
     return (
-        <div className="time-picker m-auto p-4">
+        <div className="time-picker p-4">
             <div className="time-picker-container">
                 <input
                     className="time-picker-input"

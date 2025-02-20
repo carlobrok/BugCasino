@@ -21,7 +21,7 @@ export default async function ScoreBoard() {
         <div className="flex flex-col items-center gap-4">
             <div className="flex items-center gap-4">
                 <LaurelLeft className="size-20 fill-white" />
-                <h1 className="text-3xl lg:text-5xl font-bold">Leaderboard</h1>
+                    <span className="text-5xl font-bold">Leaderboard</span>
                 <LaurelRight className="size-20 fill-white" />
             </div>
             <GradientLine className="my-4 w-80" />

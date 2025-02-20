@@ -20,16 +20,14 @@ export default function CreateTicket() {
     }
 
     return (
-        <div className="max-w-md m-auto">
-            <h2 className="text-2xl font-bold mb-4">Create a new Ticket</h2>
-
+        
             <form action={formAction}>
                 <div >
-                    <label className="block text-sm font-medium">Title</label>
+                    <label className="block text-lg font-semibold">Title</label>
                     <input
                         type="text"
                         name="title"
-                        className="mt-1 block w-full px-4 p-2 bg-zinc-700 rounded-md focus:border-pink-600"
+                        className="mt-1 block w-full px-4 p-2 bg-zinc-700 rounded-md"
                         placeholder="Enter the title"
                         autoComplete="off"
                         required
@@ -37,7 +35,7 @@ export default function CreateTicket() {
                 </div>
 
                 <div className="mt-2">
-                    <label className="block text-sm font-medium">Description</label>
+                    <label className="block text-lg font-semibold">Description</label>
                     <input
                         type="text"
                         name="description"
@@ -48,11 +46,19 @@ export default function CreateTicket() {
                 </div>
 
                 <div className="mt-2">
-                    <TimePicker />
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between">
+                        <div className="lg:flex lg:flex-col lg:w-1/3">
+                            <p className="text-lg font-semibold mt-2 lg:mb-2">Estimated time</p>
+                            <p className="italic">when you think you have completed the ticket. You will continue to earn coins after this time.</p>
+                        </div>
+                        <div className="m-auto">
+                            <TimePicker />
+                        </div>
+                    </div>
                 </div>
 
                 <SubmitButton pending={pending} />
             </form>
-        </div>
+        
     );
 }

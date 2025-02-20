@@ -39,19 +39,16 @@ function GroupCard({ group, rank }: { group: Group, rank: number }) {
                     </div>
                 </div>
                 <GradientLine className="w-full my-3" />
-                {group.users.map((user) => (
+                {group.users.sort((a, b) => b.score - a.score).map((user) => (
                     <div key={user.name} className="w-full flex justify-between items-center">
-
-
                         <UserIconName name={user.name} avatar={user.avatar} size={20} />
-                        <div className="flex" >
+                        <div className="flex">
                             <Amount amount={user.score} color={AmountColor.EmeraldDark} />
                             <div className="flex justify-end items-center gap-2 w-15">
                                 {user._count.tickets}
                                 <TicketIcon className="size-5" />
                             </div>
                         </div>
-
                     </div>
                 ))}
             </div>

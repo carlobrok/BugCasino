@@ -70,7 +70,7 @@ const defaultTicketChildrenLeft = (ticket: TicketWithDetails) => (
                     {ticket.author.name}
                 </div>
                 <p className="italic">
-                    Estimated: {formatTimeEstimate(ticket.timeEstimate)}
+                    Estimated time: {formatTimeEstimate(ticket.timeEstimate)}
                 </p>
             </div>
         </div>

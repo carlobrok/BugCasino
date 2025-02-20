@@ -1,5 +1,6 @@
 "use client";
 
+import Amount, { AmountColor } from "./Amount";
 import { AreaChart } from "./AreaChart";
 import { FormatDateOptions } from "date-fns";
 
@@ -36,13 +37,12 @@ export function ScoreChart({ score, firstDate, data }: { score: number; firstDat
   processedData = processedData.reverse();
 
   return (
-    <div className="m-auto mt-10 w-2/3 lg:w-1/2 h-96">
+    <div className="m-auto w-xl lg:w-full h-96">
       <AreaChart className="h-80"
         data={processedData}
         index="date"
         categories={["score"]}
         colors={["amber"]}
-        valueFormatter={(number: number) => `${Intl.NumberFormat("enx").format(number).toString()}`}
         // showXAxis={false}
         showLegend={false}
         startEndOnly={true}

@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Container des gesamten TimePickers */
 .time-picker {
   border-radius: 12px;
@@ -124,7 +126,8 @@
 /* Overlays und Schatten */
 .time-picker-selected-overlay {
   position: absolute;
-  background-color: #2c2c2f;
+  background-color: #bbb;
+  opacity: 0.2;
   border-radius: 6px;
   pointer-events: none;
   z-index: 1;
