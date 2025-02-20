@@ -47,7 +47,7 @@ export async function closeUserTicket() {
     }
   }
 
-  await createTransaction({ userId: user.id, amount: getTicketReward(ticket.createdAt), type: TransactionType.PAYOUT });
+  await createTransaction({ userId: user.id, amount: getTicketReward(ticket.createdAt), type: TransactionType.TICKET });
 
   // Return the result of updating the ticket(s)
   return await prisma.ticket.update({

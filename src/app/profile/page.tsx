@@ -22,18 +22,18 @@ export default async function ProfilePage() {
    const groupName: string = await getGroupName(user.groupId);
    const userTransactions = await getUserTransactions({ userId: user.id });
 
-   const chartData = userTransactions.map((transaction) => {
-      return {
-         date: transaction.createdAt,
-         value: (transaction.type == TransactionType.PAYOUT ? transaction.amount : - transaction.amount),
-      };
-   });
+   // const chartData = userTransactions.map((transaction) => {
+   //    return {
+   //       date: transaction.createdAt,
+   //       value: (transaction.type == TransactionType.PAYOUT ? transaction.amount : - transaction.amount),
+   //    };
+   // });
 
    return (
       <AppPage>
          <div className='w-2xl m-auto'>
             <h1 className='text-center mb-8'>Profile</h1>
-            <div className="flex flex-col gap-2 mb-10">
+            <div className="flex justify-center gap-10 mb-20">
                <UserIconName name={user.name} avatar={user.avatar} size={30} textClassNames='text-xl font-semibold' />
                <div className='flex items-center gap-2'> 
                   <UserGroupIcon className='size-6 mx-1' /> 
@@ -45,9 +45,9 @@ export default async function ProfilePage() {
                <h3>Score</h3>
                <Amount amount={<h3>{user.score}</h3>} size={25} color={AmountColor.EmeraldDark} />
             </div>
-            <ScoreChart score={user.score} firstDate={user.createdAt} data={chartData}></ScoreChart>
+            <ScoreChart score={user.score} firstDate={user.createdAt} data={userTransactions}></ScoreChart>
 
-            <GradientLine className="mb-20" />
+            {/* <GradientLine className="mb-20" /> */}
 
             <div className='flex justify-between items-center'>
 

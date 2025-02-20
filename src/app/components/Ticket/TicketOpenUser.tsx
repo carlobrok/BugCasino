@@ -26,9 +26,9 @@ export default async function OpenUserTicket({ ticket }: { ticket: any }) {
       }
       childrenLeft={
         <>
-          <div className="flex items-center">
-            {ticket.open && (<TicketIcon className="w-6 h-6 mr-2" />)}
-            <h3 className="text-lg font-bold">{ticket.title}</h3>
+          <div className="flex">
+            {ticket.open && (<TicketIcon className="size-7 h-7 mr-2" />)}
+            <h4 className="text-lg font-bold">{ticket.title}</h4>
           </div>
           <p>{ticket.description}</p>
           <p className="mt-4 italic">

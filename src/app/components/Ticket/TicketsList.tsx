@@ -5,6 +5,7 @@ import { getGroups, getOtherTickets } from "@/lib/actions/gamedata";
 import TicketCard, { TicketClosed, TicketOpen, TicketTitle } from "./TicketCard";
 import GroupFilterDropdown from "./DropdownGroupFilter";
 import TicketStatusDropdown from "./DropdownTicketStatus";
+import {NoTicketsCard} from "./TicketCard";
 
 interface TicketsGridProps {
   searchParams: {
@@ -48,10 +49,7 @@ export default async function TicketsList({ searchParams }: TicketsGridProps) {
       <>
         {filterSection}
         <div className="opacity-30">
-        <TicketCard childrenLeft={
-          <TicketTitle title="There are no tickets yet .." open={true} />
-        }
-          childrenRight={<></>} />
+          <NoTicketsCard/>
         </div>
       </>
     );

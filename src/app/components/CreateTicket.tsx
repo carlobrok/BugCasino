@@ -49,7 +49,7 @@ export default function CreateTicket() {
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between">
                         <div className="lg:flex lg:flex-col lg:w-1/3">
                             <p className="text-lg font-semibold mt-2 lg:mb-2">Estimated time</p>
-                            <p className="italic">when you think you have completed the ticket. You will continue to earn coins after this time.</p>
+                            <p className="italic">at which you think you will finish the ticket. You will continue to earn coins after this time.</p>
                         </div>
                         <div className="m-auto">
                             <TimePicker />

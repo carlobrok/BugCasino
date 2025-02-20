@@ -7,6 +7,16 @@ import CreateBet from "../CreateBet";
 import React from "react";
 
 
+export function NoTicketsCard() {
+    return (
+        <div className="relative p-6 rounded-2xl bg-zinc-700 shadow-lg w-full">
+            <div className="flex justify-between">
+                <TicketTitle title="There are no tickets yet .." open={true} />
+            </div>
+        </div>
+    );
+}
+
 
 export default function TicketCard({ childrenLeft, childrenRight, topLevel }:
     {
@@ -33,9 +43,9 @@ export default function TicketCard({ childrenLeft, childrenRight, topLevel }:
 export function TicketTitle({ title, open = true }: { title: string, open?: boolean }) {
     return (
         <div className="flex items-center">
-            {open && (<TicketIcon className="size-6 mr-2" />)}
+            {open && (<TicketIcon className="h-6 size-6 mr-2" />)}
             {!open && (<LockClosedIcon className="size-5 mr-2 fill-red-300" />)}
-            <h3 className="text-lg font-bold">{title}</h3>
+            <h4 className="text-lg font-bold">{title}</h4>
         </div>
     )
 }
