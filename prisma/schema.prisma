@@ -48,7 +48,7 @@ model Bet {
   ticket        Ticket   @relation(fields: [ticketId], references: [id])
   ticketId      Int
   amount        Int
-  outcome       Int?    
+  outcome       Int?     
   doneInTime    Boolean
   notified      Boolean  @default(false)
   updatedAt     DateTime @updatedAt
@@ -59,7 +59,8 @@ model Transaction {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [userId], references: [id])
   userId        Int
-  amount        Int
+  change        Int
+  finalBalance  Int
   type          String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
