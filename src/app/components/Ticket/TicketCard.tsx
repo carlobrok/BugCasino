@@ -1,5 +1,5 @@
 import { TicketWithDetails } from "@/lib/actions/gamedata";
-import { formatBetCounter, formatDoneInTime, formatTimeEstimate, formatTimeEstimateShort } from "@/lib/format-helper";
+import { formatBetCounter, formatDoneInTime, formatTime } from "@/lib/format-helper";
 import { LockClosedIcon, TicketIcon, UserIcon } from "@heroicons/react/24/solid";
 import Amount, { AmountColor } from "../Amount";
 import GradientLine from "../GradientLine";
@@ -53,7 +53,7 @@ export function TicketTitleDescription({ ticket }: { ticket: TicketWithDetails }
     return (
         <div>
             <TicketTitle title={ticket.title} open={ticket.open} />
-            <p>{ticket.description}</p>
+            {/* <p>{ticket.description}</p> */}
         </div>
     );
 }
@@ -69,6 +69,8 @@ export function TicketTopRightCorner({ children }: { children: React.ReactNode }
     );
 }
 
+
+
 const defaultTicketChildrenLeft = (ticket: TicketWithDetails) => (
     <>
         <div className="flex flex-col justify-between h-full">
@@ -80,7 +82,7 @@ const defaultTicketChildrenLeft = (ticket: TicketWithDetails) => (
                     {ticket.author.name}
                 </div>
                 <p className="italic">
-                    Estimated time: {formatTimeEstimate(ticket.timeEstimate)}
+                    Estimated time: {formatTime(ticket.timeEstimate)}
                 </p>
             </div>
         </div>
@@ -110,8 +112,8 @@ export function TicketClosed({ ticket, userId }: { ticket: TicketWithDetails, us
 
                                 </div>
                                 <div>
-                                    <p>{formatTimeEstimateShort(ticket.timeEstimate)}</p>
-                                    <p>{formatTimeEstimateShort(ticket.updatedAt)}</p>
+                                    <p>{formatTime(ticket.timeEstimate)}</p>
+                                    <p>{formatTime(ticket.updatedAt)}</p>
                                 </div>
                             </div>
                         </div>

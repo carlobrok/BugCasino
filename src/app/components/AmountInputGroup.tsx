@@ -39,9 +39,9 @@ export default function InputGroup({ userScore, amount, setAmount, disableInput 
     }
 
     return (
-        <div className="flex items-center align-middle w-fit">
+        <div className="flex items-center align-middle w-fit gap-x-2">
             <ModifierButton adjustment={decrease} disabled={amount <= 0 || disableInput} direction="decrease" />
-            <Amount amount={amount} color={AmountColor.Emerald} />
+            <Amount amount={amount} color={AmountColor.Emerald} margin={true}/>
             <ModifierButton adjustment={increase} disabled={amount >= userScore || amount + stepUp(amount) > userScore || disableInput} direction="increase" />
         </div>
     );

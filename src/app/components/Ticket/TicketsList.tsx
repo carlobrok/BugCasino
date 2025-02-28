@@ -2,10 +2,11 @@
 import React from "react";
 import { getUser } from "@/lib/session";
 import { getGroups, getOtherTickets } from "@/lib/actions/gamedata";
-import TicketCard, { TicketClosed, TicketOpen, TicketTitle } from "./TicketCard";
+import { TicketClosed, TicketOpen } from "./TicketCard";
 import GroupFilterDropdown from "./DropdownGroupFilter";
 import TicketStatusDropdown from "./DropdownTicketStatus";
 import {NoTicketsCard} from "./TicketCard";
+import { TicketBase } from "./TicketBase";
 
 interface TicketsGridProps {
   searchParams: {
@@ -63,8 +64,9 @@ export default async function TicketsList({ searchParams }: TicketsGridProps) {
       <div className="flex flex-col gap-4">
         {tickets.map((theTicket) => (
           <React.Fragment key={theTicket.id}>
-            {theTicket.open && (<TicketOpen ticket={theTicket} userId={user.id} userScore={user.score} />)}
-            {!theTicket.open && (<TicketClosed ticket={theTicket} userId={user.id} />)}
+            <TicketBase ticket={theTicket} user={user} />
+            {/* {theTicket.open && (<TicketOpen ticket={theTicket} userId={user.id} userScore={user.score} />)}
+            {!theTicket.open && (<TicketClosed ticket={theTicket} userId={user.id} />)} */}
           </React.Fragment>
         ))
         }

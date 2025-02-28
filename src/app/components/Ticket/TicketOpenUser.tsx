@@ -1,9 +1,10 @@
 import { getOpenUserTicket } from "@/lib/actions/gamedata";
 import CloseTicketButton from "./CloseTicketButton";
-import { formatBetCounter, formatTimeEstimate } from "@/lib/format-helper";
+import { formatBetCounter, formatTime } from "@/lib/format-helper";
 import TicketCard, { TicketTopRightCorner } from "./TicketCard";
 import { TicketIcon } from "@heroicons/react/24/solid";
 import Amount, { AmountColor } from "../Amount";
+import { TicketBase } from "./TicketBase";
 
 export default async function OpenUserTicket({ ticket }: { ticket: any }) {
 
@@ -32,7 +33,7 @@ export default async function OpenUserTicket({ ticket }: { ticket: any }) {
           </div>
           <p>{ticket.description}</p>
           <p className="mt-4 italic">
-            {formatTimeEstimate(ticket.timeEstimate)}
+            {formatTime(ticket.timeEstimate)}
           </p>
         </>
       }

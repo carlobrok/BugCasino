@@ -12,7 +12,7 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
     const [isLoading, setIsLoading] = useState(false);
     const [amount, setAmount] = useState(0);
     const [doneInTime, setDoneInTime] = useState(true);
-    const [success, setSuccess] = useState(false);	
+    const [success, setSuccess] = useState(false);
     const [feedback, setFeedback] = useState("");
 
     const [betPlaced, setBetPlaced] = useState(false);
@@ -29,7 +29,7 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
             } else {
                 alert(response.error);
             }
-        } 
+        }
         catch (error) {
             setFeedback("Some error occoured");
         }
@@ -48,27 +48,30 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
 
     return (
         <>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col items-center space-y-2">
+
                 <AmountInputGroup userScore={userScore} amount={amount} setAmount={setAmount} disableInput={isLoading} />
-                <button
-                    onClick={() => setDoneInTime(!doneInTime)}
-                    disabled={isLoading}
-                    className={"link-btn  backdrop-blur-lg" + (doneInTime ? " link-green" : " link-red")}
-                >
-                    {formatDoneInTime(doneInTime)}
-                </button>
-                <button
-                    onClick={submitBet}
-                    disabled={isLoading || amount <= 0}
-                    className={" link-btn enabled:hover:bg-zinc-400 " + (isLoading ? " bg-zinc-600" : " bg-zinc-500")}
-                >
-                    <p className="mr-2">bet</p>
-                    {isLoading ?
-                        <LoadingIndicator />
-                        :
-                        <CheckIcon className="w-4 h-4" />
-                    }
-                </button>
+                <div className="flex items-center space-x-2">
+                    <button
+                        onClick={() => setDoneInTime(!doneInTime)}
+                        disabled={isLoading}
+                        className={"link-btn  backdrop-blur-lg" + (doneInTime ? " link-green" : " link-red")}
+                    >
+                        {formatDoneInTime(doneInTime)}
+                    </button>
+                    <button
+                        onClick={submitBet}
+                        disabled={isLoading || amount <= 0}
+                        className={" link-btn enabled:hover:bg-zinc-400 " + (isLoading ? " bg-zinc-600" : " bg-zinc-500")}
+                    >
+                        <p className="mr-2">bet</p>
+                        {isLoading ?
+                            <LoadingIndicator />
+                            :
+                            <CheckIcon className="w-4 h-4" />
+                        }
+                    </button>
+                </div>
             </div>
         </>
     );

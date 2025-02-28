@@ -18,11 +18,11 @@ export enum AmountColor {
 //     Gray = "stroke-zinc-300"
 // }
 
-export default function Amount({ amount, color = AmountColor.Emerald, size = 20}: { amount: number | React.ReactElement; color?: AmountColor, size?: number }) {
+export default function Amount({ amount, color = AmountColor.Emerald, size = 20, margin = false}: { amount: number | React.ReactElement; color?: AmountColor, size?: number, margin?: boolean }) {
     return (
-        <div className="flex items-center mx-2">  
-            {typeof amount === 'number' ? <p>{amount}</p> : amount}
-            <Coins className={AmountColor.Emerald + " drop-shadow-md ml-1"} color="#fffbeb" size={size} />
-        </div>
+        <span className={"inline-flex items-center" + (margin ? " ml-2 mr-2" : "")}>  
+            {amount}
+            <Coins className={AmountColor.Emerald + " drop-shadow-md ml-1 align-middle inline shrink-0"} color="#fffbeb" size={size} />
+        </span>
     );
 }

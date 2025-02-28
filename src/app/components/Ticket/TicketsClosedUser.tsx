@@ -4,7 +4,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import { Ticket, TicketWithDetails } from "@/lib/actions/gamedata"
 import React from "react";
 import TicketCard, { TicketClosed, TicketTitle, TicketTopRightCorner } from "./TicketCard";
-import { formatBetCounter, formatDoneInTime, formatTimeEstimate, formatTimeEstimateShort } from "@/lib/format-helper";
+import { formatBetCounter, formatDoneInTime, formatTime, formatTimeEstimateShort } from "@/lib/format-helper";
 import Amount, { AmountColor } from "../Amount";
 import GradientLine from "../GradientLine";
 
@@ -43,8 +43,8 @@ function ClosedUserTicketCard({ ticket }: { ticket: TicketWithDetails }) {
 
                                 </div>
                                 <div>
-                                    <p>{formatTimeEstimate(ticket.timeEstimate)}</p>
-                                    <p>{formatTimeEstimate(ticket.updatedAt)}</p>
+                                    <p>{formatTime(ticket.timeEstimate)}</p>
+                                    <p>{formatTime(ticket.updatedAt)}</p>
                                 </div>
                             </div>
                         </div>

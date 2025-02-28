@@ -122,6 +122,7 @@ export default function LoginRegister({ groups }: { groups: { name: string; id: 
                             <label className="block px-2 font-bold text-sm">Name</label>
                             <input
                                 type="text"
+                                maxLength={25}
                                 {...register("name", { required: "Name is required" })}
                                 className={"w-full px-4 py-1 bg-white border rounded-lg text-md" + (errors.name ? " border-red-500" : " border-gray-300")}
                             />

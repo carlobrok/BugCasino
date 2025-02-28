@@ -30,17 +30,7 @@ export default function CreateTicket() {
                         className="mt-1 block w-full px-4 p-2 bg-zinc-700 rounded-md"
                         placeholder="Enter the title"
                         autoComplete="off"
-                        required
-                    />
-                </div>
-
-                <div className="mt-2">
-                    <label className="block text-lg font-semibold">Description</label>
-                    <input
-                        type="text"
-                        name="description"
-                        placeholder="Some short description"
-                        className="mt-1 block bg-zinc-700 w-full border-gray-70 px-4 p-2  rounded-md"
+                        maxLength={60}
                         required
                     />
                 </div>

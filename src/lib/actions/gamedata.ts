@@ -5,7 +5,6 @@ import { User } from "@prisma/client";
 export type Ticket = {
   id: number;
   title: string;
-  description: string;
   authorId: number;
   author: {
     name: string;
@@ -13,6 +12,7 @@ export type Ticket = {
   open: boolean;
   timeEstimate: Date;
   createdAt: Date;
+  finishedAt: Date | null;
   updatedAt: Date;
 }
 
@@ -27,6 +27,7 @@ export interface TicketWithDetails extends Ticket {
   }[];
   author: {
     name: string;
+    avatar: string;
     group: {
       name: string ;
     } | null;
@@ -57,7 +58,7 @@ export async function getScores() {
 /**
  * @returns All tickets of the current user or null if not authenticated.
  */
-export async function getUserTickets(onlyClosed: boolean = false) : Promise< TicketWithDetails[] | null> {
+export async function getUserTickets(onlyClosed: boolean = false)  {
   const user : User | null = await getCurrentUser();
 
   if (!user) {
@@ -88,8 +89,11 @@ export async function getUserTickets(onlyClosed: boolean = false) : Promise< Tic
     where: { authorId: user.id, open: onlyClosed ? false : undefined },
   }
 
-  return await prisma.ticket.findMany(schema) as TicketWithDetails[];
+  return await prisma.ticket.findMany(schema);
 }
+
+// export type 
+
 
 export async function getOpenUserTicket() {
   const user : User | null = await getCurrentUser();
@@ -142,6 +146,7 @@ export async function getOtherTickets(filters: { open?: boolean; groupName?: str
       author: {
         select: {
           name: true,
+          avatar: true,
           group: {
             select: { name: true },
           },

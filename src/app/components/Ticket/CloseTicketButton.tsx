@@ -44,7 +44,7 @@ export default function CloseTicketButton({ticketStart} : {ticketStart: Date}) {
         >
             <span className="mr-1">Done</span>
             <Amount amount={rewardAmount}/>
-            <CheckIcon className="ml-1 w-6 h-6" />
+            <CheckIcon className="ml-1 size-5 shrink-0" />
         </button>
     );
 }

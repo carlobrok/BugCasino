@@ -10,10 +10,10 @@ import { RegisterFormData } from "@/app/components/Login/LoginRegister";
 
 export async function newTicket(prevState: any, formData: FormData) {
     const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
+    // const description = formData.get('description') as string;
     const timeEstimate = formData.get('time') as string;
 
-    console.log("creating ticket", title, description, timeEstimate);
+    console.log("creating ticket", title, timeEstimate);
 
     const user: User | null = await getCurrentUser();
     if (!user) {
@@ -27,13 +27,13 @@ export async function newTicket(prevState: any, formData: FormData) {
         return { error: "You already have an open ticket" };
     }
 
-    if (!title || !description || !timeEstimate) {
+    if (!title || !timeEstimate) {
         // console.log("missing fields", title, description, timeEstimate);
         return { error: "Please fill out all fields" };
     }
 
     const ticket = await prisma.ticket.create({
-        data: { title, description, authorId: user.id, timeEstimate }
+        data: { title, authorId: user.id, timeEstimate }
     });
 
     // console.log(ticket);

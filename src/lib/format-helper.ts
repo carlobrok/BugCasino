@@ -6,24 +6,14 @@ export function formatBetCounter(betCount: number) {
     return betCount === 1 ? "1 Bet" : `${betCount} Bets`;
 }
 
-export function formatTimeEstimate(estimate: Date) {
+export function formatTime(estimate: Date) {
     return estimate.toLocaleString("en-UK", {
-        weekday: "short",
-        day: "numeric",
-        month: "long",
+        weekday: "long",
         hour: "numeric",
         minute: "numeric",
       })
 }
 
-export function formatTimeEstimateShort(estimate: Date) {
-    return estimate.toLocaleString("en-UK", {
-        day: "numeric",
-        month: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-      })
-}
 
 
 export enum RankColors {
