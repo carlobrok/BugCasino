@@ -1,24 +1,56 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { createBet } from "@/lib/actions/bet";
-import { CheckIcon } from "@heroicons/react/24/solid";
-import { useRouter } from "next/navigation";
 import AmountInputGroup from "./AmountInputGroup";
 import { formatDoneInTime } from "@/lib/format-helper";
 import LoadingIndicator from "./LoadingIndicator";
+import { getBetReward, getWinReturnFactor } from "@/lib/actions/scoring";
+import { Tooltip } from "./Tooltip";
+import Amount from "./Amount";
 
-export default function CreateBet({ ticketId, userScore }: { ticketId: number, userScore: number }) {
+
+export default function CreateBet({ ticketId, userScore, bets }: {
+    ticketId: number, userScore: number, bets: {
+        user: {
+            name: string;
+            avatar: string;
+        };
+        id: number;
+        userId: number;
+        amount: number;
+        doneInTime: boolean;
+    }[]
+}) {
     const [isLoading, setIsLoading] = useState(false);
     const [amount, setAmount] = useState(0);
-    const [doneInTime, setDoneInTime] = useState(true);
     const [success, setSuccess] = useState(false);
     const [feedback, setFeedback] = useState("");
 
     const [betPlaced, setBetPlaced] = useState(false);
 
+    const [intimeReturnFactor, setIntimeReturnFactor] = useState(0);
+    const [delayedReturnFactor, setDelayedReturnFactor] = useState(0);
 
-    const submitBet = async () => {
+    const [intimeWin, setIntimeWin] = useState(0);
+    const [delayedWin, setDelayedWin] = useState(0);
+
+    useEffect(() => {
+
+        const intimePod = bets.filter(bet => bet.doneInTime).reduce((sum, bet) => sum + bet.amount, 0) + 0;
+        const delayedPod = bets.filter(bet => !bet.doneInTime).reduce((sum, bet) => sum + bet.amount, 0) + 0;
+
+        // console.log("Intime pod", intimePod, "Delayed pod", delayedPod);
+
+        setIntimeReturnFactor(getWinReturnFactor(amount, intimePod, intimePod + delayedPod));
+        setDelayedReturnFactor(getWinReturnFactor(amount, delayedPod, intimePod + delayedPod));
+
+        setIntimeWin(getBetReward(amount, amount + intimePod, amount + intimePod + delayedPod));
+        setDelayedWin(getBetReward(amount, amount + delayedPod, amount + intimePod + delayedPod));
+
+    }, [bets, amount]);
+
+    const submitBet = async (doneInTime: boolean) => {
         setIsLoading(true);
 
         try {
@@ -49,28 +81,63 @@ export default function CreateBet({ ticketId, userScore }: { ticketId: number, u
     return (
         <>
             <div className="flex flex-col items-center space-y-2">
+                    <p className="font-semibold">Create a bet</p>
 
                 <AmountInputGroup userScore={userScore} amount={amount} setAmount={setAmount} disableInput={isLoading} />
                 <div className="flex items-center space-x-2">
-                    <button
-                        onClick={() => setDoneInTime(!doneInTime)}
-                        disabled={isLoading}
-                        className={"link-btn  backdrop-blur-lg" + (doneInTime ? " link-green" : " link-red")}
+
+                    {/* input for in time bet */}
+
+                    <Tooltip text={
+                        <div className="flex flex-col items-center space-y-2">
+                            <p className="font-bold">Win prediction</p>
+                            <p><Amount amount={intimeWin} />  (x{intimeReturnFactor.toFixed(2)})</p>
+                        </div>
+                    }
+                        enabled={amount > 0}
                     >
-                        {formatDoneInTime(doneInTime)}
-                    </button>
-                    <button
-                        onClick={submitBet}
-                        disabled={isLoading || amount <= 0}
-                        className={" link-btn enabled:hover:bg-zinc-400 " + (isLoading ? " bg-zinc-600" : " bg-zinc-500")}
+
+                        <button
+                            onClick={() => submitBet(true)}
+                            disabled={isLoading || amount <= 0}
+                            className={"flex-col items-center link-btn backdrop-blur-lg link-green"}
+                        >
+                            {formatDoneInTime(true)}
+
+                            {isLoading ?
+                                <LoadingIndicator />
+                                :
+                                (amount > 0 && <span className="font-bold">x{intimeReturnFactor.toFixed(2)}</span>)
+                            }
+
+                        </button>
+                    </Tooltip>
+
+
+                    {/* Input for delayed bet */}
+
+                    <Tooltip text={
+                        <div className="flex flex-col items-center space-y-2">
+                            <p className="font-bold">Win prediction </p>
+                            <p><Amount amount={delayedWin} /> (x{delayedReturnFactor.toFixed(2)})</p>
+
+                        </div>
+                    }
+                        enabled={amount > 0}
                     >
-                        <p className="mr-2">bet</p>
-                        {isLoading ?
-                            <LoadingIndicator />
-                            :
-                            <CheckIcon className="w-4 h-4" />
-                        }
-                    </button>
+                        <button
+                            onClick={() => submitBet(false)}
+                            disabled={isLoading || amount <= 0}
+                            className={"flex-col items-center link-btn backdrop-blur-lg link-red "}
+                        >
+                            {formatDoneInTime(false)}
+                            {isLoading ?
+                                <LoadingIndicator />
+                                :
+                                (amount > 0 && <span className="font-bold">x{delayedReturnFactor.toFixed(2)}</span>)
+                            }
+                        </button>
+                    </Tooltip>
                 </div>
             </div>
         </>

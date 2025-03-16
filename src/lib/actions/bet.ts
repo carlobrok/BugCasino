@@ -46,3 +46,24 @@ export async function createBet(ticketId: number, amount: number, doneInTime: bo
         return { success: false, error: "Some error occoured" };
     }
 }
+
+// gets the bet outcome for a specfic bet that the user has placed
+export async function getUserBetOutcome(betId: number) {
+    const user: User | null = await getCurrentUser();
+
+    if (!user) {
+        return { success: false, error: "You are not authenticated" };
+    }
+
+    const bet = await prisma.bet.findUnique({ where: { id: betId } });
+
+    if (!bet) {
+        return { success: false, error: "Bet not found" };
+    }
+
+    if (bet.userId !== user.id) {
+        return { success: false, error: "You are not the owner of this bet" };
+    }
+
+    return { success: true, doneInTime: bet.doneInTime };
+}

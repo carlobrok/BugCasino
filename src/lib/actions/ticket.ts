@@ -10,7 +10,7 @@ export async function closeUserTicket() {
   const user: User | null = await getCurrentUser();
 
   if (!user) {
-    return null;
+    return { success: false, error: "You are not authenticated" };
   }
 
   const ticket = await prisma.ticket.findFirst({
@@ -21,19 +21,37 @@ export async function closeUserTicket() {
   });
 
   if (!ticket) {
-    return null;
+    return { success: false, error: "You don't have an open ticket" };
   }
-
+  
   const now = new Date();
   const doneInTime = ticket.timeEstimate > now;
 
-  console.log("Closing ticket", ticket);
-  console.log("Done in time", doneInTime);
+  console.log("Closing ticket", ticket, "done in time", doneInTime);
+
+  await prisma.ticket.update({
+    where: { id: ticket.id },
+    data: { open: false, finishedAt: now, finishedInTime: doneInTime },
+  });
+
+  
+
+  // calculate the payout for the winners. The total pod is split between the winners, share is proportional to the amount they bet
+  // get total pod and winners pod
+  const totalPod = ticket.bets.reduce((acc, bet) => acc + bet.amount, 0);
+  const winnersPod = ticket.bets.filter(bet => bet.doneInTime === doneInTime).reduce((acc, bet) => acc + bet.amount, 0);
+
+  console.log("Total pod", totalPod, "Winners pod", winnersPod);
 
   for (const bet of ticket.bets) {
     const correctBet = bet.doneInTime === doneInTime;
     console.log("Bet", bet, "is correct", correctBet);
-    const betReward = getBetReward(bet.amount, correctBet);
+    
+    let betReward = 0;
+    if (correctBet) {
+      betReward = getBetReward(bet.amount, winnersPod, totalPod);
+      console.log("Bet reward", betReward);
+    }
 
     // update Bet 
     await prisma.bet.update({
@@ -47,11 +65,12 @@ export async function closeUserTicket() {
     }
   }
 
-  await createTransaction({ userId: user.id, amount: getTicketReward(ticket.createdAt), type: TransactionType.TICKET });
+  const ticketReward = getTicketReward(ticket.createdAt, now, totalPod);
+  console.log("Ticket reward", ticketReward);
+  const totalReward = ticketReward.timeReward + ticketReward.podReward;
+
+  await createTransaction({ userId: user.id, amount: totalReward, type: TransactionType.TICKET });
 
   // Return the result of updating the ticket(s)
-  return await prisma.ticket.update({
-    where: { id: ticket.id },
-    data: { open: false },
-  });
+  return { success: true };
 }

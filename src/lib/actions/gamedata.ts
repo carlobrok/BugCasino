@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import { getCurrentUser, getUser } from "../session";
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 
 export type Ticket = {
   id: number;
@@ -13,29 +13,49 @@ export type Ticket = {
   timeEstimate: Date;
   createdAt: Date;
   finishedAt: Date | null;
+  finishedInTime: boolean | null;
   updatedAt: Date;
 }
 
 
-export interface TicketWithDetails extends Ticket {
-  bets: {
-    user: { name: string };
-    amount: number;
-    doneInTime: boolean;
-    userId: number;
-    id: number;
-  }[];
-  author: {
-    name: string;
-    avatar: string;
-    group: {
-      name: string ;
-    } | null;
-  };
-  _count: {
-    bets: number;
-  }
-}
+// Wir definieren, welche Felder wir abfragen wollen.
+const ticketWithDetailsSelect = Prisma.validator<Prisma.TicketDefaultArgs>()({
+  include: {
+    author: {
+      select: {
+        name: true,
+        avatar: true,
+        group: {
+          select: { name: true },
+        },
+      },
+    },
+    bets: {
+      select: {
+        user: { select: { name: true, avatar: true } },
+        amount: true,
+        doneInTime: true,
+        userId: true,
+        id: true,
+        outcome: true,
+      },
+    },
+    _count: { select: { bets: true } },
+  },
+});
+
+export type TicketWithDetails = Prisma.TicketGetPayload<typeof ticketWithDetailsSelect>;
+
+
+const openUserTicketSelect = Prisma.validator<Prisma.TicketDefaultArgs>()({
+  include: {
+    author: { select: { name: true } },
+    bets: { select: { userId: true, id: true } },
+    _count: { select: { bets: true } },
+  },
+});
+
+export type OpenUserTicket = Prisma.TicketGetPayload<typeof openUserTicketSelect>;
 
 
 export async function getUserScore() : Promise<{name: string, userScore: number, avatar: string, closedTickets: number}> {
@@ -95,7 +115,7 @@ export async function getUserTickets(onlyClosed: boolean = false)  {
 // export type 
 
 
-export async function getOpenUserTicket() {
+export async function getOpenUserTicket() : Promise<TicketWithDetails | null> {
   const user : User | null = await getCurrentUser();
 
   if (!user) {
@@ -103,28 +123,11 @@ export async function getOpenUserTicket() {
   }
 
   return prisma.ticket.findFirst({
-    include: {
-      author: { select: { name: true } },
-      bets: { select: { userId: true, id: true } },
-      _count: { select: { bets: true } },
-    },
+    ...ticketWithDetailsSelect,
     where: { authorId: user.id, open: true },
   });
 }
 
-
-export async function closeUserTicket() {
-  const user : User | null = await getCurrentUser();
-
-  if (!user) {
-    return null;
-  }
-
-  prisma.ticket.updateMany({
-    where: { authorId: user.id, open: true },
-    data: { open: false },
-  });
-}
 
 
 
@@ -140,32 +143,10 @@ export async function getOtherTickets(filters: { open?: boolean; groupName?: str
     ...(filters.open !== undefined ? { open: filters.open } : {}),
     ...(filters.groupName ? { author: { group: { name: filters.groupName } } } : {}),
   };
-
   const tickets = await prisma.ticket.findMany({
-    include: {
-      author: {
-        select: {
-          name: true,
-          avatar: true,
-          group: {
-            select: { name: true },
-          },
-        },
-      },
-      bets: {
-        select: {
-          user: { select: { name: true } },
-          amount: true,
-          doneInTime: true,
-          userId: true,
-          id: true,
-        },
-      },
-      _count: { select: { bets: true } },
-    },
+    ...ticketWithDetailsSelect,
     where: whereClause,
   });
-  
   return tickets.sort((a, b) => {
     // 1. Open tickets should come first
     if (a.open !== b.open) return b.open ? 1 : -1;
