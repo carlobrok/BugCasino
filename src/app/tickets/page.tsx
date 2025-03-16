@@ -4,18 +4,20 @@ import { redirect } from "next/navigation";
 import TicketsList from '../components/Ticket/TicketsList';
 import { getOpenUserTicket, getUserTickets } from '@/lib/actions/gamedata';
 import CreateTicket from '../components/CreateTicket';
-import OpenUserTicket from '../components/Ticket/TicketOpenUser';
+import TicketUserOpen from '../components/Ticket/TicketOpenUser';
 import GradientLine from '../components/GradientLine';
 import AppPage from '../components/AppPage';
 import TicketClosedUser from "../components/Ticket/TicketsClosedUser";
-import { getUser } from "@/lib/session";
-// import { useEffect } from 'react';
+import { getCurrentUser, getUser } from "@/lib/session";
 
+interface PageProps {
+    searchParams: Promise<Record<string, string | undefined>>;
+}
 
-export default async function Page({ searchParams }: { searchParams: { open?: string; groupName?: string } }) {
-    const session = await getServerSession();
-
-    if (!session) {
+export default async function Page({ searchParams }: PageProps) {
+    const resolvedSearchParams = await searchParams; // Await the promise
+    const user = await getUser();
+    if (!user) {
         redirect("/");
     }
 
@@ -29,7 +31,7 @@ export default async function Page({ searchParams }: { searchParams: { open?: st
                     {openTicket ? (
                         <>
                             <h2 className="mb-4">My open Ticket</h2>
-                            <OpenUserTicket ticket={openTicket} />
+                            <TicketUserOpen ticket={openTicket} user={user} />
                         </>
                     ) : (
                         <div className="m-auto max-w-lg lg:max-w-full">
@@ -41,14 +43,15 @@ export default async function Page({ searchParams }: { searchParams: { open?: st
                     )}
 
                     {closedTickets && closedTickets.length > 0 && (
-                        <TicketClosedUser tickets={closedTickets} />
+                        // <TicketClosedUser tickets={closedTickets} />
+                        <></>
                     )}
 
                     <GradientLine className='my-8' />
 
                     <div className=''>
                         <h2 className="mb-4">Other users' Tickets</h2>
-                        <TicketsList searchParams={searchParams} />
+                        <TicketsList searchParams={resolvedSearchParams} />
                     </div>
                 </div>
             </AppPage>

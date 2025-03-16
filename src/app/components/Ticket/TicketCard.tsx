@@ -17,6 +17,14 @@ export function NoTicketsCard() {
     );
 }
 
+export function TicketIdBatch({ ticketId }: { ticketId: number }) {
+    return (
+        <div className="italic bottom-5 left-5 bg-zinc-500 shadow-md text-white rounded-full my-auto px-3 py-1 text-sm">
+            #{ticketId}
+        </div>
+    );
+}
+
 
 export default function TicketCard({ childrenLeft, childrenRight, topLevel }:
     {
@@ -155,7 +163,7 @@ export function TicketClosed({ ticket, userId }: { ticket: TicketWithDetails, us
 export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDetails, userId: number, userScore: number }) {
 
     const userHasBetOnTicket = ticket.bets.some((bet) => bet.userId === userId);
-    console.log("userHasBetOnTicket", userHasBetOnTicket);
+    // console.log("userHasBetOnTicket", userHasBetOnTicket);
 
     return (
         <>
@@ -202,7 +210,7 @@ export function TicketOpen({ ticket, userId, userScore }: { ticket: TicketWithDe
                         ) : (
                             <>
                                 <div className="flex flex-col justify-end items-end h-full">
-                                    <CreateBet ticketId={ticket.id} userScore={userScore} />
+                                    {/* <CreateBet ticketId={ticket.id} userScore={userScore} /> */}
                                 </div>
                             </>
                         )}

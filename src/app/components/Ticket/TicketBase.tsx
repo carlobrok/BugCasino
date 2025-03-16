@@ -1,13 +1,19 @@
+'use client';
+
 import { TicketWithDetails } from "@/lib/actions/gamedata";
 import UserIconName from "../UserIconName";
 import { formatBetCounter, formatDoneInTime, formatTime } from "@/lib/format-helper";
-import { ChevronDownIcon, LockClosedIcon, TicketIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, ChevronUpIcon, LockClosedIcon, TicketIcon } from "@heroicons/react/24/solid";
 import Amount, { AmountColor } from "../Amount";
-import GradientLine from "../GradientLine";
 import CreateBet from "../CreateBet";
 import { UserData } from "@/lib/session";
-import ExpandableList from "./ExpandableList";
-
+import BetsList, { PunctualityLabel } from "./BetsList";
+import { useEffect, useRef, useState } from "react";
+import { Tooltip } from "../Tooltip";
+import { Clock } from "lucide-react";
+import { TicketIdBatch } from "./TicketCard";
+import Link from "next/link";
+import { TicketUserBet } from "./TicketUserBet";
 
 export function TicketTitle({ ticket }: { ticket: TicketWithDetails }) {
     return (
@@ -22,115 +28,229 @@ export function TicketTitle({ ticket }: { ticket: TicketWithDetails }) {
     );
 }
 
+// return the remaining time until the ticket is estimated to be finished as a string
+// it must be a counter that counts down
+// show e.g. "1h 30m" or "30m 20s" 
+// if the time is already over, show "overdue"
 
-export function TicketBase({ ticket, user }: { ticket: TicketWithDetails, user: UserData }) {
+export function remainingTime(time: Date) {
+    const now = new Date();
+    const diff = time.getTime() - now.getTime();
+    if (diff < 0) {
+        return "overdue";
+    }
+    const hours = Math.floor(diff / 1000 / 60 / 60);
+    const minutes = Math.floor((diff / 1000 / 60) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
-    const userHasBetOnTicket = ticket.bets.some((bet) => bet.userId === user.id);
+    if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    }
+    if (minutes > 0) {
+        return `${minutes}m ${seconds}s`;
+    }
+    return `${seconds}s`;
+}
+
+export function CountdownTimer({ timeEstimate }: { timeEstimate: Date }) {
+    const [time, setTime] = useState(remainingTime(timeEstimate));
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(remainingTime(timeEstimate));
+        }, 1000);
+
+        return () => clearInterval(interval); // Cleanup interval on unmount
+    }, [timeEstimate]);
+
+    return (
+        <span>
+            {time}
+        </span>
+    );
+}
 
 
+export function TicketLeftSide({ ticket, user }: { ticket: TicketWithDetails, user: UserData }) {
 
 
     return (
-
-        <div className="relative w-full flex">
-
+        <>
             {/* Ticket Info on the left side */}
+
+            {/* <div className="relative ticket-side p-6 w-1/2 md:w-2/3 flex flex-col justify-between"></div> */}
+
             <div className="relative ticket-side p-6 w-2/3 flex flex-col justify-between">
                 {/* Titel, Author and estimated Time */}
                 <div>
                     <TicketTitle ticket={ticket} />
-                    <UserIconName name={ticket.author.name} avatar={ticket.author.avatar} />
+                    <Link
+                        className="flex items-center link-translate"
+                        href={`/profile/${ticket.authorId}`}
+                    >
+                        <UserIconName name={ticket.author.name} avatar={ticket.author.avatar} />
+                    </Link>
                 </div>
-                <div className="mt-6 flex gap-2 italic">
-                    <div className=" bottom-5 left-5 bg-zinc-500 shadow-md text-white rounded-full my-auto px-3 py-1 text-sm">
-                        #{ticket.id}
-                    </div>
-                    <div className="text-sm">
-                        {ticket.open ?
-                            (
+                <div className="mt-6 flex items-center gap-2">
+                    <TicketIdBatch ticketId={ticket.id} />
+
+                    {ticket.open ?
+                        (
+                            <>
+                                <Tooltip
+                                    text={
+
+                                        <div className="">
+                                            <p>Created:  {formatTime(ticket.createdAt)}</p>
+                                            <p>Estimate: {formatTime(ticket.timeEstimate)}</p>
+                                        </div>
+                                    }>
+                                    <div className="inline-flex font-semibold items-center gap-1">
+                                        <Clock className="size-5 text-zinc-200" />
+                                        {<CountdownTimer timeEstimate={ticket.timeEstimate} />}
+                                    </div>
+                                </Tooltip>
+                            </>
+                        )
+                        :
+                        (
+                            <>
+                                <Tooltip
+                                    text={
+                                        <div className="">
+                                            <p>Created:  {formatTime(ticket.createdAt)}</p>
+                                            <p>Estimate: {formatTime(ticket.timeEstimate)}</p>
+                                            <p>Finished: {formatTime(ticket.finishedAt || new Date())}</p>
+                                        </div>
+                                    }>
+                                    <div className="inline-flex font-semibold items-center gap-1">
+                                        {ticket.finishedInTime !== null && <PunctualityLabel doneInTime={ticket.finishedInTime} />}
+                                    </div>
+                                </Tooltip>
+                            </>
+                        )}
+                </div>
+
+
+            </div>
+        </>
+    );
+}
+
+
+
+function TicketSeeAllBets({ handleToggle, isOpen, numBets }: {
+    handleToggle: () => void, isOpen: boolean, numBets: number
+}) {
+    return (
+        <div className="mt-4 ">
+            <button
+                disabled={numBets === 0}
+                className={"inline link-btn link-btn-opague text-gray-200 enabled:hover:text-white"}
+                onClick={handleToggle}
+            >
+                {numBets === 0 ? "No bets" : (
+                    <>
+                        {isOpen ? "Hide bets" : "See all bets"}
+                        {isOpen ? (
+                            <ChevronUpIcon className="ml-1 size-5" />
+                        ) : (
+                            <ChevronDownIcon className="ml-1 size-5" />
+                        )}
+                    </>
+                )}
+
+
+            </button>
+        </div>
+    );
+}
+
+export function TicketNumBetsAmount({ ticket }: { ticket: TicketWithDetails }) {
+    return (<div className="flex w-full items-center justify-between rounded-2xl px-5 py-2 bg-zinc-500 text-white font-bold">
+        {formatBetCounter(ticket.bets.length)}
+        <Amount
+            amount={ticket.bets.reduce((betSum, bet) => betSum + bet.amount, 0)}
+            color={AmountColor.EmeraldDark}
+        />
+    </div>);
+}
+
+export function TicketRightSide({ ticket, user, userHasBetOnTicket, handleToggle, isOpen }: { ticket: TicketWithDetails, user: UserData, userHasBetOnTicket: boolean, handleToggle: () => void, isOpen: boolean }) {
+
+    return (
+        <>
+            <div className="w-1/3 ticket-side">
+                <div className="flex flex-col justify-between items-center h-full w-full">
+                    <TicketNumBetsAmount ticket={ticket} />
+
+                    {!ticket.open || new Date(ticket.timeEstimate) < new Date() ? (
+                        <>
+                            <div className="flex flex-col items-center justify-center p-6">
                                 <>
-                                    <p>Created:  {formatTime(ticket.createdAt)}</p>
-                                    <p>Estimate: {formatTime(ticket.timeEstimate)}</p>
+                                    <TicketUserBet ticket={ticket} user={user} userHasBetOnTicket />
+                                    <TicketSeeAllBets handleToggle={handleToggle} isOpen={isOpen} numBets={ticket.bets.length} />
+                                </>
+                            </div>
+
+                        </>
+                    ) : (
+                        <>
+
+                            {/* If the user has bet on the ticket, show the bets */}
+
+                            {userHasBetOnTicket ? (
+                                <>
+                                    <div className="flex flex-col items-center justify-end text-center p-6">
+
+                                        {/* User bet on the ticket */}
+
+                                        <TicketUserBet ticket={ticket} user={user} userHasBetOnTicket />
+                                        {/* " All bets v " button */}
+
+                                        <TicketSeeAllBets handleToggle={handleToggle} isOpen={isOpen} numBets={ticket.bets.length} />
+                                    </div>
                                 </>
                             ) : (
                                 <>
-                                    <p>Estimate: {formatTime(ticket.timeEstimate)}</p>
-                                    <p>Finished: {formatTime(ticket.finishedAt || new Date())}</p>
-                                </>
-                            )
-                        }
-                    </div>
-                </div>
-
-
-            </div>
-            <div className="ticket-separator"></div>
-            {/* Right side for betting */}
-            <div className="w-1/3 ticket-side">
-
-                {userHasBetOnTicket ? (
-                    <>
-                        <div className="flex flex-col justify-between items-center h-full w-full">
-                            <div className="flex w-full items-center justify-between rounded-2xl px-5 py-2 bg-zinc-500 text-white font-bold">
-
-                                {formatBetCounter(ticket.bets.length)}
-                                <Amount
-                                    amount={ticket.bets.reduce((betSum, bet) => betSum + bet.amount, 0)}
-                                    color={AmountColor.EmeraldDark}
-                                />
-
-
-                            </div>
-
-
-
-                            {ticket.bets.some((bet) => bet.userId === user.id) && (
-                                <div className="flex flex-col items-center justify-end text-center p-6">
-
-                                    {/* User bet on the ticket */}
-
-                                    {ticket.bets
-                                        .filter((bet) => bet.userId === user.id)
-                                        .map((bet) => (
-                                            <span key={bet.id} className="inline-block ">
-                                                I bet <Amount amount={bet.amount} color={AmountColor.Emerald} margin={true} />
-                                                on {formatDoneInTime(bet.doneInTime)}
-                                            </span>
-                                        ))}
-
-                                    {/* " All bets v " button */}
-
-                                    <div className="mt-4 ">
-                                        <button className="inline link-btn link-btn-opague hover:text-white text-gray-200">
-                                            All bets
-                                            <ChevronDownIcon className="ml-1 size-5" />
-                                        </button>
+                                    <div className="p-6 ">
+                                        <CreateBet ticketId={ticket.id} userScore={user.score} bets={ticket.bets} />
                                     </div>
-
-
-
-                                </div>
+                                </>
                             )}
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className="flex flex-col justify-between items-center h-full w-full">
-                            <div className="flex w-full items-center justify-between rounded-2xl px-5 py-2 bg-zinc-500 text-white font-bold">
-                                {formatBetCounter(ticket.bets.length)}
-                                <Amount
-                                    amount={ticket.bets.reduce((betSum, bet) => betSum + bet.amount, 0)}
-                                    color={AmountColor.EmeraldDark}
-                                />
-                            </div>
-                            <div className="p-6 ">
-                                <CreateBet ticketId={ticket.id} userScore={user.score} />
-                            </div>
-                        </div>
-                    </>
-                )}
+                        </>)}
+                </div>
             </div>
-            {/* <ExpandableList /> */}
+        </>
+
+    );
+}
+
+export function TicketBase({ ticket, user }: { ticket: TicketWithDetails, user: UserData }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const userHasBetOnTicket = ticket.bets.some((bet) => bet.userId === user.id);
+
+    const handleToggle = () => {
+        setIsOpen((prev) => !prev);
+    };
+
+
+    return (
+        <div>
+            <div className="relative w-full flex z-1">
+
+                <TicketLeftSide ticket={ticket} user={user} />
+
+                {/* Separator */}
+                <div className="ticket-separator"></div>
+
+                {/* Right side for betting */}
+                <TicketRightSide ticket={ticket} user={user} userHasBetOnTicket={userHasBetOnTicket} handleToggle={handleToggle} isOpen={isOpen} />
+
+            </div>
+            {/* Expandable list appears below */}
+            <BetsList bets={ticket.bets} isOpen={isOpen} />
         </div>
     );
 }

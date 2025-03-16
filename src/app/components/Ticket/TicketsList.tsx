@@ -9,10 +9,7 @@ import {NoTicketsCard} from "./TicketCard";
 import { TicketBase } from "./TicketBase";
 
 interface TicketsGridProps {
-  searchParams: {
-    open?: string;
-    groupName?: string;
-  };
+  searchParams: Record<string, string | undefined>;
 }
 
 export default async function TicketsList({ searchParams }: TicketsGridProps) {

@@ -35,7 +35,7 @@ model Ticket {
   open          Boolean  @default(true)
   bets          Bet[]
   timeEstimate  DateTime
-  doneInTime    Boolean?
+  finishedInTime    Boolean?
   finishedAt    DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

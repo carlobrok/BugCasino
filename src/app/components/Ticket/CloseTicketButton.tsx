@@ -2,17 +2,16 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { closeUserTicket } from "@/lib/actions/ticket";
-import { getTicketReward } from "@/lib/actions/scoring"
+import { getTicketReward, TicketReward } from "@/lib/actions/scoring"
 import { CheckIcon } from "@heroicons/react/24/solid";
-import { useRouter } from "next/navigation";
 import Amount from "../Amount";
+import { Tooltip } from "../Tooltip";
 
-export default function CloseTicketButton({ticketStart} : {ticketStart: Date}) {
+export default function CloseTicketButton({ ticketStart, ticketEnd, podAmount }: { ticketStart: Date, ticketEnd: Date, podAmount: number }) {
+
     const [isPending, startTransition] = useTransition();
-    const router = useRouter();
+    const [ticketReward, setTicketReward] = useState<TicketReward>({ timeReward: 0, podReward: 0 });
 
-    const [rewardAmount, setRewardAmount] = useState(0);
-    
     async function handleClick() {
         // Start a transition so that the UI knows we're in a pending state.
         startTransition(async () => {
@@ -24,27 +23,31 @@ export default function CloseTicketButton({ticketStart} : {ticketStart: Date}) {
         });
     }
 
-    // function to update the rewardAmount
+
     useEffect(() => {
-        const updateReward = () => {
-          setRewardAmount(getTicketReward(ticketStart));
-        };
-    
-        updateReward(); // Direkt initial berechnen
-        const interval = setInterval(updateReward, 5000); // Alle Sekunde updaten
-    
-        return () => clearInterval(interval); // Cleanup bei Unmount
-      }, [ticketStart]);
+        setTicketReward(getTicketReward(ticketStart, ticketEnd, podAmount));
+    }, [ticketStart, ticketEnd, podAmount]);
+
 
     return (
-        <button
-            onClick={handleClick}
-            disabled={isPending}
-            className="link-green link-btn"
+        <Tooltip
+            text={
+                <div>
+                    <p>Reward</p>
+                    <p>Working time: <Amount amount={ticketReward.timeReward} /> </p>
+                    <p>Pod  bonus: <Amount amount={ticketReward.podReward} /> </p>
+                </div>
+            }
         >
-            <span className="mr-1">Done</span>
-            <Amount amount={rewardAmount}/>
-            <CheckIcon className="ml-1 size-5 shrink-0" />
-        </button>
+            <button
+                onClick={handleClick}
+                disabled={isPending}
+                className="link-green link-btn"
+            >
+                <span className="mr-2">Done</span>
+                <Amount amount={ticketReward.podReward + ticketReward.timeReward} />
+                <CheckIcon className="ml-1 size-5 shrink-0" />
+            </button>
+        </Tooltip>
     );
 }
