@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { BellAlertIcon, BellIcon } from "@heroicons/react/24/solid";
 import { BetNotification } from "../api/notifications/route";
 import GradientLine from "./GradientLine";
+import { Tooltip } from "./Tooltip";
 
 export default function Notifications() {
   const { data: session, status } = useSession();
@@ -16,7 +17,7 @@ export default function Notifications() {
 
   useEffect(() => {
     if (status !== "authenticated") {
-      console.log("Notifications: Session not authenticated");
+      // console.log("Notifications: Session not authenticated");
       return;
     }
 
@@ -65,17 +66,19 @@ export default function Notifications() {
 
   return (
     <>
-      <div ref={containerRef}  className="relative flex items-center">
-        <button
-          onClick={toggleNotifications}
-        >
-          { notifications.length > 0 ? 
-            <BellAlertIcon className={"size-6 hover:cursor-pointer fill-red-300" + (showWiggle ? " animate-wiggle" : "")}/> 
-            :
-            <BellIcon className={"size-6 hover:cursor-pointer fill-zinc-300"} />
-          }
-        </button>
+      <div ref={containerRef} className="relative flex items-center">
+        <Tooltip text="Notifications">
 
+          <button
+            onClick={toggleNotifications}
+          >
+            {notifications.length > 0 ?
+              <BellAlertIcon className={"size-6 hover:cursor-pointer fill-red-300" + (showWiggle ? " animate-wiggle" : "")} />
+              :
+              <BellIcon className={"size-6 hover:cursor-pointer fill-zinc-300"} />
+            }
+          </button>
+        </Tooltip>
         {showNotifications && (
           <div className="absolute top-10 -right-20 z-8 mt-2 w-80 origin-top-right rounded-lg overflow-hidden bg-zinc-300/50 shadow-lg">
             <div className="py-1">
