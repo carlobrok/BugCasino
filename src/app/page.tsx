@@ -1,7 +1,7 @@
 import LoginRegister from "./components/Login/LoginRegister";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 import { getGroups } from "@/lib/actions/gamedata";
 
 export default async function Home() {
