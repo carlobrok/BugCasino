@@ -70,7 +70,7 @@ section {
 }
 
 .link-translate {
-  @apply cursor-pointer  duration-200;
+  @apply cursor-pointer  duration-200 translate-0;
 }
 
 .link-translate:hover {
@@ -86,7 +86,7 @@ section {
 }
 
 .link-btn-opague {
-  @apply bg-zinc-600 hover:bg-zinc-500;
+  @apply bg-zinc-600 enabled:hover:bg-zinc-500;
 }
 
 .link-green {
@@ -94,7 +94,7 @@ section {
 }
 
 .link-green:hover {
-  @apply bg-green-800 cursor-pointer;
+  @apply bg-green-800 enabled:cursor-pointer;
 }
 
 .link-red {
@@ -102,12 +102,12 @@ section {
 }
 
 .link-red:hover {
-  @apply bg-red-800 cursor-pointer;
+  @apply bg-red-800 enabled:cursor-pointer;
 }
 
 
 .ticket-side{
-  @apply bg-zinc-700 rounded-2xl;
+  @apply bg-zinc-700 rounded-2xl shadow-lg;
 }
 
 .ticket-separator{
