@@ -1,4 +1,3 @@
-// src/components/DayWheel.tsx
 import React from 'react';
 import WheelBase from './WheelBase';
 
@@ -20,12 +19,34 @@ const DayWheel: React.FC<DayWheelProps> = ({ timeFrames, selectedIndex, onChange
     const newDate = new Date(current);
     const newDay = timeFrames[newIdx].start;
     newDate.setFullYear(newDay.getFullYear(), newDay.getMonth(), newDay.getDate());
+
+    const now = new Date();
+    if (
+      newDate.getFullYear() === now.getFullYear() &&
+      newDate.getMonth() === now.getMonth() &&
+      newDate.getDate() === now.getDate() &&
+      newDate.getHours() === now.getHours() &&
+      newDate.getMinutes() < now.getMinutes()
+    ) {
+      const roundedMinutes = Math.ceil(now.getMinutes() / 5) * 5;
+      newDate.setMinutes(roundedMinutes);
+    }
+
     return newDate;
   };
+
+  // Prüft, ob das Datum in der Vergangenheit liegt
+  const isItemDisabled = (dayIndex: number): boolean => {
+    const now = new Date();
+    const dayDate = timeFrames[dayIndex].end;
+    return dayDate < now;
+  };
+
 
   return (
     <WheelBase
       date={timeFrames[selectedIndex].start}
+      initialIndex={selectedIndex}
       onChange={(newDate: Date) => {
         const newIdx = timeFrames.findIndex(tf =>
           tf.start.getDate() === newDate.getDate() &&
@@ -40,6 +61,7 @@ const DayWheel: React.FC<DayWheelProps> = ({ timeFrames, selectedIndex, onChange
       updateDate={updateDate}
       displayFormatter={(value: number) => formatDay(value)}
       classNames={classNames}
+      isItemDisabled={isItemDisabled}
     />
   );
 };

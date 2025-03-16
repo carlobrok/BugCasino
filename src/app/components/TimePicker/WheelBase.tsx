@@ -19,6 +19,16 @@ export interface WheelBaseProps {
   minValue?: number;
   maxValue?: number;
   classNames?: string;
+  /** Falls definiert, liefert diese Funktion true zurück, wenn ein Element (bei Index und Wert) deaktiviert sein soll. */
+  isItemDisabled?: (item: number, index: number) => boolean;
+  /** Wenn true, wird der letzte Eintrag (maximaler Index) erzwungen – z. B. beim Minutewheel, wenn die letzte Stunde gewählt ist. */
+  forceLastItem?: boolean;
+  /**
+   * Wird aufgerufen, wenn beim Scrollen am Rand (z. B. beim Versuch, vom letzten Element weiter zu scrollen)
+   * ein Übergang gewünscht ist – hier kann der Parent reagieren (z. B. die Stunde anpassen).
+   */
+  onEdgeReached?: (direction: 'up' | 'down') => void;
+  initialIndex?: number;
 }
 
 const ITEM_HEIGHT = 40;
@@ -34,6 +44,9 @@ const WheelBase: React.FC<WheelBaseProps> = ({
   minValue,
   maxValue,
   classNames = '',
+  isItemDisabled,
+  forceLastItem,
+  initialIndex
 }) => {
   // Bestimme den erlaubten Indexbereich anhand minValue und maxValue.
   const minIndex =
@@ -49,19 +62,25 @@ const WheelBase: React.FC<WheelBaseProps> = ({
 
   const mainListRef = useRef<HTMLDivElement>(null);
 
-  // Bestimme den initialen Wert aus dem Datum (Stunden, Minuten oder erster Wert)
+  // console.log('WheelBase', { minIndex, maxIndex, maxTranslate, minTranslate });
+
+  // Bestimme den initialen Wert aus dem Datum (z.B. Stunde, Minute oder erster Wert)
   let currentValue: number;
   if (items.length === 24) {
     currentValue = date.getHours();
-  } else if (items.length === 60) {
+  } else if (items.length === 60 || items.length === 61) {
     currentValue = date.getMinutes();
   } else {
-    currentValue = items[0];
+    currentValue = 0;
   }
-  const initialIndex = items.indexOf(currentValue) !== -1 ? items.indexOf(currentValue) : 0;
-  const initialTranslate = (CENTER_INDEX - initialIndex) * ITEM_HEIGHT;
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(initialIndex);
+  const index = initialIndex !== undefined ? initialIndex : items.indexOf(currentValue);
+
+  // console.log('WheelBase render', { initialIndex, currentValue, index });
+
+  const initialTranslate = (CENTER_INDEX - index) * ITEM_HEIGHT;
+
+  const [selectedIndex, setSelectedIndex] = useState<number>(index);
   const [currentTranslatedValue, setCurrentTranslatedValue] = useState<number>(initialTranslate);
   const [wasDragged, setWasDragged] = useState<boolean>(false);
 
@@ -74,7 +93,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
   const [dragDirection, setDragDirection] = useState<'up' | 'down' | null>(null);
   const [showFinalTranslate, setShowFinalTranslate] = useState<boolean>(false);
 
-  // Wenn minValue oder maxValue (bzw. items) geändert wurden, aktualisiere selectedIndex und den translate-Wert
+  // Wenn minValue, maxValue oder items (bzw. forceLastItem) geändert wurden, aktualisiere selectedIndex und den translate-Wert.
   useEffect(() => {
     const newMinIndex =
       minValue !== undefined && items.includes(minValue)
@@ -84,19 +103,26 @@ const WheelBase: React.FC<WheelBaseProps> = ({
       maxValue !== undefined && items.includes(maxValue)
         ? items.indexOf(maxValue)
         : items.length - 1;
+
     let newSelectedIndex = selectedIndex;
     if (selectedIndex < newMinIndex) {
       newSelectedIndex = newMinIndex;
     } else if (selectedIndex > newMaxIndex) {
       newSelectedIndex = newMaxIndex;
     }
+    if (forceLastItem) {
+      newSelectedIndex = newMaxIndex;
+    }
+
+    // console.log('WheelBase useEffect', { newMinIndex, newMaxIndex, newSelectedIndex });
+
     const newTranslate = (CENTER_INDEX - newSelectedIndex) * ITEM_HEIGHT;
     if (newTranslate !== currentTranslatedValue) {
       setCurrentTranslatedValue(newTranslate);
       setSelectedIndex(newSelectedIndex);
     }
-    // Wir hängen auch an items, falls diese sich ändern.
-  }, [minValue, maxValue, items]);  
+    // Abhängigkeiten: minValue, maxValue, items, forceLastItem
+  }, [minValue, maxValue, items, forceLastItem]);
 
   // Update des Transforms: während des Draggings wird die Vorschau angezeigt,
   // ansonsten der final festgelegte Wert.
@@ -126,6 +152,19 @@ const WheelBase: React.FC<WheelBaseProps> = ({
     setDragStartTime(performance.now());
   };
 
+  const updateSelectedDate = (newIndex: number) => {
+    const newDate = updateDate(date, items[newIndex]);
+    if (isItemDisabled && isItemDisabled(items[newIndex], newIndex)) {
+      setCurrentTranslatedValue((CENTER_INDEX - selectedIndex) * ITEM_HEIGHT);
+      setCursorPosition(0);
+      setStartCapture(false);
+      return;
+    }
+    setCurrentTranslatedValue((CENTER_INDEX - newIndex) * ITEM_HEIGHT);
+    setSelectedIndex(newIndex);
+    onChange(newDate);
+  };
+
   const finalizeDrag = useCallback(() => {
     const endTime = performance.now();
     const dragTime = endTime - dragStartTime;
@@ -138,7 +177,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
     if (computedDragType === 'fast' && cursorPosition !== 0) {
       extraOffset =
         computedDragDirection === 'down'
-          ? - (120 / dragTime) * 100
+          ? -(120 / dragTime) * 100
           : (120 / dragTime) * 100;
     }
     const rawValue = currentTranslatedValue + cursorPosition + extraOffset;
@@ -146,23 +185,19 @@ const WheelBase: React.FC<WheelBaseProps> = ({
     if (finalValue > maxTranslate) finalValue = maxTranslate;
     if (finalValue < minTranslate) finalValue = minTranslate;
 
-    setCurrentTranslatedValue(finalValue);
     const newSelectedIndex = CENTER_INDEX - finalValue / ITEM_HEIGHT;
-    setSelectedIndex(newSelectedIndex);
-    onChange(updateDate(date, items[newSelectedIndex]));
+    updateSelectedDate(newSelectedIndex);
+
     setCursorPosition(0);
     setStartCapture(false);
     setShowFinalTranslate(true);
   }, [
     cursorPosition,
     currentTranslatedValue,
-    date,
     dragStartTime,
-    items,
     maxTranslate,
     minTranslate,
-    onChange,
-    updateDate,
+    updateSelectedDate,
   ]);
 
   const handleMouseTouchEnd = (
@@ -204,27 +239,31 @@ const WheelBase: React.FC<WheelBaseProps> = ({
     }
     if (newTranslate > maxTranslate) newTranslate = maxTranslate;
     if (newTranslate < minTranslate) newTranslate = minTranslate;
-    setCurrentTranslatedValue(newTranslate);
     const newIndex = CENTER_INDEX - newTranslate / ITEM_HEIGHT;
-    setSelectedIndex(newIndex);
-    onChange(updateDate(date, items[newIndex]));
-  };
 
+    const newDate = updateDate(date, items[newIndex]);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to midnight
+    if (newDate < today) {
+      return;
+    }
+
+    updateSelectedDate(newIndex);
+  };
 
   useEffect(() => {
     const currentElem = mainListRef.current;
     if (!currentElem) return;
-  
+
     const wheelHandler: EventListener = (e: Event) => {
       e.preventDefault();
     };
-  
+
     currentElem.addEventListener('wheel', wheelHandler, { passive: false });
     return () => {
       currentElem.removeEventListener('wheel', wheelHandler);
     };
   }, [currentTranslatedValue, maxTranslate, minTranslate, date, items, onChange, updateDate]);
-  
 
   const handleTransitionEnd = () => {
     setShowFinalTranslate(false);
@@ -234,10 +273,10 @@ const WheelBase: React.FC<WheelBaseProps> = ({
     if (wasDragged) {
       return;
     }
-    const translate = (CENTER_INDEX - idx) * ITEM_HEIGHT;
-    setCurrentTranslatedValue(translate);
-    setSelectedIndex(idx);
-    onChange(updateDate(date, item));
+    if (isItemDisabled && isItemDisabled(item, idx)) {
+      return;
+    }
+    updateSelectedDate(idx);
   };
 
   return (
@@ -270,8 +309,11 @@ const WheelBase: React.FC<WheelBaseProps> = ({
         {items.map((item, idx) => (
           <div key={idx} className="time-picker-cell" style={{ height: ITEM_HEIGHT }}>
             <div
-              hidden={idx < minIndex || idx > maxIndex}
-              className={`item-picker-cell-inner hover:bg-sky-700/70 ${idx === selectedIndex ? 'time-picker-cell-inner-selected font-bold' : ''}`}
+              // hidden={idx < minIndex || idx > maxIndex}
+              className={'item-picker-cell-inner'
+                + (idx === selectedIndex ? ' time-picker-cell-inner-selected font-bold' : '')
+                + (isItemDisabled && isItemDisabled(item, idx)
+                  ? ' opacity-40 hover:cursor-default' : ' hover:bg-sky-700/70')}
               onClick={() => handleClickToSelect(idx, item)}
             >
               {displayFormatter(item)}
