@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import LoadingIndicator from "../LoadingIndicator";
-import { Ticket, TicketWithDetails } from "@/lib/actions/gamedata"
+import { TicketWithDetails } from "@/lib/actions/gamedata"
 import React from "react";
 import TicketCard, { TicketClosed, TicketTitle, TicketTopRightCorner } from "./TicketCard";
-import { formatBetCounter, formatDoneInTime, formatTime, formatTimeEstimateShort } from "@/lib/format-helper";
+import { formatBetCounter, formatDoneInTime, formatTime } from "@/lib/format-helper";
 import Amount, { AmountColor } from "../Amount";
 import GradientLine from "../GradientLine";
 

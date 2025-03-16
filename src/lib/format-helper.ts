@@ -1,5 +1,5 @@
 export function formatDoneInTime(doneInTime: boolean) {
-    return doneInTime ? "timely" : "delayed";
+    return doneInTime ? "in time" : "delayed";
 }
 
 export function formatBetCounter(betCount: number) {

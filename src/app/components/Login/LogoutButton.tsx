@@ -10,7 +10,8 @@ export default function LogoutButton() {
     // <div className="bg-red-500 hover:bg-red-600 rounded-lg px-4 py-2 mt-4 text-white">
     <button
       onClick={() => {
-        signOut(); redirect("/");
+        signOut(); 
+        redirect("/");
       }}
     >
       <ArrowRightStartOnRectangleIcon className="w-6 h-6 fill-red-700 hover:fill-red-600 hover:cursor-pointer" />
