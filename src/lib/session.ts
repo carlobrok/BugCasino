@@ -37,7 +37,7 @@ export type UserData = Pick<User, "id" | "email" | "name" | "avatar" | "score" >
 export async function getUser() : Promise<UserData> {
  const session = await getCurrentSession();
  if (!session || !session.user?.email) {
-   throw new Error("User is not authenticated");
+    throw new Error("User not authenticated");
  }
 
 //  exclude password

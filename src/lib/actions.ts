@@ -46,7 +46,7 @@ export async function checkUserExists(prevState: any, formData: RegisterFormData
     const mail = formData.email;
 
     // console.log("checking user", mail);
-
+    
     const user = await prisma.user.findUnique({ where: { email: mail } });
 
     // console.log("user", user);
