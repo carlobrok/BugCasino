@@ -66,7 +66,7 @@ export async function closeUserTicket() {
   }
 
   const ticketReward = getTicketReward(ticket.createdAt, now, totalPod);
-  console.log("Ticket reward", ticketReward);
+  // console.log("Ticket reward", ticketReward);
   const totalReward = ticketReward.timeReward + ticketReward.podReward;
 
   await createTransaction({ userId: user.id, amount: totalReward, type: TransactionType.TICKET });

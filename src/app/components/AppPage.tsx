@@ -8,6 +8,8 @@ import HelpPage from "./HelpPage";
 import GradientLine from "./GradientLine";
 import { Coins } from "lucide-react";
 import { getUserScore } from "@/lib/actions/gamedata";
+import { BugCasinoTitle } from "./BugCasinoTitle";
+
 
 function SideBarLink({ href, children }: { href: string; children: React.ReactNode }) {
     return (
@@ -52,13 +54,8 @@ export function SideBars() {
 
                 <div className="flex flex-col font-bold gap-y-2">
                     {/* Left placeholder for spacing */}
-                    <div className="">
-                        <h1 className={"text-4xl py-2 fugaz-one-regular"
-                            + " bg-linear-to-r from-red-600  via-amber-500 to-orange-600"
-                            + " inline-block text-transparent bg-clip-text"}>
-                            Bug Casino
-                        </h1>
-                    </div>
+                    
+                    <BugCasinoTitle />
 
                     <SideBarDynamic />
 
@@ -91,7 +88,7 @@ export function SideBars() {
 export default function AppPage({ children }: { children: React.ReactNode }) {
     return (
         <>
-            <div className="absolute top-20 right-0 w-4/5 md:5/6  lg:w-full ">
+            <div className="absolute top-20 right-8 w-3/4 md:5/6 lg:w-full ">
                 {children}
                 <footer className=" w-full h-40 static bottom-0"></footer>
             </div>

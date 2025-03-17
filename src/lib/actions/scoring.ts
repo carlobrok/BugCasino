@@ -38,6 +38,15 @@ export type TicketReward = {
     podReward: number;
 }
 
+export function getMaxTicketTimeReward(startTime: Date, endTime: Date) {
+    // ignore the seconds
+    startTime.setSeconds(0);
+    endTime.setSeconds(0);
+    const minutes = Math.floor((endTime.getTime() - startTime.getTime()) / 60000);
+
+    return minutes;
+}
+
 export function getTicketReward(startTime: Date, endTime: Date, pod: number) : TicketReward {
     
     // calculate the time passed since the ticket was created or until the tickets deadline

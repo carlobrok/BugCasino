@@ -81,7 +81,7 @@ export default function CreateBet({ ticketId, userScore, bets }: {
     return (
         <>
             <div className="flex flex-col items-center space-y-2">
-                    <p className="font-semibold">Create a bet</p>
+                    <p className="italic">Create a bet</p>
 
                 <AmountInputGroup userScore={userScore} amount={amount} setAmount={setAmount} disableInput={isLoading} />
                 <div className="flex items-center space-x-2">
