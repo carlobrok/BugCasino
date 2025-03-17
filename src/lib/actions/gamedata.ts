@@ -112,6 +112,22 @@ export async function getUserTickets(onlyClosed: boolean = false)  {
   return await prisma.ticket.findMany(schema);
 }
 
+export async function getTicketsForUser(userId: number) : Promise<TicketWithDetails[]> {
+  const tickets = await prisma.ticket.findMany({
+    ...ticketWithDetailsSelect,
+    where: { authorId: userId },
+  });
+
+  return tickets.sort((a, b) => {
+    if (a.open && b.open) {
+      return a.timeEstimate.getTime() - b.timeEstimate.getTime();
+    }
+    if (a.open) return -1;
+    if (b.open) return 1;
+    return 0;
+  });
+}
+
 // export type 
 
 
@@ -147,18 +163,28 @@ export async function getOtherTickets(filters: { open?: boolean; groupName?: str
     ...ticketWithDetailsSelect,
     where: whereClause,
   });
+  
+  const now = new Date();
   return tickets.sort((a, b) => {
-    // 1. Open tickets should come first
-    if (a.open !== b.open) return b.open ? 1 : -1;
+  // 1. Open, not delayed tickets (timeEstimate > now), sorted by timeEstimate
+    if (a.open && a.timeEstimate > now && b.open && b.timeEstimate > now) {
+      return a.timeEstimate.getTime() - b.timeEstimate.getTime();
+    }
+    if (a.open && a.timeEstimate > now) return -1;
+    if (b.open && b.timeEstimate > now) return 1;
+  
+    // 2. Open, delayed tickets (timeEstimate < now), sorted by timeEstimate
+    if (a.open && a.timeEstimate < now && b.open && b.timeEstimate < now) {
+      return a.timeEstimate.getTime() - b.timeEstimate.getTime();
+    }
+    if (a.open && a.timeEstimate < now) return -1;
+    if (b.open && b.timeEstimate < now) return 1;
 
-    // // 2. Tickets where the user has NOT bet should come first
-    // const aUserBet = a.bets.some((bet) => bet.userId === user.id);
-    // const bUserBet = b.bets.some((bet) => bet.userId === user.id);
-    // if (aUserBet !== bUserBet) return aUserBet ? 1 : -1;
-
-    // 3. Newest tickets first (already ordered in Prisma, but kept as fallback)
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  })
+    if (!a.open) return -1;
+    if (!b.open) return 1;
+    
+    return 0;
+  });
 }
 
 
@@ -175,4 +201,22 @@ export async function getGroupName(groupId: number) : Promise<string> {
   });
 
   return name?.name || "Unknown";
+}
+
+const userProfileSelect = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: {
+    group: { select: { name: true } },
+  },
+});
+
+export type UserProfile = Prisma.UserGetPayload<typeof userProfileSelect>;
+
+
+export async function getUserProfile(userId: number): Promise<UserProfile | null> {
+  const user = await prisma.user.findUnique({
+    ...userProfileSelect,
+    where: { id: userId },
+  });
+
+  return user;
 }

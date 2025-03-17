@@ -37,7 +37,7 @@ export function remainingTime(time: Date) {
     const now = new Date();
     const diff = time.getTime() - now.getTime();
     if (diff < 0) {
-        return "overdue";
+        return <PunctualityLabel doneInTime={false} />;
     }
     const hours = Math.floor(diff / 1000 / 60 / 60);
     const minutes = Math.floor((diff / 1000 / 60) % 60);
@@ -99,10 +99,9 @@ export function TicketLeftSide({ ticket, user }: { ticket: TicketWithDetails, us
                             <>
                                 <Tooltip
                                     text={
-
-                                        <div className="">
-                                            <p>Created:  {formatTime(ticket.createdAt)}</p>
-                                            <p>Estimate: {formatTime(ticket.timeEstimate)}</p>
+                                        <div className="flex flex-col">
+                                            <p className="flex flex-row justify-between space-x-1"><span>Created: </span><span>{formatTime(ticket.createdAt)}</span></p>
+                                            <p className="flex flex-row justify-between space-x-1"><span>Estimate: </span><span>{formatTime(ticket.timeEstimate)}</span></p>
                                         </div>
                                     }>
                                     <div className="inline-flex font-semibold items-center gap-1">
@@ -117,10 +116,10 @@ export function TicketLeftSide({ ticket, user }: { ticket: TicketWithDetails, us
                             <>
                                 <Tooltip
                                     text={
-                                        <div className="">
-                                            <p>Created:  {formatTime(ticket.createdAt)}</p>
-                                            <p>Estimate: {formatTime(ticket.timeEstimate)}</p>
-                                            <p>Finished: {formatTime(ticket.finishedAt || new Date())}</p>
+                                        <div className="flex flex-col">
+                                            <p className="flex flex-row justify-between space-x-1"><span>Created: </span> <span>{formatTime(ticket.createdAt)}</span></p>
+                                            <p className="flex flex-row justify-between space-x-1"><span>Estimate: </span><span>{formatTime(ticket.timeEstimate)}</span></p>
+                                            <p className="flex flex-row justify-between space-x-1"><span>Finished: </span><span>{formatTime(ticket.finishedAt || new Date())}</span></p>
                                         </div>
                                     }>
                                     <div className="inline-flex font-semibold items-center gap-1">

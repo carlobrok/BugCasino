@@ -26,7 +26,7 @@ export async function getCurrentUser() : Promise<User | null> {
   });
 }
 
-export type UserData = Pick<User, "id" | "email" | "name" | "avatar" | "score" > & {transactions: any[]};
+export type UserData = Pick<User, "id" | "name" | "avatar" | "score" > & {transactions: any[]};
 
 
 /**
@@ -60,12 +60,3 @@ export async function getUser() : Promise<UserData> {
  return user;
 }
 
-
-export async function getMinimalUserData() : Promise<Pick<User, "email"| "name"| "avatar">> {
-  const user = await getUser();
-  return {
-    email: user.email,
-    name: user.name,
-    avatar: user.avatar,
-  };
-}
