@@ -7,8 +7,6 @@ import SubmitButton from "../SubmitButton";
 import { checkUserExists, registerUser } from "../../../lib/actions";
 import RegisterSelectGroup from "./RegisterSelectGroup";
 import RegisterSelectAvatar from "./RegisterSelectAvatar";
-import { getMinimalUserData } from "@/lib/session";
-import UserIconName from "../UserIconName";
 
 export interface RegisterFormData {
     email: string;

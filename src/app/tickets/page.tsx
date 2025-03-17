@@ -34,12 +34,7 @@ export default async function Page({ searchParams }: PageProps) {
                             <TicketUserOpen ticket={openTicket} user={user} />
                         </>
                     ) : (
-                        <div className="m-auto max-w-lg lg:max-w-full">
-                            <h2 className="mb-4">Create a new Ticket</h2>
-                            <div className=" px-15 py-10 rounded-4xl bg-zinc-800">
-                                <CreateTicket />
-                            </div>
-                        </div>
+                        <CreateTicket />
                     )}
 
                     {closedTickets && closedTickets.length > 0 && (

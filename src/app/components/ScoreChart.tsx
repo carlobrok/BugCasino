@@ -103,7 +103,7 @@ export function ScoreChart({ score, firstDate, data }: { score: number; firstDat
   }
 
   return (
-    <div className="m-auto w-xl lg:w-full h-96">
+    <div className="m-auto w-full h-96">
       <AreaChart className="h-80"
         data={processedData}
         index="description"

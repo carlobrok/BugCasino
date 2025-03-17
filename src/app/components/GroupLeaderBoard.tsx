@@ -78,13 +78,12 @@ export default async function GroupLeaderBoard() {
     return (
         <>
             <div className="flex flex-col items-center gap-4">
-                <div className="flex items-center gap-4 mb-10">
-
+                <div className="flex items-center gap-4">
                     <LaurelLeft className="size-20 fill-white" />
                     <h1 className="text-3xl lg:text-5xl font-bold">Group Leaderboard</h1>
                     <LaurelRight className="size-20 fill-white" />
                 </div>
-
+                <GradientLine className="my-4 w-80" />
                 {groupsScores.sort((a, b) => b.score - a.score).map((group, index) => (
 
                     <GroupCard key={group.name} group={group} rank={index + 1} />
