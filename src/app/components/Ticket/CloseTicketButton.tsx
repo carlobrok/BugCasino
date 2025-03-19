@@ -45,7 +45,7 @@ export default function CloseTicketButton({ ticketStart, ticketEnd, podAmount }:
         <Tooltip
             text={
                 <div>
-                    <p>Reward</p>
+                    <p className="font-semibold text-center">Reward</p>
                     <p>Working time: <Amount amount={ticketReward.timeReward} /> </p>
                     <p>Pod  bonus: <Amount amount={ticketReward.podReward} /> </p>
                 </div>

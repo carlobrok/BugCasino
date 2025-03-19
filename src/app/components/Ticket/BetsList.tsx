@@ -21,6 +21,7 @@ export default function BetsList({ bets, isOpen }: {
     doneInTime: boolean;
     userId: number;
     id: number;
+    outcome: number | null;
   }[], isOpen: boolean
 }
 ) {
@@ -47,10 +48,33 @@ export default function BetsList({ bets, isOpen }: {
             className="my-2 mx-6 p-3 bg-zinc-700 rounded-2xl shadow-md flex justify-between"
           >
             <UserIconName name={bet.user.name} avatar={bet.user.avatar} />
-            <div className='absolute right-40 translate-x-1/2'>
-              <PunctualityLabel doneInTime={bet.doneInTime} />
-            </div>
-            <Amount amount={bet.amount} />
+            {(bet.outcome !== null) ? (
+              <>
+                <div className='inline-flex items-center space-x-2 absolute right-40'>
+                  <p>bet</p>
+                  <Amount amount={bet.amount} />
+                  <p>on</p>
+                  <PunctualityLabel doneInTime={bet.doneInTime} />
+                </div>
+                {(bet.outcome !== 0) ? (
+
+                <div className='font-semibold'>
+                  <Amount amount={bet.outcome} />
+                </div>
+                ) : (
+                <div className='font-semibold mr-2 text-red-400'>
+                  <p>lost</p>
+                </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className='absolute right-40 translate-x-1/2'>
+                  <PunctualityLabel doneInTime={bet.doneInTime} />
+                </div>
+                <Amount amount={bet.amount} />
+              </>
+            )}
           </li>
         ))}
       </ul>
