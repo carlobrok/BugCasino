@@ -1,5 +1,3 @@
-// 'use client'
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import TicketsList from '../components/Ticket/TicketsList';
 import { getOpenUserTicket, getUserTickets } from '@/lib/actions/gamedata';
@@ -7,8 +5,7 @@ import CreateTicket from '../components/CreateTicket';
 import TicketUserOpen from '../components/Ticket/TicketOpenUser';
 import GradientLine from '../components/GradientLine';
 import AppPage from '../components/AppPage';
-import TicketClosedUser from "../components/Ticket/TicketsClosedUser";
-import { getCurrentUser, getUser } from "@/lib/session";
+import { getUser } from "@/lib/session";
 
 interface PageProps {
     searchParams: Promise<Record<string, string | undefined>>;
@@ -22,7 +19,7 @@ export default async function Page({ searchParams }: PageProps) {
     }
 
     const openTicket = await getOpenUserTicket();
-    const closedTickets = await getUserTickets(true);
+    // const closedTickets = await getUserTickets(true);
 
     return (
         <>
@@ -35,11 +32,6 @@ export default async function Page({ searchParams }: PageProps) {
                         </>
                     ) : (
                         <CreateTicket />
-                    )}
-
-                    {closedTickets && closedTickets.length > 0 && (
-                        // <TicketClosedUser tickets={closedTickets} />
-                        <></>
                     )}
 
                     <GradientLine className='my-8' />

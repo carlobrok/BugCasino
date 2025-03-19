@@ -11,15 +11,22 @@ import React from "react";
 import { NoTicketsCard } from "../../components/Ticket/TicketCard";
 import { ro } from "date-fns/locale";
 import TicketUserOpen from "@/app/components/Ticket/TicketOpenUser";
+import { redirect } from 'next/navigation';
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const userId = parseInt(params.id, 10); // Convert params.id to a number
-
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const userId = parseInt(resolvedParams.id, 10); // Convert params.id to a number
+  
   if (isNaN(userId)) {
     console.error("Invalid user ID");
     return <AppPage>Invalid user ID</AppPage>;
   }
 
+  const currentUser = await getUser();
+  if (currentUser && currentUser.id === userId) {
+    redirect("/profile");
+  }
+  
   const userProfileData = await getUserProfile(userId);
 
   if (!userProfileData) {
