@@ -1,9 +1,7 @@
 import { createTicketRewards } from '@/lib/actions/ticket';
 import { PrismaClient } from '@prisma/client';
 import cron from 'node-cron';
-
-const prisma = new PrismaClient();
-
+import { prisma } from '@/lib/prisma';
 
 console.log('Starting cron job to check for expired tickets...');
 
