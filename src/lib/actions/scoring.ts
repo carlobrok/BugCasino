@@ -1,5 +1,6 @@
 import { min } from 'date-fns/min';
 import { prisma } from '../prisma';
+import { getDurationWithinTimeFrames } from '../timeManagement';
 
 export async function getGroupScores() {
     const t = await prisma.group.findMany({
@@ -29,7 +30,6 @@ export async function getGroupScores() {
 
 // returns the reward a player gets if the bet was correct
 export function getBetReward(betAmount: number, specificPodAmount: number, totalPodAmount: number) {
-          
     return Math.ceil((betAmount / specificPodAmount) * totalPodAmount);
 }
 
@@ -39,12 +39,7 @@ export type TicketReward = {
 }
 
 export function getMaxTicketTimeReward(startTime: Date, endTime: Date) {
-    // ignore the seconds
-    startTime.setSeconds(0);
-    endTime.setSeconds(0);
-    const minutes = Math.floor((endTime.getTime() - startTime.getTime()) / 60000);
-
-    return minutes;
+    return getDurationWithinTimeFrames(startTime, endTime);
 }
 
 export function getTicketReward(startTime: Date, endTime: Date, pod: number) : TicketReward {
@@ -54,7 +49,7 @@ export function getTicketReward(startTime: Date, endTime: Date, pod: number) : T
     const tmax = min([now, endTime]).getTime();
     
     const start = new Date(startTime).getTime();
-    const minutesPassed = Math.floor((tmax - start) / 60000);
+    const minutesPassed = getDurationWithinTimeFrames(new Date(start), new Date(tmax));
 
     // reward = 1 / minute + 10% of the pod
     return {

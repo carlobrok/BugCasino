@@ -40,10 +40,13 @@ export function TicketUserBet({ ticket, user, userHasBetOnTicket }: { ticket: Ti
     const intimePod = bets.filter(bet => bet.doneInTime).reduce((sum, bet) => sum + bet.amount, 0) + 0;
     const delayedPod = bets.filter(bet => !bet.doneInTime).reduce((sum, bet) => sum + bet.amount, 0) + 0;
 
+    const specificPodAmount = userBet.doneInTime ? intimePod : delayedPod;
+    const totalPodAmount = intimePod + delayedPod;
+
     // console.log("Intime pod", intimePod, "Delayed pod", delayedPod);
 
-    const expectedReturnFactor = getWinReturnFactor(amount, intimePod, intimePod + delayedPod);
-    const expectedWin = getBetReward(amount, amount + intimePod, amount + intimePod + delayedPod);
+    const expectedReturnFactor = getWinReturnFactor(amount, specificPodAmount, totalPodAmount);
+    const expectedWin = getBetReward(amount, specificPodAmount, totalPodAmount);
 
     return (
         <>
