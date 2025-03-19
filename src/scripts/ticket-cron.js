@@ -1,4 +1,4 @@
-import { createTicketRewards } from '@/lib/actions/ticket';
+import { createTicketRewards } from '@/lib/actions/ticketRewards';
 import { PrismaClient } from '@prisma/client';
 import cron from 'node-cron';
 import { prisma } from '@/lib/prisma';
