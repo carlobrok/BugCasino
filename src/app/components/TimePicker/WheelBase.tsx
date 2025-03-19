@@ -7,14 +7,26 @@ import React, {
   MouseEvent,
   TouchEvent,
   WheelEvent,
+  use,
 } from 'react';
 import './time-picker.css';
+import { se } from 'date-fns/locale';
+import { get } from 'http';
+
+
+export enum WheelType {
+  DAY = 'day',
+  HOUR = 'hour',
+  MINUTE = 'minute',
+}
+
 
 export interface WheelBaseProps {
   date: Date;
   onChange: (date: Date) => void;
   items: number[];
   updateDate: (current: Date, newValue: number) => Date;
+  wheelType: WheelType;
   displayFormatter?: (value: number) => string;
   minValue?: number;
   maxValue?: number;
@@ -23,11 +35,6 @@ export interface WheelBaseProps {
   isItemDisabled?: (item: number, index: number) => boolean;
   /** Wenn true, wird der letzte Eintrag (maximaler Index) erzwungen – z. B. beim Minutewheel, wenn die letzte Stunde gewählt ist. */
   forceLastItem?: boolean;
-  /**
-   * Wird aufgerufen, wenn beim Scrollen am Rand (z. B. beim Versuch, vom letzten Element weiter zu scrollen)
-   * ein Übergang gewünscht ist – hier kann der Parent reagieren (z. B. die Stunde anpassen).
-   */
-  onEdgeReached?: (direction: 'up' | 'down') => void;
   initialIndex?: number;
 }
 
@@ -40,14 +47,16 @@ const WheelBase: React.FC<WheelBaseProps> = ({
   onChange,
   items,
   updateDate,
+  wheelType,
   displayFormatter = (v) => v.toString(),
   minValue,
   maxValue,
   classNames = '',
   isItemDisabled,
   forceLastItem,
-  initialIndex
+  initialIndex,
 }) => {
+
   // Bestimme den erlaubten Indexbereich anhand minValue und maxValue.
   const minIndex =
     minValue !== undefined && items.includes(minValue)
@@ -62,19 +71,26 @@ const WheelBase: React.FC<WheelBaseProps> = ({
 
   const mainListRef = useRef<HTMLDivElement>(null);
 
-  // console.log('WheelBase', { minIndex, maxIndex, maxTranslate, minTranslate });
 
-  // Bestimme den initialen Wert aus dem Datum (z.B. Stunde, Minute oder erster Wert)
-  let currentValue: number;
-  if (items.length === 24) {
-    currentValue = date.getHours();
-  } else if (items.length === 60 || items.length === 61) {
-    currentValue = date.getMinutes();
-  } else {
-    currentValue = 0;
+
+  const getWheelValue = (): number => {
+    switch (wheelType) {
+      case WheelType.DAY:
+        return date.getDate();
+      case WheelType.HOUR:
+        return date.getHours();
+      case WheelType.MINUTE:
+        return date.getMinutes();
+    }
   }
 
+  const getCurrentIndex = (): number => {
+    return items.indexOf(currentValue);
+  }
+
+  let currentValue = getWheelValue();
   const index = initialIndex !== undefined ? initialIndex : items.indexOf(currentValue);
+
 
   // console.log('WheelBase render', { initialIndex, currentValue, index });
 
@@ -123,6 +139,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
     }
     // Abhängigkeiten: minValue, maxValue, items, forceLastItem
   }, [minValue, maxValue, items, forceLastItem]);
+
 
   // Update des Transforms: während des Draggings wird die Vorschau angezeigt,
   // ansonsten der final festgelegte Wert.
@@ -230,7 +247,6 @@ const WheelBase: React.FC<WheelBaseProps> = ({
 
   const handleWheelScroll = (e: WheelEvent<HTMLDivElement>) => {
     e.preventDefault();
-
     let newTranslate = currentTranslatedValue;
     if (e.deltaY > 0) {
       newTranslate -= ITEM_HEIGHT;
@@ -263,7 +279,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
     return () => {
       currentElem.removeEventListener('wheel', wheelHandler);
     };
-  }, [currentTranslatedValue, maxTranslate, minTranslate, date, items, onChange, updateDate]);
+  }, [currentTranslatedValue, maxTranslate, minTranslate, date]);
 
   const handleTransitionEnd = () => {
     setShowFinalTranslate(false);
@@ -309,7 +325,7 @@ const WheelBase: React.FC<WheelBaseProps> = ({
         {items.map((item, idx) => (
           <div key={idx} className="time-picker-cell" style={{ height: ITEM_HEIGHT }}>
             <div
-              // hidden={idx < minIndex || idx > maxIndex}
+              hidden={idx < minIndex || idx > maxIndex}
               className={'item-picker-cell-inner'
                 + (idx === selectedIndex ? ' time-picker-cell-inner-selected font-bold' : '')
                 + (isItemDisabled && isItemDisabled(item, idx)

@@ -1,6 +1,6 @@
 // src/components/MinuteWheel.tsx
 import React from 'react';
-import WheelBase from './WheelBase';
+import WheelBase, { WheelType } from './WheelBase';
 
 interface MinuteWheelProps {
   date: Date;
@@ -40,6 +40,7 @@ const MinuteWheel: React.FC<MinuteWheelProps> = ({ date, onChange, minValue, max
       onChange={onChange}
       items={allMinutes}
       updateDate={updateDate}
+      wheelType={WheelType.MINUTE}
       displayFormatter={(value: number) => value.toString().padStart(2, '0')}
       minValue={minValue}
       maxValue={maxValue}

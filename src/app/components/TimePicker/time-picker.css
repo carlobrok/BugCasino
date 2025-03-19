@@ -49,6 +49,7 @@
 
 /* Gemeinsame Eigenschaften der Wheels */
 .wheel-base {
+overscroll-behavior: contain;
   overflow: visible hidden;
   position: relative;
   width: 100%;

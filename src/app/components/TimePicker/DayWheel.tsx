@@ -1,5 +1,5 @@
 import React from 'react';
-import WheelBase from './WheelBase';
+import WheelBase, { WheelType } from './WheelBase';
 
 export interface DayWheelProps {
   timeFrames: { start: Date; end: Date }[];
@@ -59,6 +59,7 @@ const DayWheel: React.FC<DayWheelProps> = ({ timeFrames, selectedIndex, onChange
       }}
       items={days}
       updateDate={updateDate}
+      wheelType={WheelType.DAY}
       displayFormatter={(value: number) => formatDay(value)}
       classNames={classNames}
       isItemDisabled={isItemDisabled}

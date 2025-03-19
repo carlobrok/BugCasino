@@ -4,27 +4,9 @@ import React, { useState } from 'react';
 import HourWheel from './HourWheel';
 import MinuteWheel from './MinuteWheel';
 import DayWheel from './DayWheel';
+import { timeFrames } from '@/lib/timeManagement';
 
-interface DayTimeWindow {
-    start: Date;
-    end: Date;
-}
-
-const dateConfig = [
-    { date: "2025-03-14", start: "09:00", end: "12:00" },
-    { date: "2025-03-15", start: "10:00", end: "17:00" },
-    { date: "2025-03-16", start: "11:00", end: "17:00" },
-];
-
-const parseDateConfig = (config: { date: string; start: string; end: string }[]): DayTimeWindow[] => {
-    return config.map(({ date, start, end }) => ({
-        start: new Date(`${date}T${start}:00`),
-        end: new Date(`${date}T${end}:00`),
-    }));
-};
-
-const timeFrames: DayTimeWindow[] = parseDateConfig(dateConfig);
-
+// ========== relevant code for time restriction ==========
 
 
 /**
@@ -40,11 +22,11 @@ function adjustDateToTimeFrame(date: Date): Date {
     const validTimeFrame = timeFrames.find(tf => date >= tf.start && date <= tf.end);
     if (validTimeFrame) {
 
-        // Check if the date is more than 5 minutes in the future
-        const now = new Date();
-        if (date.getTime() - now.getTime() > 5 * 60 * 1000) {
-            return date;
-        }
+        // // Check if the date is more than 5 minutes in the future
+        // const now = new Date();
+        // if (date.getTime() - now.getTime() > 5 * 60 * 1000) {
+        //     return date;
+        // }
 
         // Round the minutes to the next 5-minute interval
         const roundedMinutes = Math.ceil(date.getMinutes() / 5) * 5;
@@ -53,7 +35,7 @@ function adjustDateToTimeFrame(date: Date): Date {
         // Adjust the hour if necessary
         if (date.getMinutes() === 60) {
             date.setMinutes(0);
-            date.setHours(date.getHours() + 1);
+            // date.setHours(date.getHours() + 1);
         }
         
         // console.log("adjustDateToTimeFrame", date);
@@ -87,6 +69,14 @@ function adjustDateToTimeFrame(date: Date): Date {
     return timeFrames[timeFrames.length - 1].end;
 }
 
+
+// ========== relevant code for time restriction ==========
+
+
+
+
+
+
 /**
  * Custom hook to determine the initial date and corresponding day index
  * based on the current time and a predefined set of time frames.
@@ -99,41 +89,54 @@ function adjustDateToTimeFrame(date: Date): Date {
  * - `initialDate`: The calculated initial date based on the current time and time frames.
  * - `initialDayIndex`: The index of the time frame corresponding to the `initialDate`.
  */
-function useInitialDate(forceLastMinute: boolean, setForceLastMinute: React.Dispatch<React.SetStateAction<boolean>>) {
+export function TimePickerInitialDate() {
     const now = new Date();
     const initialDate = adjustDateToTimeFrame(now);
     const initialDayIndex = timeFrames.findIndex(tf => tf.start.getDate() === initialDate.getDate());
     return { initialDate, initialDayIndex };
 }
 
-function TimePicker() {
-    const [forceLastMinute, setForceLastMinute] = useState<boolean>(false);
-    const { initialDate, initialDayIndex } = useInitialDate(forceLastMinute, setForceLastMinute);
 
-    const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+function TimePicker({selectedDate, setSelectedDate, initialDayIndex = 0}: {selectedDate: Date, setSelectedDate: (date: Date) => void, initialDayIndex: number}) {
+    const [forceLastMinute, setForceLastMinute] = useState<boolean>(false);
     const [selectedDayIndex, setSelectedDayIndex] = useState<number>(initialDayIndex);
 
     const currentTimeFrame = timeFrames[selectedDayIndex];
-    
-
-    // Here we calculate the minimum and maximum values for the hour and minute wheels
 
 
-    const now = new Date();
-    const adjustedNow = adjustDateToTimeFrame(now);
+    const adjustedNow = adjustDateToTimeFrame(new Date());
 
-    const minHour = selectedDate.toDateString() === adjustedNow.toDateString() && adjustedNow.getHours() > currentTimeFrame.start.getHours()
-        ? adjustedNow.getHours()
-        : currentTimeFrame.start.getHours();
-
+    const minHour = currentTimeFrame.start.getHours();
     const maxHour = currentTimeFrame.end.getHours();
 
     const minMinute = selectedDate.toDateString() === adjustedNow.toDateString() && selectedDate.getHours() === adjustedNow.getHours()
         ? adjustedNow.getMinutes()
         : 0;
 
-
+    
     const selectDate = (date: Date) => {
+
+        console.log("currentSelectedDate", selectedDate);
+        console.log("selectDate", date);
+        
+
+        // if the currently selected hour is the last and the new selected minute is > 0 the step one hour back
+        if (selectedDate.getHours() === currentTimeFrame.end.getHours() && date.getMinutes() > 0) {
+            date.setHours(date.getHours() - 1);
+            console.log("changed hour");
+        }
+
+        // if the selected hour is the last available hour, force the selection of the last available minute
+        if (date.getHours() === currentTimeFrame.end.getHours()) {
+            setForceLastMinute(true);
+            date.setMinutes(0);
+        } else {
+            setForceLastMinute(false);
+        }
+
+        console.log("selectDate", date);
+
+
         const adjustedDate = adjustDateToTimeFrame(date);
         setSelectedDate(adjustedDate);
 
@@ -154,6 +157,7 @@ function TimePicker() {
 
     return (
         <div className="time-picker p-4">
+            {/* {selectedDate.toISOString()} */}
             <div className="time-picker-container">
                 <input
                     className="time-picker-input"

@@ -9,6 +9,7 @@ export function formatBetCounter(betCount: number) {
 export function formatTime(estimate: Date) {
     return estimate.toLocaleString("en-UK", {
         weekday: "long",
+        // day: "numeric",
         hour: "numeric",
         minute: "numeric",
       })

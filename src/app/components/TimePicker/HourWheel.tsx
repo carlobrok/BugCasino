@@ -1,6 +1,6 @@
 // src/components/HourWheel.tsx
 import React from 'react';
-import WheelBase from './WheelBase';
+import WheelBase, { WheelType } from './WheelBase';
 
 interface HourWheelProps {
   date: Date;
@@ -45,6 +45,7 @@ const HourWheel: React.FC<HourWheelProps> = ({ date, onChange, minValue, maxValu
       onChange={onChange}
       items={hours}
       updateDate={updateDate}
+      wheelType={WheelType.HOUR}
       displayFormatter={(value: number) => value.toString().padStart(2, '0')}
       minValue={minValue}
       maxValue={maxValue}
