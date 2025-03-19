@@ -76,8 +76,8 @@ export function SideBars() {
                 {/* Right side: stats, event and logout */}
 
                 <div className="flex justify-end font-bold items-center gap-x-4">
-                    <Notifications />
-                    <HelpPage />
+                    {/* <Notifications />
+                    <HelpPage /> */}
                     <LogoutButton />
                 </div>
             </div>
