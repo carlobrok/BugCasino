@@ -6,21 +6,33 @@ import { getTicketReward, TicketReward } from "@/lib/actions/scoring"
 import { CheckIcon } from "@heroicons/react/24/solid";
 import Amount from "../Amount";
 import { Tooltip } from "../Tooltip";
+import { useRouter } from "next/navigation";
+import { ca } from "date-fns/locale";
 
 export default function CloseTicketButton({ ticketStart, ticketEnd, podAmount }: { ticketStart: Date, ticketEnd: Date, podAmount: number }) {
 
-    const [isPending, startTransition] = useTransition();
+    const [isPending, setPending] = useState(false);
     const [ticketReward, setTicketReward] = useState<TicketReward>({ timeReward: 0, podReward: 0 });
+    const router = useRouter();
+    
 
-    async function handleClick() {
-        // Start a transition so that the UI knows we're in a pending state.
-        startTransition(async () => {
-            try {
-                await closeUserTicket();
-            } catch (error) {
-                console.error("Error closing ticket:", error);
+    const handleClick = async () => {
+        setPending(true);
+        try {
+            const response = await closeUserTicket();
+
+            if (response.success) {
+                router.refresh();
+            } else {
+                console.error("Error closing ticket:", response.error);
             }
-        });
+        }
+        catch (error) {
+            console.error("Error closing ticket:", error);
+        }
+        finally {
+            setPending(false);
+        }
     }
 
 

@@ -8,6 +8,7 @@ import LoadingIndicator from "./LoadingIndicator";
 import { getBetReward, getWinReturnFactor } from "@/lib/actions/scoring";
 import { Tooltip } from "./Tooltip";
 import Amount from "./Amount";
+import { useRouter } from "next/navigation";
 
 
 export default function CreateBet({ ticketId, userScore, bets }: {
@@ -71,6 +72,10 @@ export default function CreateBet({ ticketId, userScore, bets }: {
     };
 
     if (betPlaced) {
+
+        const router = useRouter();
+        router.refresh();
+
         return (
             <div className="flex items-center space-x-2 transition-opacity duration-500 ease-out opacity-100">
                 <p className="text-green-700">Bet placed</p>
@@ -81,64 +86,59 @@ export default function CreateBet({ ticketId, userScore, bets }: {
     return (
         <>
             <div className="flex flex-col items-center space-y-2">
-                    <p className="italic">Create a bet</p>
+                <p className="italic">Create a bet</p>
 
-                <AmountInputGroup userScore={userScore} amount={amount} setAmount={setAmount} disableInput={isLoading} />
-                <div className="flex items-center space-x-2">
+                {isLoading ?
+                    <LoadingIndicator />
+                    :
+                    (<>
+                        <AmountInputGroup userScore={userScore} amount={amount} setAmount={setAmount} disableInput={isLoading} />
+                        <div className="flex items-center space-x-2">
 
-                    {/* input for in time bet */}
+                            {/* input for in time bet */}
 
-                    <Tooltip text={
-                        <div className="flex flex-col items-center space-y-2">
-                            <p className="font-bold">Win prediction</p>
-                            <p><Amount amount={intimeWin} />  (x{intimeReturnFactor.toFixed(2)})</p>
-                        </div>
-                    }
-                        enabled={amount > 0}
-                    >
-
-                        <button
-                            onClick={() => submitBet(true)}
-                            disabled={isLoading || amount <= 0}
-                            className={"flex-col items-center link-btn backdrop-blur-lg link-green"}
-                        >
-                            {formatDoneInTime(true)}
-
-                            {isLoading ?
-                                <LoadingIndicator />
-                                :
-                                (amount > 0 && <span className="font-bold">x{intimeReturnFactor.toFixed(2)}</span>)
+                            <Tooltip text={
+                                <div className="flex flex-col items-center space-y-2">
+                                    <p className="font-bold">Win prediction</p>
+                                    <p><Amount amount={intimeWin} />  (x{intimeReturnFactor.toFixed(2)})</p>
+                                </div>
                             }
+                                enabled={amount > 0}
+                            >
+                                <button
+                                    onClick={() => submitBet(true)}
+                                    disabled={isLoading || amount <= 0}
+                                    className={"flex-col items-center link-btn backdrop-blur-lg link-green"}
+                                >
+                                    {formatDoneInTime(true)}
+                                    {(amount > 0 && <span className="font-bold">x{intimeReturnFactor.toFixed(2)}</span>)}
+                                </button>
+                            </Tooltip>
 
-                        </button>
-                    </Tooltip>
 
+                            {/* Input for delayed bet */}
 
-                    {/* Input for delayed bet */}
+                            <Tooltip text={
+                                <div className="flex flex-col items-center space-y-2">
+                                    <p className="font-bold">Win prediction </p>
+                                    <p><Amount amount={delayedWin} /> (x{delayedReturnFactor.toFixed(2)})</p>
 
-                    <Tooltip text={
-                        <div className="flex flex-col items-center space-y-2">
-                            <p className="font-bold">Win prediction </p>
-                            <p><Amount amount={delayedWin} /> (x{delayedReturnFactor.toFixed(2)})</p>
-
-                        </div>
-                    }
-                        enabled={amount > 0}
-                    >
-                        <button
-                            onClick={() => submitBet(false)}
-                            disabled={isLoading || amount <= 0}
-                            className={"flex-col items-center link-btn backdrop-blur-lg link-red "}
-                        >
-                            {formatDoneInTime(false)}
-                            {isLoading ?
-                                <LoadingIndicator />
-                                :
-                                (amount > 0 && <span className="font-bold">x{delayedReturnFactor.toFixed(2)}</span>)
+                                </div>
                             }
-                        </button>
-                    </Tooltip>
-                </div>
+                                enabled={amount > 0}
+                            >
+                                <button
+                                    onClick={() => submitBet(false)}
+                                    disabled={isLoading || amount <= 0}
+                                    className={"flex-col items-center link-btn backdrop-blur-lg link-red "}
+                                >
+                                    {formatDoneInTime(false)}
+                                    {(amount > 0 && <span className="font-bold">x{delayedReturnFactor.toFixed(2)}</span>)}
+
+                                </button>
+                            </Tooltip>
+                        </div>
+                    </>)}
             </div>
         </>
     );

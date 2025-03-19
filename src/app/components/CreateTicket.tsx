@@ -4,7 +4,8 @@ import { useActionState, useEffect, useState } from "react";
 import { newTicket } from "@/lib/actions";
 import './TimePicker/time-picker.css';
 import SubmitButton from "./SubmitButton";
-import TimePicker, { bugCasinoClosed, TimePickerInitialDate } from "./TimePicker/TimePicker";
+import TimePicker, { TimePickerInitialDate } from "./TimePicker/TimePicker";
+import { bugCasinoClosed } from "@/lib/timeManagement";
 import { useRouter } from "next/navigation";
 import Amount from "./Amount";
 import { Tooltip } from "./Tooltip";
@@ -17,12 +18,13 @@ const initialState = { error: "", success: undefined, ticket: undefined };
 export default function CreateTicket() {
 
     const [state, formAction, pending] = useActionState(newTicket, initialState);
-    
+
     const { initialDate, initialDayIndex } = TimePickerInitialDate();
     const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
 
     if (state.success) {
-        return <div>Success</div>;
+        const router = useRouter();
+        router.refresh();
     }
 
     return (
@@ -60,15 +62,18 @@ export default function CreateTicket() {
                                             <p className="italic mb-5"> by which you expect the task to be completed. </p>
                                             <Tooltip
                                                 text={
-                                                    <p>You earn <Amount amount={1} /> per minute until the deadline. As a bonus you get 10% of the bets placed on your ticket by other players.</p>
+                                                    <>
+                                                        <p className="mb-1">During working hours you earn <Amount amount={1} /> per minute until the deadline.</p>
+                                                        <p className="mb-1">As a bonus you get 10% of the bets placed on your ticket by other players.</p>
+                                                        <p>You get the reward after closing the ticket or if the deadline is over.</p>
+                                                    </>
                                                 }
                                             >
-
                                                 {(selectedDate) &&
                                                     <div className="flex flex-col w-full">
                                                         <p className="text-lg font-semibold">Ticket reward: </p>
                                                         <div className="text-right">
-                                                            <Amount amount={getMaxTicketTimeReward(new Date(), selectedDate)} />
+                                                            up to <Amount amount={getMaxTicketTimeReward(new Date(), selectedDate)} />
                                                             <p>+ 10% of bets</p>
                                                         </div>
                                                     </div>
