@@ -29,16 +29,16 @@ export default function GroupFilterDropdown({ groups }: GroupFilterDropdownProps
   };
 
   return (
-    <BaseDropdown selectedLabel={selectedGroup || "All Groups"} className="w-40">
-      <div className="py-1">
-        <BaseDropdownItem key={"all"} onClick={() => selectGroup("")}>
-          All Groups
+    <BaseDropdown selectedLabel={selectedGroup || "All Groups"} className="w-48">
+      <div className="py-1 max-h-[250px] overflow-y-auto">
+      <BaseDropdownItem key={"all"} onClick={() => selectGroup("")}>
+        All Groups
+      </BaseDropdownItem>
+      {groups.map((group) => (
+        <BaseDropdownItem key={group} onClick={() => selectGroup(group)}>
+        {group}
         </BaseDropdownItem>
-        {groups.map((group) => (
-          <BaseDropdownItem key={group} onClick={() => selectGroup(group)}>
-            {group}
-          </BaseDropdownItem>
-        ))}
+      ))}
       </div>
     </BaseDropdown>
   );

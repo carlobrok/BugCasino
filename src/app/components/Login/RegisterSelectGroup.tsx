@@ -51,7 +51,7 @@ export default function RegisterSelectGroup({ groups, register, setValue, errors
           </span>
         </MenuButton>
         <MenuItems
-          className="absolute right-0 z-5 mt-2 w-full  origin-top-right border rounded-lg overflow-hidden bg-white shadow-lg focus:solid-none"
+          className="absolute right-0 bottom-full mb-2 w-full origin-bottom-right border rounded-lg overflow-y-auto bg-white shadow-lg focus:solid-none max-h-[250px]"
         >
           <div className="py-1">
             {groups.map((group) => (
