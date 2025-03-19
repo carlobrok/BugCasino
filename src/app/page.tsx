@@ -12,7 +12,7 @@ export default async function Home() {
   const groups = await getGroups();
 
   if (session) {
-    redirect("/leaderboard");
+    redirect("/tickets");
   } else {
     return (
       <div className="relative bg-bug-casino bg-cover bg-center h-screen w-screen text-lg">
