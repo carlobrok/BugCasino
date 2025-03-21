@@ -54,7 +54,7 @@ export function getTicketReward(startTime: Date, endTime: Date, pod: number) : T
     // reward = 1 / minute + 10% of the pod
     return {
         timeReward: minutesPassed,
-        podReward: Math.floor(0.1 * pod)
+        podReward: 0
     }
 }
 

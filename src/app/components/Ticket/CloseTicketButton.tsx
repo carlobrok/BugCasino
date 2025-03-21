@@ -47,7 +47,7 @@ export default function CloseTicketButton({ ticketStart, ticketEnd, podAmount }:
                 <div>
                     <p className="font-semibold text-center">Reward</p>
                     <p>Working time: <Amount amount={ticketReward.timeReward} /> </p>
-                    <p>Pod  bonus: <Amount amount={ticketReward.podReward} /> </p>
+                    {/* <p>Pod  bonus: <Amount amount={ticketReward.podReward} /> </p> */}
                 </div>
             }
         >
