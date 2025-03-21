@@ -71,7 +71,7 @@ export function CountdownTimer({ timeEstimate }: { timeEstimate: Date }) {
 }
 
 
-export function TicketLeftSide({ ticket, user }: { ticket: TicketWithDetails, user: UserData }) {
+export function TicketLeftSide({ ticket }: { ticket: TicketWithDetails }) {
 
 
     return (
@@ -175,7 +175,7 @@ export function TicketNumBetsAmount({ ticket }: { ticket: TicketWithDetails }) {
     </div>);
 }
 
-export function TicketRightSide({ ticket, user, userHasBetOnTicket, handleToggle, isOpen }: { ticket: TicketWithDetails, user: UserData, userHasBetOnTicket: boolean, handleToggle: () => void, isOpen: boolean }) {
+export function TicketRightSide({ ticket, user: loggedInUser, userHasBetOnTicket, handleToggle, isOpen }: { ticket: TicketWithDetails, user: UserData, userHasBetOnTicket: boolean, handleToggle: () => void, isOpen: boolean }) {
 
     return (
         <>
@@ -187,7 +187,7 @@ export function TicketRightSide({ ticket, user, userHasBetOnTicket, handleToggle
                         <>
                             <div className="flex flex-col items-center justify-center p-6">
                                 <>
-                                    <TicketUserBet ticket={ticket} user={user} userHasBetOnTicket />
+                                    <TicketUserBet ticket={ticket} user={loggedInUser} userHasBetOnTicket />
                                     <TicketSeeAllBets handleToggle={handleToggle} isOpen={isOpen} numBets={ticket.bets.length} />
                                 </>
                             </div>
@@ -204,7 +204,7 @@ export function TicketRightSide({ ticket, user, userHasBetOnTicket, handleToggle
 
                                         {/* User bet on the ticket */}
 
-                                        <TicketUserBet ticket={ticket} user={user} userHasBetOnTicket />
+                                        <TicketUserBet ticket={ticket} user={loggedInUser} userHasBetOnTicket />
                                         {/* " All bets v " button */}
 
                                         <TicketSeeAllBets handleToggle={handleToggle} isOpen={isOpen} numBets={ticket.bets.length} />
@@ -213,7 +213,7 @@ export function TicketRightSide({ ticket, user, userHasBetOnTicket, handleToggle
                             ) : (
                                 <>
                                     <div className="p-6 ">
-                                        <CreateBet ticketId={ticket.id} userScore={user.score} bets={ticket.bets} />
+                                        <CreateBet ticketId={ticket.id} userScore={loggedInUser.score} bets={ticket.bets} />
                                     </div>
                                 </>
                             )}
@@ -239,7 +239,7 @@ export function TicketBase({ ticket, user }: { ticket: TicketWithDetails, user: 
         <div>
             <div className="relative w-full flex z-1">
 
-                <TicketLeftSide ticket={ticket} user={user} />
+                <TicketLeftSide ticket={ticket} />
 
                 {/* Separator */}
                 <div className="ticket-separator"></div>

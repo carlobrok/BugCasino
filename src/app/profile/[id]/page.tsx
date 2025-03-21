@@ -40,11 +40,12 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const openTicket = userTickets.find((ticket) => ticket.open);
   const closedTickets = userTickets.filter((ticket) => !ticket.open).length;
 
+  // this is the currently logged in user
   const minimalUserData = {
-    id: userProfileData.id,
-    name: userProfileData.name,
-    avatar: userProfileData.avatar,
-    score: userProfileData.score,
+    id: currentUser.id,
+    name: currentUser.name,
+    avatar: currentUser.avatar,
+    score: currentUser.score,
     transactions: userTransactions,
   };
 
@@ -62,7 +63,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
         <div className="flex justify-between my-5">
           <h3>Score</h3>
-          <Amount amount={userProfileData.score} color={AmountColor.Emerald} size={6} />
+          <Amount amount={userProfileData.score} color={AmountColor.Emerald} size={25} />
         </div>
 
         <ScoreChart score={userProfileData.score} firstDate={userProfileData.createdAt} data={userTransactions} />

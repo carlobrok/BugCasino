@@ -20,7 +20,7 @@ export default async function TicketUserOpen({ ticket, user }: { ticket: TicketW
     <div>
       <div className="relative w-full flex z-1">
 
-        <TicketLeftSide ticket={ticket} user={user} />
+        <TicketLeftSide ticket={ticket} />
 
         {/* Separator */}
         <div className="ticket-separator"></div>

@@ -22,10 +22,31 @@ export async function createBet(ticketId: number, amount: number, doneInTime: bo
         return { success: false, error: "You don't have enough score" };
     }
 
-    // backcheck if ticket is still open
-    const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
-    if (ticket!.open === false) {
+    // find the ticket in the database
+    const ticket = await prisma.ticket.findUnique(
+        { 
+            include: {
+                bets: {
+                    select: { 
+                        userId: true,
+                    }
+                }
+            },
+            where: { id: ticketId } 
+        }
+    );
+
+    if (!ticket) {
+        return { success: false, error: "Ticket not found" };
+    }
+
+    if (ticket.open === false) {
         return { success: false, error: "Ticket is closed" };
+    }
+
+    // check if user already has a ticket
+    if (ticket.bets.some(bet => bet.userId === user.id)) {
+        return { success: false, error: "You already have a bet on this ticket" };
     }
 
     try {
