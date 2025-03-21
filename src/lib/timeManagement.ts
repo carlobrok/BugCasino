@@ -5,7 +5,7 @@ export interface DayTimeWindow {
 }
 
 const dateConfig = [
-    { date: "2025-03-19", start: "01:00", end: "17:00" },
+    { date: "2025-03-19", start: "10:00", end: "17:00" },
     { date: "2025-03-20", start: "09:00", end: "17:00" },
     { date: "2025-03-21", start: "09:00", end: "12:00" },
 ];
